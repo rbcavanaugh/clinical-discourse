@@ -5,13 +5,13 @@ output:
     navbar:
       - { title: "Rob Cavanaugh", href: "https://robcavanaugh.com", align: right, target: _blank }
       - { title: "Sarah Grace Dalton", href: "https://www.marquette.edu/speech-pathology-audiology/building-rehabilitation-advances-in-neurscience-lab.php", target: _blank, align: right }
-
+      - { icon: "fa-github", href: "https://github.com/rbcavanaugh/clinical-discourse", align: right, target: _blank}
     orientation: columns
     vertical_layout: fill
-    source_code: "https://github.com/rbcavanaugh/clinical-discourse"
+    source_code: NULL
     theme:
       version: 4
-      bg: "#E7E7E7"
+      bg: "#F6F6F6"
       primary: "#204773"
       secondary: "#637784"
       base_font: !expr bslib::font_google("Roboto")
@@ -313,6 +313,26 @@ numericInput("time", "Time on task (seconds)", value= 120,
 
 sliderInput("adj", "Score Adjustment:", value= 0,
              min = -10, max = 10, step = 1)
+
+#div(style = "display:inline-block; float:right", actionButton("button", "Send Feedback"))
+
+actionButton("button", "Send Feedback", style = 'float:right;')
+
+    observeEvent(input$button, {
+      showModal(
+        modalDialog(
+          title = "Feedback",
+          tags$iframe(src = 'https://docs.google.com/forms/d/e/1FAIpQLSfrae3ucppQC_Hy2udxj5_xZwRqbkHwTzUX6PQEnpUdahAb4g/viewform?usp=sf_link',
+                    width = '100%',
+                    height = 500,
+                    frameborder = 0,
+                    marginheight = 0),
+          easyClose = TRUE,
+          size = "l"
+      ))
+    })
+
+
 
 ```
 
