@@ -1,32 +1,128 @@
 ---
-title: "Automated Core Lexicon Scoring (In Development)"
+title: "Aphasia Discourse Analysis"
 output: 
   flexdashboard::flex_dashboard:
+    navbar:
+      - { title: "Rob Cavanaugh", href: "https://robcavanaugh.com", align: right, target: _blank }
+      - { title: "Sarah Grace Dalton", href: "https://www.marquette.edu/speech-pathology-audiology/building-rehabilitation-advances-in-neurscience-lab.php", target: _blank, align: right }
+
     orientation: columns
     vertical_layout: fill
-    social: menu
-    source_code: embed
-    theme: cosmo
+    source_code: "https://github.com/rbcavanaugh/clinical-discourse"
+    theme:
+      version: 4
+      bg: "#E7E7E7"
+      primary: "#204773"
+      secondary: "#637784"
+      base_font: !expr bslib::font_google("Roboto")
+      enable-rounded: TRUE
+      bootswatch: "cosmo"
+      fg: "#000000"
+      style: "bootstrap4"
 runtime: shiny
 ---
 
+```{r}
+# This website is licensed under the GNU General Public License v3.0
+```
+
+
+
 ```{r setup, include=FALSE}
+library(shiny)
 library(flexdashboard)
+library(bslib)
 library(tibble)
 library(scales)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(tidytext)
-library(plotly)
 library(textstem)
-library(here)
+#library(here)
 library(DT)
 library(truncnorm)
-library(shinyjs)
-library(here)
+#library(shinyjs)
+#library(qdap)
+library(koRpus)
+#library(waiter)
+# thematic_rmd()
+#waiter_preloader(html = spin_dots(), color = "#f0f0f0")
+set.kRp.env(lang="en")
+koRpus.lang.en::lang.support.en()
 
-source(here('R', 'core_lex.R'))
+#source(here('R', 'core_lex.R'))
+
+```
+
+```{r}
+# need to give a way for clinicians to take away or add points manually to adjust the score...
+
+broken_window=tibble(c("a","and","ball","be","boy","break","go","he","in",
+                       "it","kick","lamp","look","of","out","over","play","sit",
+                       "soccer","the","through","to","up","window"))
+
+refused_umbrella=tibble(c("a", 'and', 'back', 'be', 'boy', 'do', 'get', 'go', 'have','he',
+                          'home', 'i', 'in', 'it', 'little', 'mother', 'mom', 'need', 'not', 'out',
+                          'rain', 'say', 'school', 'she', 'so', 'start', 'take', 'that', 'the',
+                          'then', 'to', 'umbrella', 'walk', 'wet', 'with', 'you'))
+
+cat_rescue=tibble(c("a","and","bark","be","call","cat","climb","come","department", 'dad',
+                    "dog","down","father","fire","get","girl","go","have","he",
+                    "in","ladder","little","tree","not","up", 'out', 'with', 'she', 'fireman',
+                    'so', 'stick', 'the', 'their', 'there', 'to'))
+
+cinderella = tibble(c('a', 'after', 'all', 'and', 'as', 'at', 'away', 'back','ball',
+                      'be', 'beautiful', 'because', 'but', 'by', 'cinderella', 'clock', 'come',
+                      'could', 'dance','daughter', 'do', 'dress', 'ever', 'fairy', 'father',
+                      'dad', 'find', 'fit', 'foot', 'for', 'get', 'girl', 'glass', 'go',
+                      'godmother', 'happy', 'have', 'he', 'home', 'horse', 'house', 'i', 'in',
+                      'into', 'it', 'know', 'leave', 'like', 'little', 'live', 'look', 'lose',
+                      'make', 'marry', 'midnight', 'mother', 'mom', 'mouse', 'not', 'of',
+                      'off', 'on', 'one', 'out', 'prince', 'pumpkin', 'run', 'say', 'she',
+                      'shoe', 'sister', 'slipper', 'so', 'strike', 'take', 'tell', 'that',
+                      'the', 'then', 'there', 'they', 'this', 'time', 'to', 'try',
+                      'turn', 'two', 'up', 'very', 'want', 'well', 'when', 'who', 'will', 'with'))
+
+sandwich = tibble(c("a","and","bread","butter","get","it","jelly","knife","of", 'on',
+                    "one","other","out","peanut","piece","put","slice","spread","take",
+                    "the","then","to","together","two","you"))
+
+# gdc_picnic <- read.csv(here('data', 'gdc_picnic_cleaned.csv'))[,2:4] %>%
+#   as_tibble()
+# 
+# list2env(split(gdc_picnic, gdc_picnic$story),envir=.GlobalEnv)
+
+corpus <- list(broken_window, refused_umbrella, cat_rescue, cinderella, sandwich)
+              #gdc, picnic)
+
+
+core_lex <- function(text, stimulus, age_input){
+  stim = corpus[[stimulus]]
+  if(stimulus > 5){
+    stim <- stim %>% filter(age == floor(age_input/10)*10) %>%
+      select(lexeme)
+      }
+  colnames(stim) = 'target_lemma'
+  text = tibble(text)
+  colnames(text) = 'text'
+  text <- tibble(unnest_tokens(text, word, text)) %>% distinct()
+  text$lemma <- lemmatize_words(text$word)
+  colnames(text) = c('token', 'produced_lemma')
+  
+  return_list <- list()
+  
+  return_list$match <- stim %>%
+    left_join(text, by = c('target_lemma' = 'produced_lemma')) %>%
+    mutate(produced = ifelse(!is.na(token), 1,0)) %>%
+    select(target_lemma, produced, token)
+  
+  return_list$extra <- text %>%
+    anti_join(stim, by = c('produced_lemma' = 'target_lemma'))
+  
+  
+  return(return_list)
+}
 
 ```
 
@@ -141,6 +237,7 @@ selectedData <- reactive({
                                        ifelse(score_num > max_val,
                                               'exceeded max score',
                                               AphasiaPercentile)
+                                       
             )
           )
         
@@ -166,7 +263,7 @@ selectedData <- reactive({
 
 ```
 
-``` {r dat2}
+```{r dat2}
 selectedData2 <- reactive({
       task = case_when(
         input$stim == 'broken_window' ~ 1,
@@ -188,15 +285,13 @@ selectedData2 <- reactive({
 })
 ```
 
-Core Lexicon Analysis
-=====================================
+# Core Lexicon
 
-Inputs{.sidebar data-width=300}
------------------------------------------------------------------------
+## Sidebar {.sidebar data-width="300"}
 
 ```{r}
 
-radioButtons("stim", "Elicitation Task:",
+selectInput("stim", h5("Select Stimulus"),
              c("Broken Window" = 'broken_window',
                "Cat Rescue" = 'cat_rescue',
                "Refused Umbrella" = 'refused_umbrella',
@@ -205,90 +300,133 @@ radioButtons("stim", "Elicitation Task:",
              selected = "broken_window",
               # "Good Dog Carl" = 'gdc',
                #"Picnic" = 'picnic'),
-             inline = F)
+            )
             
 textAreaInput("transcr",
-              "Transcript:",
+             h5("Enter Transcript"),
               value = "Young boy is practicing playing soccer. Kicking the ball up and keeping it in the air. He miskicks. and and it fall goes and breaks the window of his house. of the living room actually. and bounces into the living room knocking a lamp over where his father is sitting. the father picks up the soccer ball. Looks out the window. And calls for the little boy to come and explain.",
               height = '300px')
 
-sliderInput("time", "Time on task (seconds)", value= 120,
-            min = 1, max = 1200, step = 10)
+  
+numericInput("time", "Time on task (seconds)", value= 120,
+            min = 1, max = 1200, step = 1)
 
 sliderInput("adj", "Score Adjustment:", value= 0,
              min = -10, max = 10, step = 1)
 
-a(icon("copyright"), "Rob Cavanaugh 2021", icon("external-link"), href="https://robcavanaugh.com", target = "_blank")
- 
 ```
 
-Scores 
------------------------------------------------------------------------
+## Scores {.tabset}
 
 ### Check Scoring
 
-#### Use the score adjustment slider to add or subtract a point
+1.  Check that target lexemes match tokens, following core lexicon rules.
+2.  Check that target lexemes without a matched token were not missed by the algorithm. (Lexeme Produced = no)
+3.  Add 1 point to the Cinderella passage if the possessive [ 's ] is used
+4.  Count any variation of mom/mother or dad/father.\
+    \
 
-1. Check that target lexemes match tokens, following core lexicon rules.
-1. Check that target lexemes without a matched token were not missed by the algorithm. (Lexeme Produced = no)
-1. Add 1 point to the Cinderella passage if the possessive [ 's ] is used
-1. Count any variation of mom/mother or dad/father.\
-\
-  
 ```{r}
 
 renderDT({
   table = selectedData2()
-})
+  
+},options = list(dom = "ftp"))
 
 ```
 
-Words
------------------------------------------------------------------------
+### Detailed Transcription and Scoring Rules
 
-### Result {data-height=150}
+1.  one
+2.  two
+3.  three
+4.  four
 
-``` {r}
+## Words
 
-renderTable({
-  score = selectedData()[[1]]
-  score
-  })
+### Result
+
+```{r}
+
+
+renderValueBox({
+      valueBox(
+         paste0(selectedData()[["scores"]][1], " core words"),
+         caption = paste0("Aphasia Percentile: ", selectedData()[["score"]][1,4], " | Control Percentile: ", selectedData()[["score"]][1,3]),
+         icon = "fa-list-ol",
+         color = "primary"
+         )
+   })
 
 ```
 
-### Performance relative to people with and without aphasia {data-height=400}
+### Result 2
 
-``` {r}
+```{r}
+renderValueBox({
+      valueBox(
+         paste0(round(selectedData()[["scores"]][2],1), " core words/min"),
+         caption = paste0("Aphasia Percentile: ", selectedData()[["score"]][2,4], " | Control Percentile: ", selectedData()[["score"]][2,3]),
+         icon = "fa-tachometer",
+         color = "primary"
+         )
+   })
+```
 
+### Performance relative to people with and without aphasia {data-height="400"}
+
+```{r}
+library(patchwork)
 
 renderPlot({
-  p <- selectedData()[[2]] %>%
+  prod <- selectedData()[[2]] %>%
     mutate(Cohort = ifelse(dist == 'dist1' | dist == 'dist3', 'control', 'aphasia'),
            met = factor(ifelse(dist == 'dist1' | dist == 'dist2', 'Production', 'Efficiency'),
                         levels = c('Production', 'Efficiency'))
            ) %>%
+    filter(met == "Production") %>%
     ggplot(aes(x = val, color = Cohort, fill = Cohort)) +
     geom_density(alpha = .3) +
     geom_vline(data = data.frame(xint=selectedData()[[3]][[1]],met="Production"), 
-               aes(xintercept = xint)) +
-    geom_vline(data = data.frame(xint=selectedData()[[3]][[2]],met="Efficiency"), 
-               aes(xintercept = xint)) +
-    facet_wrap(.~met, scales = 'free') +
-    theme_grey(base_size = 16) +
-    theme(legend.position = 'bottom',
+               aes(xintercept = xint), linetype = "dashed", size = 1) +
+    theme_grey(base_size = 14) +
+   theme(#panel.background = element_rect(fill = "transparent"),
+          legend.position = 'bottom',
           axis.title.y=element_blank(),
+          axis.title.x=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank(),
-          legend.margin=margin(c(.5, .5, .5, .5))) +
-    labs(x = 'Score')
+          legend.title = element_blank(),
+          plot.title = element_text(hjust = 0.5)) +
+    labs(title = "Core words")
+  
+  eff <- selectedData()[[2]] %>%
+    mutate(Cohort = ifelse(dist == 'dist1' | dist == 'dist3', 'control', 'aphasia'),
+           met = factor(ifelse(dist == 'dist1' | dist == 'dist2', 'Production', 'Efficiency'),
+                        levels = c('Production', 'Efficiency'))
+           ) %>%
+    filter(met == "Efficiency") %>%
+    ggplot(aes(x = val, color = Cohort, fill = Cohort)) +
+    geom_density(alpha = .3) +
+    geom_vline(data = data.frame(xint=selectedData()[[3]][[2]],met="Efficiency"), 
+               aes(xintercept = xint), linetype = "dashed", size = 1) +
+    theme_grey(base_size = 14) +
+    theme(#panel.background = element_rect(fill = "transparent"),
+          legend.position = 'bottom',
+          axis.title.y=element_blank(),
+          axis.title.x=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          legend.title = element_blank(),
+          plot.title = element_text(hjust = 0.5)) +
+    labs(title = "Core words / min")
 
-  p
+  prod + eff + plot_layout(guides = 'collect') & theme(legend.position = 'bottom')
 
   })
 ```
 
-### References {data-height=300}
+### References {data-height="300"}
 
 Dalton, S. G., Hubbard, H. I., & Richardson, J. D. (2019). Moving toward non-transcription based discourse analysis in stable and progressive aphasia. In Seminars in speech and language. Thieme Medical Publishers.\
 
@@ -296,44 +434,135 @@ Dalton, S. G., & Richardson, J. D. (2015). Core-lexicon and main-concept product
 
 Kim, H., & Wright, H. H. (2020, January). A tutorial on core lexicon: development, use, and application. In Seminars in speech and language (Vol. 41, No. 01, pp. 020-031). Thieme Medical Publishers.\
 
-Silge J, Robinson D (2016). “tidytext: Text Mining and Analysis Using Tidy Data Principles in R.” JOSS, 1(3). doi: 10.21105/joss.00037
+Silge J, Robinson D (2016). "tidytext: Text Mining and Analysis Using Tidy Data Principles in R." JOSS, 1(3). doi: 10.21105/joss.00037
 
+# Main Concept & Sequencing
 
+## Sidebar {.sidebar data-width="300"}
 
-
-Main Concept Analysis
-=====================================
-
-Inputs{.sidebar data-width=300}
------------------------------------------------------------------------
 ```{r}
 
-radioButtons("stim", "Elicitation Task:",
+selectInput("stim", h5("Select Stimulus"),
              c("Broken Window" = 'broken_window',
                "Cat Rescue" = 'cat_rescue',
                "Refused Umbrella" = 'refused_umbrella',
                "Cinderella" = 'cinderella',
                "Sandwich" = 'sandwich'),
+             selected = "broken_window",
               # "Good Dog Carl" = 'gdc',
                #"Picnic" = 'picnic'),
-             inline = F)
+            )
             
 textAreaInput("transcr",
-              "Transcript:",
+             h5("Enter Transcript"),
               value = "Young boy is practicing playing soccer. Kicking the ball up and keeping it in the air. He miskicks. and and it fall goes and breaks the window of his house. of the living room actually. and bounces into the living room knocking a lamp over where his father is sitting. the father picks up the soccer ball. Looks out the window. And calls for the little boy to come and explain.",
               height = '300px')
 
-sliderInput("time", "Time on task (seconds)", value= 120,
-            min = 1, max = 1200, step = 10)
+  
+# sliderInput("time", "Time on task (seconds)", value= 120,
+#             min = 1, max = 1200, step = 10)
+# 
+# sliderInput("adj", "Score Adjustment:", value= 0,
+#              min = -10, max = 10, step = 1)
+# 
+# sliderInput("mattr_w", "MATTR Window:", value = 5,
+#             min = 5, max = 50, step = 1)
 
-sliderInput("adj", "Score Adjustment:", value= 0,
-             min = -10, max = 10, step = 1)
-
-a(icon("copyright"), "Rob Cavanaugh 2021", icon("external-link"), href="https://robcavanaugh.com", target = "_blank")
  
 ```
 
-Main Concept Scoring 
------------------------------------------------------------------------
+## Main Concept Scoring
 
 ### Coming Soon!
+
+# Lexical Diversity
+
+## Sidebar {.sidebar data-width="300"}
+
+```{r}
+
+selectInput("stim", h5("Select Stimulus"),
+             c("Broken Window" = 'broken_window',
+               "Cat Rescue" = 'cat_rescue',
+               "Refused Umbrella" = 'refused_umbrella',
+               "Cinderella" = 'cinderella',
+               "Sandwich" = 'sandwich',
+               "Other" = 'other'),
+             selected = "broken_window",
+              # "Good Dog Carl" = 'gdc',
+               #"Picnic" = 'picnic'),
+            )
+            
+textAreaInput("transcr",
+             h5("Enter Transcript"),
+              value = "Young boy is practicing playing soccer. Kicking the ball up and keeping it in the air. He miskicks. and and it fall goes and breaks the window of his house. of the living room actually. and bounces into the living room knocking a lamp over where his father is sitting. the father picks up the soccer ball. Looks out the window. And calls for the little boy to come and explain.",
+              height = '300px')
+
+sliderInput("mattr_w", "MATTR Window:", value = 5,
+            min = 5, max = 50, step = 1)
+
+ 
+```
+
+## Check Transcription
+
+### Check Transcription
+
+#### Make sure youve followed these transcription rules
+
+1.  Rule 1\
+2.  Rule 2\
+3.  Rule 3\
+4.  Rule 4\
+    \
+
+## Results
+
+### Results
+
+```{r}
+
+renderValueBox({
+      valueBox(
+         round(qdap::diversity(as.character(input$transcr))$shannon,2),
+         caption = paste0("Word Information Measure"),
+         icon = "fa-book",
+         color = "primary"
+         )
+   })
+
+```
+
+### Results2
+
+```{r}
+
+renderValueBox({
+      valueBox(
+         round(MATTR(tokenize(as.character(input$transcr), lang = "en", format = 'obj'), window = 5)@MATTR$MATTR,2),
+         caption = paste0("Moving Average Type Token Ratio"),
+         icon = "fa-book-open",
+         color = "primary"
+         )
+   })
+
+```
+
+### Results3
+
+```{r}
+
+# m <- MATTR(tokenize(as.character(input$transcr), lang = "en", format = 'obj'), window = 5)@MATTR$MATTR #this is the analysis window, currently set to 5 words
+# m <- m@MATTR
+# m <-m$MATTR
+
+renderValueBox({
+      valueBox(
+         round(TTR(tokenize(as.character(input$transcr), lang = "en", format = 'obj'))@TTR,2),
+         caption = paste0("Type Token Ratio"),
+         icon = "fa-newspaper",
+         color = "primary"
+         )
+   })
+
+```
