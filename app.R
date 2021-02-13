@@ -1,5 +1,5 @@
 
-
+############### load stuff ################
 library(shiny)
 library(here)
 library(dplyr)
@@ -16,38 +16,47 @@ library(koRpus)
 set.kRp.env(lang="en")
 koRpus.lang.en::lang.support.en()
 library(waiter)
-library(shinythemes)
-
-
-waiter_preloader(html = spin_dots(), color = "#f0f0f0")
+library(bslib)
+library(shinydashboard)
+library(shinyWidgets)
 
 # load info 
 source(here('R', 'core_lex.R'))
 
-
-# Define UI for application that draws a histogram
+###################### UI ###################
 ui <- 
     tagList(
-        tags$head(
-            tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+        use_waiter(),
+        waiter_preloader(html = spin_dots(), color = "#2c3e50"), #html = spin_dots(), color = "#f0f0f0"
+        useShinydashboard(),
+        tags$style(type = 'text/css',
+                   '.bg-aqua {background-color: #55a998!important; }
+                   .form-control {color: #333333!important;}
+                   .selectize-dropdown, .selectize-input, .selectize-input input  {color: #333333!important;}'
         ),
+                   
         navbarPage(
-    theme = shinytheme("flatly"),
-    fluid = T, 
-    title = div("Aphasia Discourse Analysis",
-                  a(id = "img-id",
-                  href = "https://github.com/rbcavanaugh/clinical-discourse",
-                  icon("github")
-                ),
-                a(id = "rc",
-                  href = "https://github.com/rbcavanaugh/clinical-discourse",
-                  "Rob Cavanaugh"
-                ),
-                a(id = "sg",
-                  href = "https://github.com/rbcavanaugh/clinical-discourse",
-                  "Sarah Grace Dalton"
-                )
-    ),
+            theme = bslib::bs_theme(secondary = "#55a998", success = "#55a998", 
+                                    base_font = font_google("Open Sans"), `enable-gradients` = TRUE, 
+                                    `enable-shadows` = TRUE, bootswatch = "flatly"),
+            fluid = T, 
+            title = div("Aphasia Discourse Analysis",
+                          tags$a(id = "img-id",
+                          href = "https://github.com/rbcavanaugh/clinical-discourse",
+                          icon("github"),
+                          style = "position: absolute; right: 15px; top: 25px; font-size: 1rem; color: #FFFFFF;"
+                        ),
+                        tags$a(id = "rc",
+                          href = "https://github.com/rbcavanaugh/clinical-discourse",
+                          "Sarah Grace Dalton",
+                          style = "position: absolute; right: 50px; top: 25px; font-size: .9rem; color: #FFFFFF;"
+                        ),
+                        tags$a(id = "sg",
+                          href = "https://github.com/rbcavanaugh/clinical-discourse",
+                          "Rob Cavanaugh",
+                          style = "position: absolute; right: 175px; top: 25px; font-size: .9rem; color: #FFFFFF;"
+                        )
+            ),
 
                  
                  tabPanel("Core Lexicon",
@@ -84,25 +93,47 @@ ui <-
                                          tabsetPanel(
                                              tabPanel("Check Scoring", 
                                                       br(),
-                                                      p("Instructions"),
+                                                      tags$ol(
+                                                          tags$li("Check that target lexemes match tokens, following core lexicon rules."),
+                                                          tags$li("Check that target lexemes without a matched token were not missed by the algorithm. (Lexeme Produced = no)"),
+                                                          tags$li("Add 1 point to the Cinderella passage if the possessive [ 's ] is used"),
+                                                          tags$li("Count any variation of mom/mother or dad/father.")
+                                                      ),
                                                       DTOutput("table_cl")), 
                                              tabPanel("Detailed Instructions", textOutput("scoring_cl"))
                                          )
                                   ),
                                   column(width = 6,
-                                         tableOutput("results_cl"),
-                                         plotOutput("plot_cl", height = '300px'),
-                                         p(refsCl)
+                                         tabsetPanel(
+                                            tabPanel("Results",br(),
+                                                #box(width = NULL,
+                                                valueBoxOutput("results_cl1", width = NULL),
+                                                valueBoxOutput("results_cl2", width = NULL),
+                                              # ),
+                                                box(width = NULL,
+                                                plotOutput("plot_cl", height = '300px')
+                                                )
+                                            ),
+                                            tabPanel("References",
+                                                     br(),
+                                                 tags$ol(
+                                                     tags$li("Dalton, S. G., Hubbard, H. I., & Richardson, J. D. (2019). Moving toward non-transcription based discourse analysis in stable and progressive aphasia. In Seminars in speech and language. Thieme Medical Publishers."), br(),
+                                                     tags$li("Dalton, S. G., & Richardson, J. D. (2015). Core-lexicon and main-concept production during picture-sequence description in adults without brain damage and adults with aphasia. American Journal of Speech-Language Pathology, 24(4), S923-S938."),br(),
+                                                     tags$li("Kim, H., & Wright, H. H. (2020, January). A tutorial on core lexicon: development, use, and application. In Seminars in speech and language (Vol. 41, No. 01, pp. 020-031). Thieme Medical Publishers."),br(),
+                                                     tags$li("Silge J, Robinson D (2016). tidytext: Text Mining and Analysis Using Tidy Data Principles in R. JOSS, 1(3). doi: 10.21105/joss.00037")
+                                                 )
                                          )
                                          )
+                                         )
+                              )
                               )
                               
                      )
                  ),
-                 
+###### main concept ######
                  tabPanel("Main Concept & Sequencing",
                           sidebarLayout(
-                              sidebarPanel(
+                              sidebarPanel(width = 3,
                                   selectInput("stimMC", h5("Select Stimulus"),
                                               c("Broken Window" = 'broken_window',
                                                 "Cat Rescue" = 'cat_rescue',
@@ -119,12 +150,18 @@ ui <-
                                   
                                   actionButton("buttonMC", "Send Feedback", style = 'float:right;')
                               ),
-                              mainPanel(
+                              mainPanel(width = 9,
                                   fluidRow(
                                     column(width = 6,
                                          tabsetPanel(
                                              tabPanel("Check Scoring", 
-                                                    p("Instructions")),
+                                                    h4("Instructions"),
+                                                    tags$ol(
+                                                        tags$li("Check that target lexemes match tokens, following core lexicon rules."),
+                                                        tags$li("Check that target lexemes without a matched token were not missed by the algorithm. (Lexeme Produced = no)"),
+                                                        tags$li("Add 1 point to the Cinderella passage if the possessive [ 's ] is used"),
+                                                        tags$li("Count any variation of mom/mother or dad/father.")
+                                                    )),
                                                     #DTOutput("table_cl")), 
                                                     tabPanel("Detailed Instructions",
                                                              textOutput("scoring_mc"))
@@ -133,16 +170,21 @@ ui <-
                                     column(width = 6,
                                            #tableOutput("results_cl"),
                                            #plotOutput("plot_cl"),
-                                           p("References")
+                                           tags$ol(
+                                               tags$li("Dalton, S. G., Hubbard, H. I., & Richardson, J. D. (2019). Moving toward non-transcription based discourse analysis in stable and progressive aphasia. In Seminars in speech and language. Thieme Medical Publishers."),
+                                               tags$li("Dalton, S. G., & Richardson, J. D. (2015). Core-lexicon and main-concept production during picture-sequence description in adults without brain damage and adults with aphasia. American Journal of Speech-Language Pathology, 24(4), S923-S938."),
+                                               tags$li("Kim, H., & Wright, H. H. (2020, January). A tutorial on core lexicon: development, use, and application. In Seminars in speech and language (Vol. 41, No. 01, pp. 020-031). Thieme Medical Publishers."),
+                                               tags$li("Silge J, Robinson D (2016). tidytext: Text Mining and Analysis Using Tidy Data Principles in R. JOSS, 1(3). doi: 10.21105/joss.00037")
+                                           )
                                     )
                                   )
                               )
                           )
                  ),
-
+######### lexical diversity ########
                  tabPanel("Lexical Diversity",
                           sidebarLayout(
-                              sidebarPanel(
+                              sidebarPanel(width = 3,
                                   selectInput("stimLD", h5("Select Stimulus"),
                                               c("Broken Window" = 'broken_window',
                                                 "Cat Rescue" = 'cat_rescue',
@@ -162,12 +204,18 @@ ui <-
                                   
                                   actionButton("buttonLD", "Send Feedback", style = 'float:right;')
                               ),
-                              mainPanel(
+                              mainPanel(width = 9,
                                   fluidRow(
                                       column(width = 6,
                                              tabsetPanel(
                                                  tabPanel("Check Scoring", 
-                                                          p("Instructions")),
+                                                          h4("Instructions"),
+                                                          tags$ol(
+                                                              tags$li("Check that target lexemes match tokens, following core lexicon rules."),
+                                                              tags$li("Check that target lexemes without a matched token were not missed by the algorithm. (Lexeme Produced = no)"),
+                                                              tags$li("Add 1 point to the Cinderella passage if the possessive [ 's ] is used"),
+                                                              tags$li("Count any variation of mom/mother or dad/father.")
+                                                          )),
                                                          # DTOutput("table_cl")), 
                                                  tabPanel("Detailed Instructions",
                                                           textOutput("scoring_ld"))
@@ -177,7 +225,12 @@ ui <-
                                       column(width = 6,
                                              tableOutput("resultsLD"),
                                              #plotOutput("plot_cl"),
-                                             p("References")
+                                             tags$ol(
+                                                 tags$li("Dalton, S. G., Hubbard, H. I., & Richardson, J. D. (2019). Moving toward non-transcription based discourse analysis in stable and progressive aphasia. In Seminars in speech and language. Thieme Medical Publishers."),
+                                                 tags$li("Dalton, S. G., & Richardson, J. D. (2015). Core-lexicon and main-concept production during picture-sequence description in adults without brain damage and adults with aphasia. American Journal of Speech-Language Pathology, 24(4), S923-S938."),
+                                                 tags$li("Kim, H., & Wright, H. H. (2020, January). A tutorial on core lexicon: development, use, and application. In Seminars in speech and language (Vol. 41, No. 01, pp. 020-031). Thieme Medical Publishers."),
+                                                 tags$li("Silge J, Robinson D (2016). tidytext: Text Mining and Analysis Using Tidy Data Principles in R. JOSS, 1(3). doi: 10.21105/joss.00037")
+                                             )
                                       )
                                   )
                               )
@@ -186,11 +239,12 @@ ui <-
 )
 )
 
+######## server ########
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
     ###### Core Lex ####################################
-    
+   # bs_themer()
     observeEvent(input$button, {
         showModal(
             modalDialog(
@@ -210,37 +264,6 @@ server <- function(input, output) {
         
     },options = list(dom = "ftp"))
     
-    ### Check Scoring
-    output$scoring_cl <- renderText({
-   txt<-  "1.  Check that target lexemes match tokens, following core lexicon rules.
-    2.  Check that target lexemes without a matched token were not missed by the algorithm. (Lexeme Produced = no)
-    3.  Add 1 point to the Cinderella passage if the possessive [ 's ] is used
-4.  Count any variation of mom/mother or dad/father."
-   txt
-    })
-    
-    ### Check Scoring
-    output$scoring_ld <- renderText({
-        txt<-  "1.  Check that target lexemes match tokens, following core lexicon rules.
-    2.  Check that target lexemes without a matched token were not missed by the algorithm. (Lexeme Produced = no)
-    3.  Add 1 point to the Cinderella passage if the possessive [ 's ] is used
-4.  Count any variation of mom/mother or dad/father."
-        txt
-    })
-    
-    ### Check Scoring
-    output$scoring_mc <- renderText({
-        txt<-  "1.  Check that target lexemes match tokens, following core lexicon rules.
-    2.  Check that target lexemes without a matched token were not missed by the algorithm. (Lexeme Produced = no)
-    3.  Add 1 point to the Cinderella passage if the possessive [ 's ] is used
-4.  Count any variation of mom/mother or dad/father."
-        txt
-    })
-    
-   output$results_cl <- renderTable({
-        score = selectedData()[[1]]
-        score
-    })
      
     output$plot_cl <- renderPlot({
         prod <- selectedData()[[2]] %>%
@@ -307,7 +330,23 @@ server <- function(input, output) {
         return(df)
     })
     
+   output$results_cl1 <- renderValueBox({
+        valueBox(
+            value = paste0(selectedData()[["scores"]][1], " core words"),
+            subtitle = paste0("Aphasia Percentile: ", selectedData()[["score"]][1,4], " | Control Percentile: ", selectedData()[["score"]][1,3]),
+            icon = icon("list-ol"),
+            color = "aqua"
+        )
+    })
     
+    output$results_cl2 <- renderValueBox({
+        valueBox(
+            paste0(round(selectedData()[["scores"]][2],1), " core words/min"),
+            subtitle = paste0("Aphasia Percentile: ", selectedData()[["score"]][2,4], " | Control Percentile: ", selectedData()[["score"]][2,3]),
+            icon = icon("tachometer"),
+            color = "aqua"
+        )
+    })
     
     
     # Reactive that returns the whole dataset if there is no brush
@@ -466,5 +505,5 @@ server <- function(input, output) {
     
 }
 
-# Run the application 
+# Run the application  ###################3
 shinyApp(ui = ui, server = server)

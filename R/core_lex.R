@@ -71,28 +71,28 @@ core_lex <- function(text, stimulus, age_input){
 # val = "Young boy is practicing playing soccer. Kicking the ball up and keeping it in the air. He miskicks. and and it fall goes and breaks the window of his house. of the living room actually. and bounces into the living room knocking tiger lion bear"
 # core_lex(val, 1)
 
-valueBox <- function(value, subtitle, icon, color) {
-  div(class = "col-lg-3 col-md-6",
-      div(class = "panel panel-primary",
-          div(class = "panel-heading", style = paste0("background-color:", color),
-              div(class = "row",
-                  div(class = "col-xs-3",
-                      icon(icon, "fa-5x")
-                  ),
-                  div(class = ("col-xs-9 text-right"),
-                      div(style = ("font-size: 56px; font-weight: bold;"),
-                          textOutput(value)
-                      ),
-                      div(subtitle)
-                  )
-              )
-          ),
-          div(class = "panel-footer",
-              div(class = "clearfix")
-          )
-      )
-  )
-}
+# valueBox <- function(value, subtitle, icon, color) {
+#   div(class = "col-lg-3 col-md-6",
+#       div(class = "panel panel-primary",
+#           div(class = "panel-heading", style = paste0("background-color:", color),
+#               div(class = "row",
+#                   div(class = "col-xs-3",
+#                       icon(icon, "fa-5x")
+#                   ),
+#                   div(class = ("col-xs-9 text-right"),
+#                       div(style = ("font-size: 56px; font-weight: bold;"),
+#                           textOutput(value)
+#                       ),
+#                       div(subtitle)
+#                   )
+#               )
+#           ),
+#           div(class = "panel-footer",
+#               div(class = "clearfix")
+#           )
+#       )
+#   )
+# }
 
 transcriptDefault <- "Young boy is practicing playing soccer. Kicking the ball up and keeping it in the air. He miskicks. and and it fall goes and breaks the window of his house. of the living room actually. and bounces into the living room knocking a lamp over where his father is sitting. the father picks up the soccer ball. Looks out the window. And calls for the little boy to come and explain."
 
