@@ -1,17 +1,24 @@
-/* Get a fancy font from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:500');
-
-html {
-  font-size: 15px;
-  font-family: Roboto;
+#img-id{
+  position: absolute;
+  right: 15px;
+  top: 20px;
+  color: #FFFFFF;
 }
 
-body {
-  padding-right: 1%;
-  font-size: 1rem;
+#rc{
+  position: absolute;
+  right: 50px;
+  top: 22px;
+  font-size: 1.5rem;
+  color: #FFFFFF;
 }
 
-.navbar {
-    background-color: #a9a9a9;
+#sg{
+  position: absolute;
+  right: 165px;
+  top: 22px;
+  font-size: 1.5rem;
+  color: #FFFFFF;
 }
+
 
