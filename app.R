@@ -26,35 +26,35 @@ source(here('R', 'core_lex.R'))
 ###################### UI ###################
 ui <- 
     tagList(
+        #setup
         use_waiter(),
         waiter_preloader(html = spin_dots(), color = "#2c3e50"), #html = spin_dots(), color = "#f0f0f0"
         useShinydashboard(),
-        tags$style(type = 'text/css',
-                   '.bg-aqua {background-color: #55a998!important; }
-                   .form-control {color: #333333!important;}
-                   .selectize-dropdown, .selectize-input, .selectize-input input  {color: #333333!important;}'
+        tags$head(
+            tags$link(rel = "shortcut icon", href = "favicon.png", type="image/png"),
+            tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+            tags$title("Aphasia Discourse")
         ),
-                   
+        #app
         navbarPage(
+
             theme = bslib::bs_theme(secondary = "#55a998", success = "#55a998", 
                                     base_font = font_google("Open Sans"), `enable-gradients` = TRUE, 
                                     `enable-shadows` = TRUE, bootswatch = "flatly"),
             fluid = T, 
+            #windowTitle = "Aphasia Discourse",
             title = div("Aphasia Discourse Analysis",
                           tags$a(id = "img-id",
                           href = "https://github.com/rbcavanaugh/clinical-discourse",
-                          icon("github"),
-                          style = "position: absolute; right: 15px; top: 25px; font-size: 1rem; color: #FFFFFF;"
+                          icon("github")
                         ),
                         tags$a(id = "rc",
                           href = "https://github.com/rbcavanaugh/clinical-discourse",
-                          "Sarah Grace Dalton",
-                          style = "position: absolute; right: 50px; top: 25px; font-size: .9rem; color: #FFFFFF;"
+                          "Sarah Grace Dalton"
                         ),
                         tags$a(id = "sg",
-                          href = "https://github.com/rbcavanaugh/clinical-discourse",
-                          "Rob Cavanaugh",
-                          style = "position: absolute; right: 175px; top: 25px; font-size: .9rem; color: #FFFFFF;"
+                          href = "https://robcavanaugh.com",
+                          "Rob Cavanaugh"
                         )
             ),
 
@@ -62,7 +62,7 @@ ui <-
                  tabPanel("Core Lexicon",
                               sidebarLayout(
                                   sidebarPanel(width = 3,
-                                      selectInput("stim", h5("Select Stimulus"),
+                                      selectInput("stim", "Select Stimulus",
                                                   c("Broken Window" = 'broken_window',
                                                     "Cat Rescue" = 'cat_rescue',
                                                     "Refused Umbrella" = 'refused_umbrella',
@@ -74,7 +74,7 @@ ui <-
                                       ),
                                       
                                       textAreaInput("transcr",
-                                                    h5("Enter Transcript"),
+                                                    "Enter Transcript",
                                                     value = transcriptDefault,
                                                     height = '300px'),
                                       

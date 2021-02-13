@@ -1,5 +1,5 @@
 # need to give a way for clinicians to take away or add points manually to adjust the score...
-
+library(tibble)
 broken_window=tibble(c("a","and","ball","be","boy","break","go","he","in",
                        "it","kick","lamp","look","of","out","over","play","sit",
                        "soccer","the","through","to","up","window"))
