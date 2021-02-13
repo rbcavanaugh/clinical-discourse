@@ -1,6 +1,6 @@
 
 #### Packages ####
-
+library(tibble)
 library(tibble)
 library(scales)
 library(ggplot2)
@@ -13,7 +13,11 @@ library(here)
 library(DT)
 library(truncnorm)
 library(shinyjs)
+library(shiny)
 library(shinydashboard)
+library(shinydashboardPlus)
+
+#library(bs4Dash)
 
 #### Setup files ####
 # need to give a way for clinicians to take away or add points manually to adjust the score...
@@ -95,7 +99,8 @@ body <- dashboardBody(
               
    fluidRow(
       column(width = 3,
-             box(solidHeader = T, status = 'primary', title = "Step 1: Enter Transcript",
+             boxPlus(solidHeader = T, status = 'primary', title = "Step 1: Enter Transcript",
+                 closable = F, 
                  width = NULL,
                  radioButtons("stim", "Elicitation Task:",
                               c("Broken Window" = 'broken_window',
@@ -116,8 +121,9 @@ body <- dashboardBody(
       ),
 
       column(width = 5,
-             box(
+             boxPlus(
                 title = "Step 2: Check Scoring",
+                closable = F, 
                 tags$ol(
                    tags$li("Check target lexemes = tokens, following published rules."), 
                    tags$li("Check that target lexemes without a matched token were not missed by the algorithm. (Lexeme Produced = no)"), 
@@ -136,8 +142,9 @@ body <- dashboardBody(
       ),
       column(width = 4, 
              fluidRow(
-                box(title = "Step 3: Review Core Lexicon Analysis Results",
+                boxPlus(title = "Step 3: Review Core Lexicon Analysis Results",
                     width = NULL,
+                    closable = F, 
                     solidHeader = T, status = "primary",
                 tabBox(
                   side = "right",
@@ -151,8 +158,9 @@ body <- dashboardBody(
 
                 )
                 ),
-                box(
+                boxPlus(
                    title = "References",
+                   closable = F, 
                    solidHeader = T,
                    status = "primary",
                    collapsible = T,
@@ -170,8 +178,7 @@ tabItem(tabName = 'ld')
 )
 
 #### header ####
-header <- dashboardHeader(title = "Aphasia Discourse Analysis",
-                          titleWidth = "20%",
+header <- dashboardHeaderPlus(title = "Aphasia Discourse Analysis",
                           tags$li(tags$a(target = "_blank", href = 'https://robcavanaugh.com',"Rob Cavanaugh"),  class= 'dropdown'),
                           tags$li(tags$a(target = "_blank", href = 'https://www.marquette.edu/speech-pathology-audiology/building-rehabilitation-advances-in-neurscience-lab.php', "Sarah Grace Dalton"),  class= 'dropdown'),
                           tags$li(tags$a(target = "_blank", href = 'https://github.com/rbcavanaugh',tags$img(icon("github"))), class= 'dropdown')
@@ -189,7 +196,7 @@ sidebar <- dashboardSidebar(collapsed = F,
                  )
 )
 # Define UI for application that draws a histogram
-ui <- dashboardPage(
+ui <- dashboardPagePlus(
    # Application title
    header,
    # Sidebar with a slider input for number of bins 
@@ -413,6 +420,9 @@ server <- function(input, output) {
 }
 
 ##### Run the application ####
-shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server )
+
+# runGist("3f1de92df0a0bb59688f609e6637d2f1")
+
 
 #         
