@@ -19,7 +19,7 @@ library(waiter)
 library(bslib)
 library(shinydashboard)
 library(shinyWidgets)
-
+library(rhandsontable)
 # load info 
 source(here('R', 'core_lex.R'))
 
@@ -33,15 +33,15 @@ ui <-
         tags$head(
             tags$link(rel = "shortcut icon", href = "favicon.png", type="image/png"),
             tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+            tags$script(src="javascript.js"),
             tags$title("Aphasia Discourse")
         ),
         #app
         navbarPage(
-
             theme = bslib::bs_theme(secondary = "#55a998", success = "#55a998", 
                                     base_font = font_google("Open Sans"), `enable-gradients` = TRUE, 
                                     `enable-shadows` = TRUE, bootswatch = "flatly"),
-            fluid = T, 
+            fluid = T,collapsible = T, 
             #windowTitle = "Aphasia Discourse",
             title = div("Aphasia Discourse Analysis",
                           tags$a(id = "img-id",
@@ -49,7 +49,7 @@ ui <-
                           icon("github")
                         ),
                         tags$a(id = "rc",
-                          href = "https://github.com/rbcavanaugh/clinical-discourse",
+                          href = "https://www.marquette.edu/speech-pathology-audiology/building-rehabilitation-advances-in-neurscience-lab.php",
                           "Sarah Grace Dalton"
                         ),
                         tags$a(id = "sg",
@@ -58,9 +58,10 @@ ui <-
                         )
             ),
 
-                 
+             ########### core lex ##########   
                  tabPanel("Core Lexicon",
-                              sidebarLayout(
+                          
+                          sidebarLayout(
                                   sidebarPanel(width = 3,
                                       selectInput("stim", "Select Stimulus",
                                                   c("Broken Window" = 'broken_window',
@@ -106,10 +107,8 @@ ui <-
                                   column(width = 6,
                                          tabsetPanel(
                                             tabPanel("Results",br(),
-                                                #box(width = NULL,
                                                 valueBoxOutput("results_cl1", width = NULL),
                                                 valueBoxOutput("results_cl2", width = NULL),
-                                              # ),
                                                 box(width = NULL,
                                                 plotOutput("plot_cl", height = '300px')
                                                 )
@@ -145,36 +144,58 @@ ui <-
                                   
                                   textAreaInput("transcrMC",
                                                 h5("Enter Transcript"),
-                                                value = transcriptDefault,
+                                                value = transcriptDefault,# transcriptDefault,
                                                 height = '300px'),
-                                  
-                                  actionButton("buttonMC", "Send Feedback", style = 'float:right;')
+
+                                  actionButton("buttonMC", "Send Feedback")
                               ),
                               mainPanel(width = 9,
                                   fluidRow(
-                                    column(width = 6,
+                                    column(width = 7,
                                          tabsetPanel(
-                                             tabPanel("Check Scoring", 
-                                                    h4("Instructions"),
-                                                    tags$ol(
-                                                        tags$li("Check that target lexemes match tokens, following core lexicon rules."),
-                                                        tags$li("Check that target lexemes without a matched token were not missed by the algorithm. (Lexeme Produced = no)"),
-                                                        tags$li("Add 1 point to the Cinderella passage if the possessive [ 's ] is used"),
-                                                        tags$li("Count any variation of mom/mother or dad/father.")
-                                                    )),
-                                                    #DTOutput("table_cl")), 
+                                             tabPanel("Check Scoring", br(),
+                                                    box(width = NULL,
+                                                        div(id='hottable', 
+                                                        rHandsontableOutput("hotable1")
+                                                        )
+                                                        #DT::DTOutput('foo')
+                                                    )
+                                                    ), 
                                                     tabPanel("Detailed Instructions",
                                                              textOutput("scoring_mc"))
                                          )
                                       ),
-                                    column(width = 6,
-                                           #tableOutput("results_cl"),
-                                           #plotOutput("plot_cl"),
-                                           tags$ol(
-                                               tags$li("Dalton, S. G., Hubbard, H. I., & Richardson, J. D. (2019). Moving toward non-transcription based discourse analysis in stable and progressive aphasia. In Seminars in speech and language. Thieme Medical Publishers."),
-                                               tags$li("Dalton, S. G., & Richardson, J. D. (2015). Core-lexicon and main-concept production during picture-sequence description in adults without brain damage and adults with aphasia. American Journal of Speech-Language Pathology, 24(4), S923-S938."),
-                                               tags$li("Kim, H., & Wright, H. H. (2020, January). A tutorial on core lexicon: development, use, and application. In Seminars in speech and language (Vol. 41, No. 01, pp. 020-031). Thieme Medical Publishers."),
-                                               tags$li("Silge J, Robinson D (2016). tidytext: Text Mining and Analysis Using Tidy Data Principles in R. JOSS, 1(3). doi: 10.21105/joss.00037")
+                                    column(width = 5,
+                                           tabsetPanel(
+                                               tabPanel("Instructions", br(),
+                                                        tags$ol(
+                                                            tags$li("We can use this area to provide a list of the main concepts and scoring info"),
+                                                            tags$li("This content can change based on which task is selected in the left menu. "),
+                                                            tags$li("If you click on results, right now I've shown the kind of data we can track from this table. As the transcript changes, the table to the left and the results will also change."),
+                                                            tags$li("Below I've done a crude calculation of the number correct for each concept (not sure if that matters) and the order based on when the first concept was presented (Regardless of accuracy right now, though that can change)."),
+                                                            tags$li("Based on certain rules or potentially some analyses of existing data, we could potentially use a model to pre-set guesses for each sentence about the concept or the accuracy. ")
+                                                        )
+                                                   
+                                               ),
+                                               tabPanel("Results",br(),
+                                                        DTOutput('table_out'),br(),
+                                                        tableOutput('results_ht_out')
+                                                        #valueBoxOutput("results_ld1", width = NULL),
+                                                        #valueBoxOutput("results_ld2", width = NULL),
+                                                        #valueBoxOutput("results_ld3", width = NULL),
+                                                        # box(width = NULL,
+                                                        #     plotOutput("plot_cl", height = '300px')
+                                                        # )
+                                               ),
+                                               tabPanel("References",
+                                                        br(),
+                                                        tags$ol(
+                                                            tags$li("Dalton, S. G., Hubbard, H. I., & Richardson, J. D. (2019). Moving toward non-transcription based discourse analysis in stable and progressive aphasia. In Seminars in speech and language. Thieme Medical Publishers."), br(),
+                                                            tags$li("Dalton, S. G., & Richardson, J. D. (2015). Core-lexicon and main-concept production during picture-sequence description in adults without brain damage and adults with aphasia. American Journal of Speech-Language Pathology, 24(4), S923-S938."),br(),
+                                                            tags$li("Kim, H., & Wright, H. H. (2020, January). A tutorial on core lexicon: development, use, and application. In Seminars in speech and language (Vol. 41, No. 01, pp. 020-031). Thieme Medical Publishers."),br(),
+                                                            tags$li("Silge J, Robinson D (2016). tidytext: Text Mining and Analysis Using Tidy Data Principles in R. JOSS, 1(3). doi: 10.21105/joss.00037")
+                                                        )
+                                               )
                                            )
                                     )
                                   )
@@ -223,14 +244,26 @@ ui <-
                                       
                                       ),
                                       column(width = 6,
-                                             tableOutput("resultsLD"),
-                                             #plotOutput("plot_cl"),
-                                             tags$ol(
-                                                 tags$li("Dalton, S. G., Hubbard, H. I., & Richardson, J. D. (2019). Moving toward non-transcription based discourse analysis in stable and progressive aphasia. In Seminars in speech and language. Thieme Medical Publishers."),
-                                                 tags$li("Dalton, S. G., & Richardson, J. D. (2015). Core-lexicon and main-concept production during picture-sequence description in adults without brain damage and adults with aphasia. American Journal of Speech-Language Pathology, 24(4), S923-S938."),
-                                                 tags$li("Kim, H., & Wright, H. H. (2020, January). A tutorial on core lexicon: development, use, and application. In Seminars in speech and language (Vol. 41, No. 01, pp. 020-031). Thieme Medical Publishers."),
-                                                 tags$li("Silge J, Robinson D (2016). tidytext: Text Mining and Analysis Using Tidy Data Principles in R. JOSS, 1(3). doi: 10.21105/joss.00037")
+                                             tabsetPanel(
+                                                 tabPanel("Results",br(),
+                                                          valueBoxOutput("results_ld1", width = NULL),
+                                                          valueBoxOutput("results_ld2", width = NULL),
+                                                          valueBoxOutput("results_ld3", width = NULL),
+                                                          # box(width = NULL,
+                                                          #     plotOutput("plot_cl", height = '300px')
+                                                          # )
+                                                 ),
+                                                 tabPanel("References",
+                                                          br(),
+                                                          tags$ol(
+                                                              tags$li("Dalton, S. G., Hubbard, H. I., & Richardson, J. D. (2019). Moving toward non-transcription based discourse analysis in stable and progressive aphasia. In Seminars in speech and language. Thieme Medical Publishers."), br(),
+                                                              tags$li("Dalton, S. G., & Richardson, J. D. (2015). Core-lexicon and main-concept production during picture-sequence description in adults without brain damage and adults with aphasia. American Journal of Speech-Language Pathology, 24(4), S923-S938."),br(),
+                                                              tags$li("Kim, H., & Wright, H. H. (2020, January). A tutorial on core lexicon: development, use, and application. In Seminars in speech and language (Vol. 41, No. 01, pp. 020-031). Thieme Medical Publishers."),br(),
+                                                              tags$li("Silge J, Robinson D (2016). tidytext: Text Mining and Analysis Using Tidy Data Principles in R. JOSS, 1(3). doi: 10.21105/joss.00037")
+                                                          )
+                                                 )
                                              )
+
                                       )
                                   )
                               )
@@ -244,7 +277,7 @@ ui <-
 server <- function(input, output) {
 
     ###### Core Lex ####################################
-   # bs_themer()
+   #bs_themer()
     observeEvent(input$button, {
         showModal(
             modalDialog(
@@ -312,24 +345,9 @@ server <- function(input, output) {
         
     })
     
+#### value boxes ####   
     
-    output$resultsLD <- renderTable({
-        
-        window = as.numeric(input$mattr_w)
-        # save input as a variable
-        transcript <- as.character(input$transcrLD)
-        wim <- round(qdap::diversity(as.character(transcript))$shannon,2)
-        m <- round(MATTR(tokenize(as.character(transcript), lang = "en", format = 'obj'), window = window)@MATTR$MATTR,2)
-        ttr <- round(TTR(tokenize(as.character(transcript), lang = "en", format = 'obj'))@TTR,2)
-        df <- tibble(
-            `Moving Average TTR` = m,
-            TTR = ttr,
-            `Word Information Measure` = wim
-        )
-        
-        return(df)
-    })
-    
+   #core lex production
    output$results_cl1 <- renderValueBox({
         valueBox(
             value = paste0(selectedData()[["scores"]][1], " core words"),
@@ -338,7 +356,8 @@ server <- function(input, output) {
             color = "aqua"
         )
     })
-    
+   
+    # core lex efficiency
     output$results_cl2 <- renderValueBox({
         valueBox(
             paste0(round(selectedData()[["scores"]][2],1), " core words/min"),
@@ -347,6 +366,115 @@ server <- function(input, output) {
             color = "aqua"
         )
     })
+    
+    #wim
+    output$results_ld1 <- renderValueBox({
+        valueBox(
+            value = round(qdap::diversity(as.character(input$transcr))$shannon,2),
+            subtitle = paste0("Word Information Measure"),
+            icon = icon("book"),
+            color = "aqua"
+        )
+    })
+    #mattr
+    output$results_ld2 <- renderValueBox({
+        valueBox(
+            value = round(MATTR(tokenize(as.character(input$transcr), lang = "en", format = 'obj'), window = 5)@MATTR$MATTR,2),
+            subtitle = paste0("Moving Average Type Token Ratio"),
+            icon = icon("book-open"),
+            color = "aqua"
+        )
+    })
+    #ttr
+    output$results_ld3 <- renderValueBox({
+        valueBox(
+            value = round(TTR(tokenize(as.character(input$transcr), lang = "en", format = 'obj'))@TTR,2),
+            subtitle = paste0("Type Token Ratio"),
+            icon = icon("newspaper"),
+            color = "aqua"
+        )
+    })
+    
+    
+    
+
+   ################## main concept stuff ##################
+
+   
+
+    data <- reactive({
+
+        df <- tibble(Sentence = as.character(qdap::sent_detect_nlp(input$transcrMC))) %>%
+            mutate(Concept = as.factor("no concept"),
+                   Correct = FALSE)
+
+    })
+        
+    
+    output$hotable1 <- renderRHandsontable({
+        concept_options = c('no concept', 'concept1', 'concept2', 'concept3', 'concept4')
+        df = data()
+        if (!is.null(df))
+            rhandsontable(df, stretchH = "all", height = "500", rowHeaders = NULL, contextMenu = FALSE) %>%
+            hot_col(col = "Concept", type = "dropdown", source = concept_options) %>%
+            hot_cols(colWidths = c(150, 40, 40),
+                     manualColumnMove = FALSE,
+                     manualColumnResize = TRUE
+            )
+        })
+    
+    hotable1_out <- reactive({
+        hot_to_r(input$hotable1) # this will convert your input into a data.frame
+    })
+    
+    output$table_out <- renderDT(hotable1_out(),
+                               options = list(dom = 'tp',pageLength = 5
+                                            )
+    )
+
+    output$results_ht_out <- renderTable({
+        mca = hotable1_out()
+        mca %>%
+            filter(Concept != 'no concept') %>%
+            mutate(rownum = row_number(),
+                   concept_num = ifelse(Correct == TRUE, 1, 0)) %>%
+            group_by(Concept) %>%
+            summarize(total_correct = sum(concept_num),
+                      order = min(rownum))
+
+    })
+    
+    # output$results_ht_out2 <- renderTable({
+    #     mca = hotable1_out()
+    #     len = nrow(mca)
+    #     mca %>%
+    #         #filter(Concept != 'no concept') %>%
+    #         mutate(rownum = row_number(),
+    #                concept_num = ifelse(Correct == TRUE, 1, 0)) %>%
+    #         group_by(Concept) %>%
+    #         summarize(order = min(row_num))
+    #     
+    # })
+    # 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        
+    #########################################################
+    
+    
+    
+    
+    
+    
     
     
     # Reactive that returns the whole dataset if there is no brush
@@ -507,3 +635,116 @@ server <- function(input, output) {
 
 # Run the application  ###################3
 shinyApp(ui = ui, server = server)
+
+
+
+
+
+
+
+
+
+
+
+
+
+# data <- reactive({
+# 
+#     df <- tibble(Sentence = qdap::sent_detect_nlp(input$transcrMC))
+#     rows = nrow(df)
+#     
+#     for (i in 1:rows) {
+#         df$Concept[i] <- as.character(selectInput(inputId = paste0("sel", i),
+#                                                   label="",
+#                                                   choices = c("select", seq(1,8,1)),
+#                                                   width = "75px"))
+#         df$Correct[i] <- as.character(selectInput(paste0("cor", i),
+#                                                   "",
+#                                                   choices = c("select", "yes", "no"),
+#                                                   width = "75px"))
+#     }
+#     
+#    return(df)
+# 
+# })
+#     
+# 
+# output$foo = DT::renderDataTable(
+#     data(),
+#     escape = FALSE,
+#     selection = 'none',
+#     server = FALSE,
+#     editable = list(target = "column", disable = list(columns = c(2,3))),
+#     options = list(dom = 't',
+#                    ordering = FALSE,
+#                    scrollY = "70vh",
+#                    scroller = TRUE,
+#                    fixedColumns = list(heightMatch = 'none'),
+#                    scrollCollapse = TRUE,
+#                    paging = FALSE),
+#     callback = JS("table.rows().every(function(i, tab, row) {
+#     var $this = $(this.node());
+#     $this.attr('id', this.data()[0]);
+#     $this.addClass('shiny-input-container');
+#   });
+#   Shiny.unbindAll(table.table().node());
+#   Shiny.bindAll(table.table().node());")
+# )
+# 
+# 
+# proxyTeams <- dataTableProxy("foo")
+# 
+# newdata <- reactive({
+#     observeEvent(input$foo_cell_edit, {
+#         info <- input$foo_cell_edit
+#         i <- info$row
+#         j <- info$col + 1L  # column index offset by 1
+#         v <- info$value
+#         data()
+#         data()[i, j] <- coerceValue(v, data()[i, j])
+#         replaceData(proxyTeams, data(), resetPaging = FALSE, rownames = FALSE)  # important
+#     })
+# })
+#    
+#         output$newdat = renderDT(data(),
+#                           options = list(dom = '',
+#                                          ordering = FALSE,
+#                                          scrollY = "70vh",
+#                                          scroller = TRUE,
+#                                          fixedColumns = list(heightMatch = 'none'),
+#                                          scrollCollapse = TRUE,
+#                                          paging = FALSE
+#                           )
+#         )
+# 
+# 
+
+# observe({ data()
+#     
+#     # when it updates, 
+#     isolate({
+#         new_table = NULL
+#         new_table <- reactive({
+#             row_num = nrow(data())
+#             out <- tibble(
+#                 text_order = as.character(seq(1,row_num,1)),
+#                 concepts = unlist(sapply(1:row_num, function(i) input[[paste0("sel", i)]])),
+#                 accuracy = unlist(sapply(1:row_num, function(i) input[[paste0("cor", i)]]))
+#             )
+#             out
+#             
+#         })
+#         
+#         output$newdat = renderDT(new_table(),
+#                           options = list(dom = '',
+#                                          ordering = FALSE,
+#                                          scrollY = "70vh",
+#                                          scroller = TRUE,
+#                                          fixedColumns = list(heightMatch = 'none'),
+#                                          scrollCollapse = TRUE,
+#                                          paging = FALSE
+#                           )
+#             )
+#             
+#     })
+# })
