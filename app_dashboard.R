@@ -24,10 +24,9 @@ library(shinyjs)
 source(here('R', 'core_lex.R'))
 
 ###################### UI ###################
-ui <- 
-  tagList(
+ui <- tagList(
     #setup
-    mobileDetect('isMobile'),
+  mobileDetect('isMobile'),
     useShinyjs(),
     use_waiter(),
     waiter_preloader(html = spin_dots(), color = "#2c3e50"), #html = spin_dots(), color = "#f0f0f0"
@@ -35,7 +34,7 @@ ui <-
     tags$head(
       tags$link(rel = "shortcut icon", href = "favicon.png", type="image/png"),
       tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
-      tags$script(src="javascript.js"),
+      #tags$script(src="javascript.js"),
       tags$title("Aphasia Discourse")
     ),
     #app
@@ -46,8 +45,15 @@ ui <-
                               `enable-shadows` = TRUE, bootswatch = "flatly"),
       fluid = T,collapsible = T, 
       #windowTitle = "Aphasia Discourse",
+      
+      
+      
       title = htmlOutput('title_isitmobile'),
       
+      
+      
+      
+
       ########### core lex ##########   
       tabPanel("Core Lexicon",
                
@@ -254,7 +260,7 @@ ui <-
                  )
                )
       )
-    )
+      )
   )
 
 ######## server ########
@@ -674,37 +680,43 @@ server <- function(input, output) {
     ifelse(input$isMobile,
            return("Aphasia Discourse Analysis"),
            return( div("Aphasia Discourse Analysis",
-                       tags$a(id = "img-id",
-                              href = "https://github.com/rbcavanaugh/clinical-discourse",
-                              icon("github")),
-                       tags$a(id = "rc",
-                              href = "https://www.marquette.edu/speech-pathology-audiology/building-rehabilitation-advances-in-neurscience-lab.php",
-                              "Sarah Grace Dalton"),
-                       tags$a(id = "sg",
-                              href = "https://robcavanaugh.com",
-                              "Rob Cavanaugh"))))
+               tags$a(id = "img-id",
+                      href = "https://github.com/rbcavanaugh/clinical-discourse",
+                      icon("github")),
+               tags$a(id = "rc",
+                      href = "https://www.marquette.edu/speech-pathology-audiology/building-rehabilitation-advances-in-neurscience-lab.php",
+                      "Sarah Grace Dalton"),
+               tags$a(id = "sg",
+                      href = "https://robcavanaugh.com",
+                      "Rob Cavanaugh"))))
   })
   
   observeEvent(input$isMobile, {
     if (input$isMobile)
       return(appendTab(inputId = "bigpage",
-                       tabPanel("Contact Us",
-                                fluidRow(
-                                  column(width = 12,
-                                         box(tags$a(id = "img-id2",
-                                                    href = "https://github.com/rbcavanaugh/clinical-discourse",
-                                                    icon("github"),
-                                                    "Source Code")),
-                                         box(tags$a(id = "sg2",
-                                                    icon("external-link"),
-                                                    href = "https://robcavanaugh.com",
-                                                    "Rob Cavanaugh")),
-                                         box(tags$a(id = "rc2",
-                                                    href = "https://www.marquette.edu/speech-pathology-audiology/building-rehabilitation-advances-in-neurscience-lab.php",
-                                                    icon("external-link"),
-                                                    "Sarah Grace Dalton")))
-                                ))))
+              tabPanel("Contact Us",
+                       fluidRow(
+                         column(width = 12,
+                           box(tags$a(id = "img-id2",
+                                  href = "https://github.com/rbcavanaugh/clinical-discourse",
+                                  icon("github"),
+                                  "Source Code")),
+                           box(tags$a(id = "sg2",
+                                  icon("external-link"),
+                                  href = "https://robcavanaugh.com",
+                                  "Rob Cavanaugh")),
+                           box(tags$a(id = "rc2",
+                                      href = "https://www.marquette.edu/speech-pathology-audiology/building-rehabilitation-advances-in-neurscience-lab.php",
+                                      icon("external-link"),
+                                      "Sarah Grace Dalton")))
+    ))))
   })
+  
+
+
+  
+  
+  
   
 }
 
@@ -717,4 +729,198 @@ shinyApp(ui = ui, server = server)
 
 
 
+
+
+
+
+
+
+# data <- reactive({
+# 
+#     df <- tibble(Sentence = qdap::sent_detect_nlp(input$transcrMC))
+#     rows = nrow(df)
+#     
+#     for (i in 1:rows) {
+#         df$Concept[i] <- as.character(selectInput(inputId = paste0("sel", i),
+#                                                   label="",
+#                                                   choices = c("select", seq(1,8,1)),
+#                                                   width = "75px"))
+#         df$Correct[i] <- as.character(selectInput(paste0("cor", i),
+#                                                   "",
+#                                                   choices = c("select", "yes", "no"),
+#                                                   width = "75px"))
+#     }
+#     
+#    return(df)
+# 
+# })
+#     
+# 
+# output$foo = DT::renderDataTable(
+#     data(),
+#     escape = FALSE,
+#     selection = 'none',
+#     server = FALSE,
+#     editable = list(target = "column", disable = list(columns = c(2,3))),
+#     options = list(dom = 't',
+#                    ordering = FALSE,
+#                    scrollY = "70vh",
+#                    scroller = TRUE,
+#                    fixedColumns = list(heightMatch = 'none'),
+#                    scrollCollapse = TRUE,
+#                    paging = FALSE),
+#     callback = JS("table.rows().every(function(i, tab, row) {
+#     var $this = $(this.node());
+#     $this.attr('id', this.data()[0]);
+#     $this.addClass('shiny-input-container');
+#   });
+#   Shiny.unbindAll(table.table().node());
+#   Shiny.bindAll(table.table().node());")
+# )
+# 
+# 
+# proxyTeams <- dataTableProxy("foo")
+# 
+# newdata <- reactive({
+#     observeEvent(input$foo_cell_edit, {
+#         info <- input$foo_cell_edit
+#         i <- info$row
+#         j <- info$col + 1L  # column index offset by 1
+#         v <- info$value
+#         data()
+#         data()[i, j] <- coerceValue(v, data()[i, j])
+#         replaceData(proxyTeams, data(), resetPaging = FALSE, rownames = FALSE)  # important
+#     })
+# })
+#    
+#         output$newdat = renderDT(data(),
+#                           options = list(dom = '',
+#                                          ordering = FALSE,
+#                                          scrollY = "70vh",
+#                                          scroller = TRUE,
+#                                          fixedColumns = list(heightMatch = 'none'),
+#                                          scrollCollapse = TRUE,
+#                                          paging = FALSE
+#                           )
+#         )
+# 
+# 
+
+# observe({ data()
+#     
+#     # when it updates, 
+#     isolate({
+#         new_table = NULL
+#         new_table <- reactive({
+#             row_num = nrow(data())
+#             out <- tibble(
+#                 text_order = as.character(seq(1,row_num,1)),
+#                 concepts = unlist(sapply(1:row_num, function(i) input[[paste0("sel", i)]])),
+#                 accuracy = unlist(sapply(1:row_num, function(i) input[[paste0("cor", i)]]))
+#             )
+#             out
+#             
+#         })
+#         
+#         output$newdat = renderDT(new_table(),
+#                           options = list(dom = '',
+#                                          ordering = FALSE,
+#                                          scrollY = "70vh",
+#                                          scroller = TRUE,
+#                                          fixedColumns = list(heightMatch = 'none'),
+#                                          scrollCollapse = TRUE,
+#                                          paging = FALSE
+#                           )
+#             )
+#             
+#     })
+# })
+
+
+
+
+
+
+
+
+
+
+
+########### try 2
+
+
+# data <- reactiveValues({
+#   
+#   out = tibble(Sentence = qdap::sent_detect_nlp(input$transcrMC),
+#                Concept = "select",
+#                Correct = 0)
+#   
+# })
+# 
+# 
+# output$foo = DT::renderDataTable(
+#   data$out,
+#   escape = FALSE,
+#   selection = 'none',
+#   server = FALSE,
+#   editable = list(target = "column", disable = list(columns = 1)),
+#   options = list(dom = 't',
+#                  ordering = FALSE,
+#                  scrollY = "70vh",
+#                  scroller = TRUE,
+#                  fixedColumns = list(heightMatch = 'none'),
+#                  scrollCollapse = TRUE,
+#                  paging = FALSE),
+#   callback = JS("table.rows().every(function(i, tab, row) {
+#         var $this = $(this.node());
+#         $this.attr('id', this.data()[0]);
+#         $this.addClass('shiny-input-container');
+#       });
+#       Shiny.unbindAll(table.table().node());
+#       Shiny.bindAll(table.table().node());")
+# )
+# 
+# 
+# proxy = dataTableProxy('foo')
+# 
+# # observeEvent(input$foo_cell_edit, {
+# #     x = data()
+# #     info = input$foo_cell_edit
+# #     str(info)
+# #     i = info$row
+# #     j = info$col
+# #     v = info$value
+# #     x[i, j] <<- DT::coerceValue(v, x[i, j])
+# #     replaceData(proxy, x, resetPaging = FALSE)  # important
+# # })
+# 
+# 
+# observeEvent(input$foo_cell_edit, {
+#   data$out <<- editData(data$out, input$foo_cell_edit, 'foo')
+# })
+# 
+# output$newdat = renderDT(data$out,
+#                          options = list(dom = '',
+#                                         ordering = FALSE,
+#                                         scrollY = "70vh",
+#                                         scroller = TRUE,
+#                                         fixedColumns = list(heightMatch = 'none'),
+#                                         scrollCollapse = TRUE,
+#                                         paging = FALSE
+#                          )
+# )
+# 
+# 
+# output$results_ht_out <- renderTable({
+#   mca = data$out
+#   mca %>%
+#     filter(Concept != 'select') %>%
+#     mutate(rownum = row_number()) %>% #,
+#     #concept_num = ifelse(Correct == TRUE, 1, 0)) %>%
+#     group_by(Concept) %>%
+#     summarize(total_correct = sum(Correct),
+#               order = min(rownum))
+#   
+# })
+# 
 
