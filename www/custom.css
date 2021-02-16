@@ -22,15 +22,15 @@
 
 #img-id {
   position: absolute;
-  right: 15px;
-  top: 25px;
+  right: 25px;
+  top: 22px;
   font-size: 1rem;
   color: #FFFFFF;
 }
 
 #rc {
   position: absolute;
-  right: 50px;
+  right: 60px;
   top: 25px;
   font-size:
   .9rem; color: #FFFFFF;
@@ -38,11 +38,15 @@
 
 #sg {
 position: absolute;
-right: 175px;
+right: 190px;
 top: 25px;
 font-size: .9rem;
 color: #FFFFFF;
 }
 
 
+.nav>li>a:active, .nav>li>a:focus, .nav>li>a:hover {
+    color: #444;
+    background: transparent!important; 
+}
 

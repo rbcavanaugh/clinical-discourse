@@ -68,7 +68,7 @@ core_lex <- function(text, stimulus, age_input){
 
 mobileDetect <- function(inputId, value = 0) {
   tagList(
-    singleton(tags$head(tags$script(src = "js/javascript.js"))),
+    #singleton(tags$head(tags$script(src = "js/javascript.js"))),
     tags$input(id = inputId,
                class = "mobile-element",
                type = "hidden"

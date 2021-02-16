@@ -5,8 +5,8 @@ account: rb-cavanaugh
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3632753
-bundleId: 4227011
+bundleId: 4227791
 url: https://rb-cavanaugh.shinyapps.io/aphasia-clinical-discourse/
-when: 1613423996.14597
+when: 1613439535.29742
 asMultiple: FALSE
 asStatic: FALSE

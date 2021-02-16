@@ -35,15 +35,17 @@ ui <-
     tags$head(
       tags$link(rel = "shortcut icon", href = "favicon.png", type="image/png"),
       tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+      tags$script(src = "js/javascript.js"),
       tags$script(src="javascript.js"),
-      tags$title("Aphasia Discourse")
+      tags$title("Aphasia Discourse"),
+      includeHTML(("analytics.html"))
     ),
     #app
     navbarPage(
       id = "bigpage",
       theme = bslib::bs_theme(secondary = "#55a998", success = "#55a998", 
                               base_font = font_google("Open Sans"), `enable-gradients` = TRUE, 
-                              `enable-shadows` = TRUE, bootswatch = "flatly"),
+                              `enable-shadows` = TRUE, bootswatch = "flatly", spacer = "1rem"),
       fluid = T,collapsible = T, 
       #windowTitle = "Aphasia Discourse",
       title = htmlOutput('title_isitmobile'),
@@ -135,7 +137,7 @@ ui <-
                               textAreaInput("transcrMC",
                                             h5("Enter Transcript"),
                                             value = transcriptDefault,# transcriptDefault,
-                                            height = '300px'),
+                                            height = '400px'),
                               
                               actionButton("button2", "Send Feedback", style = "float: right;")
                  ),
@@ -214,19 +216,19 @@ ui <-
                            fluidRow(
                              column(width = 6,
                                     tabsetPanel(
-                                      tabPanel("Check Scoring", 
+                                      tabPanel("Scoring", 
                                                h4("Instructions"),
                                                tags$ol(
                                                  tags$li("Check that target lexemes match tokens, following core lexicon rules."),
                                                  tags$li("Check that target lexemes without a matched token were not missed by the algorithm. (Lexeme Produced = no)"),
                                                  tags$li("Add 1 point to the Cinderella passage if the possessive [ 's ] is used"),
                                                  tags$li("Count any variation of mom/mother or dad/father.")
-                                               )),
+                                               ))#,
                                       # DTOutput("table_cl")), 
-                                      tabPanel("Detailed Instructions",
-                                               textOutput("scoring_ld"))
+                                    #   tabPanel("Detailed Instructions",
+                                    #            textOutput("scoring_ld"))
+                                    # )
                                     )
-                                    
                              ),
                              column(width = 6,
                                     tabsetPanel(
@@ -437,16 +439,16 @@ server <- function(input, output) {
     for (i in 1:nrow(df)) {
       df$Concept[i] <- as.character(pickerInput(inputId = paste0(get_sel_id(), i),
                                                 label="",
-                                                choices = c("no concept", seq(1,8,1)),
-                                                width = "140px"))
+                                                choices = c("no concept", seq(1,8,1)), #
+                                                width = "115px"))
       # df$Correct[i] <- as.character(selectInput(inputId = paste0(get_cor_id(), i),
       #                                           label="",
       #                                           choices = c("select", 0,1),
       #                                           width = "75px"))
       df$Correct[i] <- as.character(shinyWidgets::awesomeCheckbox(paste0(get_cor_id(), i),
                                                   label="",
-                                                  value = FALSE,
-                                                  width = "50px"))
+                                                  value = FALSE #width = "40px",
+                                                  ))
     }
     df
   })
@@ -465,8 +467,8 @@ server <- function(input, output) {
                    fixedColumns = list(heightMatch = 'none'),
                    scrollCollapse = TRUE,
                    paging = FALSE,
-                   columnDefs = list(list(className = 'dt-right', targets = 3),
-                                     list(className = 'dt-bottom', targets = 3))
+                   columnDefs = list(list(className = 'dt-center dt-bottom', targets = 3),
+                                     list(className = 'dt-top', targets = 2))
     ),
     callback = JS("table.rows().every(function(i, tab, row) {
         var $this = $(this.node());
@@ -668,12 +670,19 @@ server <- function(input, output) {
     return(table)
   })
   
-  
+
+###### mobile friendly and small screen stuff ######
   
   output$title_isitmobile <- renderUI({
-    ifelse(input$isMobile,
-           return("Aphasia Discourse Analysis"),
-           return( div("Aphasia Discourse Analysis",
+    if (input$isMobile) 
+      return("Aphasia Discourse Analysis")
+    else if (input$width < 950) 
+      return(div("Aphasia Discourse Analysis",
+                  tags$a(id = "img-id",
+                         href = "https://github.com/rbcavanaugh/clinical-discourse",
+                         icon("github"))))
+    else 
+      return(div("Aphasia Discourse Analysis",
                        tags$a(id = "img-id",
                               href = "https://github.com/rbcavanaugh/clinical-discourse",
                               icon("github")),
@@ -682,7 +691,7 @@ server <- function(input, output) {
                               "Sarah Grace Dalton"),
                        tags$a(id = "sg",
                               href = "https://robcavanaugh.com",
-                              "Rob Cavanaugh"))))
+                              "Rob Cavanaugh")))
   })
   
   observeEvent(input$isMobile, {
@@ -705,6 +714,8 @@ server <- function(input, output) {
                                                     "Sarah Grace Dalton")))
                                 ))))
   })
+  
+
   
 }
 
