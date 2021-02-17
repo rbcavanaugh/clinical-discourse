@@ -19,6 +19,8 @@ library(waiter)
 library(bslib)
 library(shinydashboard)
 library(shinyWidgets)
+library(htmlwidgets)
+library(slickR)
 library(shinyjs)
 # load info 
 source(here('R', 'core_lex.R'))
@@ -38,7 +40,7 @@ ui <-
       tags$script(src = "js/javascript.js"),
       tags$script(src="javascript.js"),
       tags$title("Aphasia Discourse"),
-      includeHTML(("analytics.html"))
+      includeHTML("www/analytics.html")
     ),
     #app
     navbarPage(
@@ -156,16 +158,15 @@ ui <-
                              ),
                              column(width = 5,
                                     tabsetPanel(
-                                      tabPanel("Instructions", br(),
-                                               tags$ol(
-                                                 tags$li("We can use this area to provide a list of the main concepts and scoring info"),
-                                                 tags$li("This content can change based on which task is selected in the left menu. "),
-                                                 tags$li("If you click on results, right now I've shown the kind of data we can track from this table. As the transcript changes, the table to the left and the results will also change."),
-                                                 tags$li("Below I've done a crude calculation of the number correct for each concept (not sure if that matters) and the order based on when the first concept was presented (Regardless of accuracy right now, though that can change)."),
-                                                 tags$li("Based on certain rules or potentially some analyses of existing data, we could potentially use a model to pre-set guesses for each sentence about the concept or the accuracy. ")
+                                      tabPanel("Instructions",
+                                               br(), 
+                                               br(),
+                                               box(width = NULL,
+                                               #h5("Main Concept Checklist"),
+                                               slickROutput("slick_output",width='90%'),
                                                )
                                                
-                                      ),
+                                     ),
                                       tabPanel("Results",br(),
                                                DTOutput('newdat'),br(),
                                                tableOutput('sel'),
@@ -504,6 +505,19 @@ server <- function(input, output) {
       group_by(Concept) %>%
       summarize(total_correct = sum(Accuracy),
                 order = min(rownum))
+    
+  })
+  
+  
+  output$slick_output <- renderSlickR({
+    
+    x <- slickR(slick,
+                slideId = 'myslick',
+                #slideType = 'p',
+                #height = 600,
+                width = '80%'
+                ) + 
+      settings(dots = T)
     
   })
   
