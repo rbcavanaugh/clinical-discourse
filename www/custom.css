@@ -1,14 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans');
+
+body {
+  font-family: "Open Sans"!important;
+}
+
 .bg-aqua {
   background-color: #55a998!important;
 }
 
-.form-control {
-  color: #333333!important;
+/*
+.btn-default {
+    color: #ffffff;
+    background-color: #607D8B!important;
+    border-color: #607D8B!important;
+}
+*/
+
+
+.btn-custom-status {
+  background-color: #fff;
+  color: #607D8B;
+  border-color: #607D8B!important;
+  border-width: 1px!important;
 }
 
-.selectize-dropdown, .selectize-input, .selectize-input input  {
-  color: #333333!important;
+.btn-custom-status:hover {
+  color: #fff;
+  background-color: #607D8B;
 }
+
+.btn-custom-status.active {
+  color: #fff;
+  background-color: #607D8B;
+  border-color: #607D8B;
+}
+
+
+#score_mca .btn {
+  padding: 4px 4px 4px 4px;
+}
+
+#score_mca .btn-group {
+  margin: 2px;
+}
+
 
 .small-box .icon-large {
   position: absolute;
@@ -28,21 +63,6 @@
   color: #FFFFFF;
 }
 
-#rc {
-  position: absolute;
-  right: 60px;
-  top: 25px;
-  font-size: .9rem;
-  .9rem; color: #FFFFFF;
-}
-
-#sg {
-position: absolute;
-right: 190px;
-top: 25px;
-font-size: .9rem;
-color: #FFFFFF;
-}
 
 
 .nav>li>a:active, .nav>li>a:focus, .nav>li>a:hover {
@@ -50,11 +70,12 @@ color: #FFFFFF;
     background: transparent!important; 
 }
 
-/*.slick-slide {
-    text-align: left!important;
-    color: #000!important;
-    background: white;
-    width: 100%;
-    font-size: 1.2rem;
+.modal-open .modal {
+    overflow-x: auto;
+    overflow-y: auto;
 }
-*/
+
+.modal-dialog {
+    max-width: 95%!important;
+}
+

@@ -77,7 +77,7 @@ mobileDetect <- function(inputId, value = 0) {
   )
 }
 
-transcriptDefault <- "Young boy is practicing playing soccer. Kicking the ball up and keeping it in the air. He miskicks. and and it fall goes and breaks the window of his house. of the living room actually. and bounces into the living room knocking a lamp over where his father is sitting. the father picks up the soccer ball. Looks out the window. And calls for the little boy to come and explain."
+transcriptDefault <- "Young boy is practicing playing soccer. Kicking the ball up and keeping it in the air. He miskicks. It fall goes and breaks the window of his house. Of the living room actually. And bounces into the living room knocking a lamp over where his father is sitting. The father picks up the soccer ball. Looks out the window. And calls for the little boy to come and explain."
 
 refsCl <- "Dalton, S. G., Hubbard, H. I., & Richardson, J. D. (2019). Moving toward non-transcription based discourse analysis in stable and progressive aphasia. In Seminars in speech and language. Thieme Medical Publishers.\
 
@@ -122,4 +122,18 @@ s5 = tags$div(
 
 slick = slick_list(s1, s2, s3, s4, s5)
 
+
+# broken window main concepts:
+
+
+bw_mca = tibble(
+  c1 = c("The boy", "was", "outside"),
+  c2 = c("the boy", "playing", "soccer"),
+  c3 = c("The ball", "breaks", "window"),
+  c4 = c("The man", "is sitting", ""),
+  c5 = c("The man", "was startled", ""),
+  c6 = c("The ball", "broke", "a lamp"),
+  c7 = c("The man", "picked up", "the ball"),
+  c8 = c("The man", "looked", "out of the window")
+)
 
