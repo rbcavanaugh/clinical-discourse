@@ -59,8 +59,13 @@ body {
   position: absolute;
   right: 25px;
   top: 22px;
-  font-size: 1rem;
+  font-size: 2rem;
   color: #FFFFFF;
+}
+
+#mca_results {
+  padding-left: 5%;
+  padding-right: 5%
 }
 
 

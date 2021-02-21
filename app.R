@@ -2,12 +2,9 @@
 ############### load stuff ################
 library(shiny)
 library(here)
-library(dplyr)
-library(tibble)
+library(tidyverse)
 library(scales)
-library(ggplot2)
 library(patchwork)
-library(tidyr)
 library(textstem)
 library(tidytext)
 library(DT)
@@ -23,7 +20,6 @@ library(shinyWidgets)
 library(htmlwidgets)
 library(shinyjs)
 library(tokenizers)
-library(sortable)
 
 # load info 
 source(here('R', 'core_lex.R'))
@@ -167,12 +163,7 @@ ui <-
                    # scoring panels
                    conditionalPanel(condition = "output.count == true",
                      fluidRow(
-                       column(width = 1,style = "margin-top:40vh",
-                                conditionalPanel(condition = "output.countleft == true",
-                                actionButton("prev", label = "", icon = icon('arrow-left'))
-                                )
-                              ),
-                       column(width = 10,
+                       column(width = 12,
                          fluidRow(
                              box(width = NULL, height = "180px",
                              htmlOutput("img")
@@ -197,43 +188,47 @@ ui <-
                              "Check boxes for scoring accuracy go here.",
                              #box(
                                #width = NULL,
-                             box(width = NULL,
-                             column(width = 4,
-                               uiOutput("score1")
-                               ),
-                             column(width = 4,
-                               uiOutput("score2")
-                               ),
-                             column(width = 4,
-                               uiOutput("score3")
+                             column(width = 12, align = "center",
+                               box(width = NULL, id = "mca_results",
+                                   column(width = 4, align = "left",
+                                     uiOutput("score1")
+                                     ),
+                                   column(width = 4, align = "left",
+                                     uiOutput("score2")
+                                     ),
+                                   column(width = 4, align = "left",
+                                     uiOutput("score3")
+                                   )
+                               )
                              )
-                             )
+                             
                              #)
                             # )
                            #)
+                         ),
+                         fluidRow(align = "center",
+                           #column(width = 12, style = "align:center;",
+                           actionButton("prev", label = "", icon = icon('arrow-left')),
+                           actionButton("nxt", label = "",  icon = icon('arrow-right')) #style = "float:right;",
+                           
                          )
                        ),
-                       column(width = 1, style = "margin-top:40vh",
-                                conditionalPanel(condition = "output.countright == true",
-                                actionButton("nxt", label = "", style = "float:right;", icon = icon('arrow-right'))
-                                )
-                              )
                      )
                  ),
                  conditionalPanel(condition = "output.countback == true",
                                   fluidRow(
-                                    column(width = 12, style = "align:center;",
+                                    column(width = 12, align = "center",
                                            "This is the results page",
-                                           actionButton("goback", "Start Over"),
                                            tableOutput("sequencing"),
-                                           #tableOutput("accuracy"),
-                                           tableOutput("results_mca_table")
-                                           #tableOutput("results_mca_table2")
+                                           tableOutput("results_mca_table"),
+                                           actionButton("goback", "Start Over")
+                              
+                                           )
                                     )
                                   )
                  )
                )
-               )
+               
       ),
       tabPanel("About",
                box(width = NULL,
@@ -248,7 +243,7 @@ ui <-
                           "Sarah Grace Dalton")),
                box(width = NULL,
                    tags$a(id = "jr",
-                          href = "https://www.marquette.edu/speech-pathology-audiology/building-rehabilitation-advances-in-neurscience-lab.php",
+                          href = "https://shs.unm.edu/people/faculty/jessica-richardson.html",
                           icon("external-link"),
                           "Jessica Richardson")),
                box(width = NULL,
@@ -445,7 +440,7 @@ server <- function(input, output) {
   order <- eventReactive(input$nxt,{
     if(values$i==9){
     if(length(values$selected_sentences) < 2){
-        tibble(warning = "not enough data for sequencing")
+        tibble(warning = "not enough data for sequencing. try selecting more sentences next time.")
       } else {
       as_data_frame(t(map_dfr(values$selected_sentences, ~as_data_frame(t(.))))) %>%
         pivot_longer(cols = tidyselect::everything(), names_to = "concept", values_to = "sentence") %>%
@@ -491,39 +486,11 @@ server <- function(input, output) {
             TRUE ~ "missed"
           )
         ) %>%
-        unite(col = "together", accuracy, completeness, sep = "", remove = F)
+        unite(col = "Result", accuracy, completeness, sep = "", remove = F)
     }
     
   })
   
-  # results_mca2 <- eventReactive(input$nxt,{
-  #   if(values$i==9){
-  #     mca = as_data_frame(t(map_dfr(values$concept_accuracy, ~as_data_frame(t(.))))) %>%
-  #       pivot_longer(cols = tidyselect::everything(), names_to = "concept", values_to = "rating") %>%
-  #       mutate(concept = str_remove(concept, "V")) %>%
-  #       arrange(concept) %>%
-  #       mutate(component = c(rep(seq(1,3,1),3), 1,2,NA,1,2,NA,rep(seq(1,3,1),3))) %>%
-  #       drop_na() %>%
-  #       group_by(concept) %>%
-  #       summarize(absent = sum(as.numeric(rating == "Absent")),
-  #                 accurate = sum(as.numeric(rating == "Accurate")),
-  #                 inaccurate = sum(as.numeric(rating == "Inaccurate"))) %>%
-  #       summarize(
-  #         accuracy = case_when(
-  #                               inaccurate > 0 ~ "I",
-  #                               accurate > 0, "A",
-  #                               TRUE ~ "missed"
-  #                             ),
-  #       completeness = case_when(
-  #                               absent > 0 ~ "I",
-  #                               absent == 0 ~ "C",
-  #                               TRUE ~ "missed"
-  #                             )
-  #       ) %>%
-  #      unite(col = "together", accuracy, completeness, sep = "", remove = F)
-  #   }
-  # 
-  # })
   
   output$results_mca_table <- renderTable({
     results_mca()
@@ -613,10 +580,18 @@ server <- function(input, output) {
      #inline = TRUE, 
      status = "primary",
      fill = TRUE,
-     selected = "Absent"
+     selected = "Absent",
    )
    }else{}
    
+ })
+ 
+ observeEvent(input$nxt | input$prev, {
+   if(values$i == 4 || values$i == 5) {
+   shinyjs::hide("score3")
+   } else {
+     shinyjs::show("score3")
+   }
  })
  
  ##### right now, screenshot with instructions:
