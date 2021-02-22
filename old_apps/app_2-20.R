@@ -81,14 +81,8 @@ ui <-
                               numericInput("time", "Time on task (seconds)", value= 120,
                                            min = 1, max = 1200, step = 1),
                               
-                              awesomeCheckbox( inputId = "adj",
-                                label = "Possessive ['s] (Cinderella)", 
-                                
-                                value = FALSE
-                              )
-                              
-                              # sliderInput("adj", "Score Adjustment:", value= 0,
-                              #             min = -10, max = 10, step = 1)
+                              sliderInput("adj", "Score Adjustment:", value= 0,
+                                          min = -10, max = 10, step = 1)
                   ),
                  mainPanel(width = 9,
                            fluidRow(
@@ -97,8 +91,9 @@ ui <-
                                       tabPanel("Check Scoring", 
                                                br(),
                                                tags$ol(
-                                                 tags$li("Following Core-lex rules, check that target lexemes match tokens and that target lexemes without a matched token were not missed by the algorithm."),
-                                                 tags$li("Add 1 point for a possessive [ 's ] (Cinderella only)"),
+                                                 tags$li("Check that target lexemes match tokens, following core lexicon rules."),
+                                                 tags$li("Check that target lexemes without a matched token were not missed by the algorithm. (Lexeme Produced = no)"),
+                                                 tags$li("Add 1 point to the Cinderella passage if the possessive [ 's ] is used"),
                                                  tags$li("Count any variation of mom/mother or dad/father.")
                                                ),
                                                DTOutput("table_cl")), 
@@ -294,87 +289,10 @@ server <- function(input, output) {
 ######## core lexicon stuff ######
 
 # core lexicon table output
-  # output$table_cl <- renderDT({
-  #   table = selectedData2()
-  #   
-  # },options = list(dom = "ftp"))
-  
-  
-  counter2 <- reactiveVal(0)
-  get_cor_id <- reactive({
-    nrow(selectedData2())
-    isolate(counter2(counter2() + 1))
-    paste0("cor_check", counter2())
-  })
-  
-  data <- reactive({
-    df = selectedData2()
-    for (i in 1:nrow(df)) {
-      df$Correct[i] <- as.character(shinyWidgets::awesomeCheckbox(paste0(get_cor_id(), i),
-                                                                  label="",
-                                                                  #width = "20px",
-                                                                  value = df$produced[i],
-                                                                  status = "primary"
-      ))
-    }
-    df %>% dplyr::select(-produced)
-  })
-  
-  
-  output$table_cl = DT::renderDataTable(
-    data(),
-    escape = FALSE,
-    selection = 'none',
-    server = FALSE,
-    options = list(dom = 't',
-                   ordering = TRUE,
-                   scrollY = "400px",
-                   #scroller = TRUE,
-                   fixedColumns = list(heightMatch = 'none'),
-                   #scrollCollapse = TRUE,
-                   columnDefs = list(list(className = 'dt-center', targets = 0:3)),
-                   paging = FALSE
-    ),
-    callback = JS(
-      "table.rows().every(function(i, tab, row) {
-        var $this = $(this.node());
-        $this.attr('id', this.data()[0]);
-        $this.addClass('shiny-input-container');
-      });
-      Shiny.unbindAll(table.table().node());
-      Shiny.bindAll(table.table().node());")
-  )
-  
-  
-  
-  score_num_data <- reactive({
-    accuracy = unlist(sapply(1:nrow(data()), function(i) input[[paste0(get_cor_id(), i)]]))
+  output$table_cl <- renderDT({
+    table = selectedData2()
     
-    return(sum(as.numeric(accuracy)))
-
-  })
-
-  output$sel = renderTable({
-    score_num()
-  })
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  },options = list(dom = "ftp"))
   
  # core lexicon results plot 
   output$plot_cl <- renderPlot({
@@ -524,18 +442,14 @@ server <- function(input, output) {
     if(length(values$selected_sentences) < 2){
         tibble(warning = "not enough data for sequencing. try selecting more sentences next time.")
       } else {
-      sen_df = sentences() %>% mutate(sentence_num = row_number()) %>% rename(sentence = txt)
       as_data_frame(t(map_dfr(values$selected_sentences, ~as_data_frame(t(.))))) %>%
         pivot_longer(cols = tidyselect::everything(), names_to = "concept", values_to = "sentence") %>%
         mutate(concept = str_remove(concept, "V")) %>%
       arrange(concept) %>%
-      drop_na() %>%
-        left_join(sen_df, by = "sentence")
+      drop_na()
       }
     }
   })
-  
-  
   
   acc <- eventReactive(input$nxt,{
     if(values$i==9){
@@ -686,34 +600,60 @@ server <- function(input, output) {
    img_val = values$i
    tags$img(src = file.path(paste('c', img_val, '.png', sep='')), width = "100%")
  })
+ #####
+  
+  # observeEvent(selected(),{
+  #   values$scored[[values$i]] = tibble(Sentence = round(values$i,0),
+  #                                      CIUs = length(input$click_sentence),
+  #                                      Words = nrow(sentences() %>% unnest_tokens(word, txt, to_lower = FALSE)))
+  #   
+  #   values$out_cius[values$i] = input$click_sentence
+  #   values$out_words[values$i] = sentences() %>% unnest_tokens(word, txt, to_lower = FALSE)
+  #   values$out_sentences[values$i] = sentences()
+  # })
+  
+  # data <- reactive({
+  #   df = sentences()
+  #   for (i in 1:nrow(df)) {
+  #     df$Concept[i] <- as.character(pickerInput(inputId = paste0(get_sel_id(), i),
+  #                                               label="",
+  #                                               choices = c("no concept", seq(1,8,1)), #
+  #                                               width = "115px"))
+  #     df$Correct[i] <- as.character(shinyWidgets::awesomeCheckbox(paste0(get_cor_id(), i),
+  #                                                 label="",
+  #                                                 value = FALSE #width = "40px",
+  #                                                 ))
+  #   }
+  #   df
+  # })
 
+  # table_out <- reactive({
+  #   concepts = unlist(sapply(1:nrow(data()), function(i) input[[paste0(get_sel_id(), i)]]))
+  #   accuracy = unlist(sapply(1:nrow(data()), function(i) input[[paste0(get_cor_id(), i)]]))
+  #   
+  #   results = sentences()
+  #   results$Concept = concepts
+  #   results$Accuracy = accuracy
+  #   results
+  # })
+  
 
-
-
+  
+  
+  
+  
+  
+  
+  
   #########################################################
   
- # this makes the table for scoring....
- # reactive data
- selectedData2 <- reactive({
-   task = case_when(
-     input$stim == 'broken_window' ~ 1,
-     input$stim == 'refused_umbrella' ~ 2,
-     input$stim == 'cat_rescue' ~ 3,
-     input$stim == 'cinderella' ~ 4,
-     input$stim == 'sandwich' ~ 5,
-     input$stim == 'gdc' ~ 6,
-     input$stim == 'picnic' ~ 7
-   )
-   df <- core_lex(input$transcr, task, input$age)
-   options = list(show = 10)
-   table = df$match %>%
-     rename('Target Lexeme' = target_lemma,
-            'Token Produced' = token
-     )
-   return(table)
- })
- 
- # this calculates the scores....
+  
+  
+  
+  
+  
+  
+  
   # Reactive that returns the whole dataset if there is no brush
   selectedData <- reactive({
     
@@ -727,14 +667,8 @@ server <- function(input, output) {
       input$stim == 'picnic' ~ 7
     )
     
-    #df <- core_lex(input$transcr, task, input$age)
-    #matches <- df$match
-    score_num = score_num_data() + input$adj #sum(matches$produced) +
-    score_eff = score_num/(input$time/60)
+    # ACCURACY ####
     
-    # Norn data ####
-    
-    # ACCURACY #
     norm_mean = case_when(
       input$stim == 'broken_window' ~ list(c(19, 2.9, 12, 23)),
       input$stim == 'refused_umbrella' ~ list(c(26.5, 3.1, 17, 33)),
@@ -751,7 +685,7 @@ server <- function(input, output) {
       input$stim == 'sandwich' ~ list(c(11.3, 5.4, 0, 23))
     )
     
-    # EFFICIENCY 
+    # EFFICIENCY ####
     
     norm_mean_eff = case_when(
       input$stim == 'broken_window' ~ list(c(34.8, 13.5, 6.7, 72.9)),
@@ -777,6 +711,11 @@ server <- function(input, output) {
       input$stim == 'cinderella' ~ 94,
       input$stim == 'sandwich' ~ 25
     )
+    
+    df <- core_lex(input$transcr, task, input$age)
+    matches <- df$match
+    score_num = sum(matches$produced) + input$adj
+    score_eff = score_num/(input$time/60)
     
     dist1 = truncnorm::rtruncnorm(10000,
                                   mean = norm_mean[[1]][[1]],
@@ -805,10 +744,6 @@ server <- function(input, output) {
                                   a = aphasia_mean_eff[[1]][[3]],
                                   b = aphasia_mean_eff[[1]][[4]])
     percentile4 = label_percent()(ecdf(dist4)(score_eff))
-    
-    
-    #####
-    
     
     score = tibble(
       Metric = c('Production', 'Efficiency'),
@@ -851,8 +786,29 @@ server <- function(input, output) {
     return(core_lex_data) # make this a list with the data for the histograms too. 
     
   })
-
   
+  
+  selectedData2 <- reactive({
+    task = case_when(
+      input$stim == 'broken_window' ~ 1,
+      input$stim == 'refused_umbrella' ~ 2,
+      input$stim == 'cat_rescue' ~ 3,
+      input$stim == 'cinderella' ~ 4,
+      input$stim == 'sandwich' ~ 5,
+      input$stim == 'gdc' ~ 6,
+      input$stim == 'picnic' ~ 7
+    )
+    df <- core_lex(input$transcr, task, input$age)
+    options = list(show = 10)
+    table = df$match %>%
+      mutate(produced = ifelse(produced == 1, 'yes', 'no')) %>%
+      rename('Target Lexeme' = target_lemma,
+             'Lexeme Produced?' = produced,
+             'Token' = token)
+    return(table)
+  })
+  
+
 ###### mobile friendly and small screen stuff ######
   
   # output$title_isitmobile <- renderUI({

@@ -1,0 +1,13 @@
+name: clinical-discourse
+title: clinical-discourse
+username:
+account: rb-cavanaugh
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3675766
+bundleId: 4254602
+url: https://rb-cavanaugh.shinyapps.io/clinical-discourse/
+when: 1613968563.48177
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: old_apps

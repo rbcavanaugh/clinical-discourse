@@ -84,3 +84,10 @@ body {
     max-width: 95%!important;
 }
 
+table.dataTable tbody td {
+    max-width: 30px;
+}
+
+.awesome-checkbox label::after {
+  padding-left: 0px;
+}
