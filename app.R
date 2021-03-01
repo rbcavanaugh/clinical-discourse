@@ -9,11 +9,7 @@ library(textstem)
 library(tidytext)
 library(DT)
 library(truncnorm)
-# library(koRpus)
-# set.kRp.env(lang="en")
-# koRpus.lang.en::lang.support.en()
 library(waiter)
-#library(bslib)
 library(shinythemes)
 library(shinydashboard)
 library(shinyWidgets)
@@ -23,8 +19,7 @@ library(tokenizers)
 
 # load info 
 source(here('R', 'core_lex.R'))
-
-
+source(here('R', 'main_concept.R'))
 
 ###################### UI ###################
 ui <- 
@@ -37,6 +32,7 @@ ui <-
     tags$head(
       tags$link(rel = "shortcut icon", href = "favicon.png", type="image/png"),
       tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+      tags$link(rel = "stylesheet", type = "text/css", href = "mca_css.css"),
       tags$script(src = "js/javascript.js"),
       tags$script(src="javascript.js"),
       tags$title("Aphasia Discourse"),
@@ -170,7 +166,7 @@ ui <-
                      fluidRow(
                        column(width = 12,
                          fluidRow(
-                             box(width = NULL, height = "180px",
+                             box(width = NULL, height = "210px",
                              htmlOutput("img")
                              
                            )
@@ -195,15 +191,19 @@ ui <-
                                #width = NULL,
                              column(width = 12, align = "center",
                                box(width = NULL, id = "mca_results",
-                                   column(width = 4, align = "left",
+                                   column(width = 3, align = "left",
                                      uiOutput("score1")
                                      ),
-                                   column(width = 4, align = "left",
+                                   column(width = 3, align = "left",
                                      uiOutput("score2")
                                      ),
-                                   column(width = 4, align = "left",
+                                   column(width = 3, align = "left",
                                      uiOutput("score3")
-                                   )
+                                     ),
+                                   column(width = 3, align = "left",
+                                     uiOutput("score4")
+                                     ) 
+                                   
                                )
                              )
                              
@@ -299,7 +299,7 @@ server <- function(input, output) {
   #   
   # },options = list(dom = "ftp"))
   
-  
+  # core lex counter
   counter2 <- reactiveVal(0)
   get_cor_id <- reactive({
     nrow(selectedData2())
@@ -320,7 +320,7 @@ server <- function(input, output) {
     df %>% dplyr::select(-produced)
   })
   
-  
+  ####core lex table #####
   output$table_cl = DT::renderDataTable(
     data(),
     escape = FALSE,
@@ -360,22 +360,6 @@ server <- function(input, output) {
   
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
  # core lexicon results plot 
   output$plot_cl <- renderPlot({
     prod <- selectedData()[[2]] %>%
@@ -383,7 +367,7 @@ server <- function(input, output) {
              met = factor(ifelse(dist == 'dist1' | dist == 'dist2', 'Production', 'Efficiency'),
                           levels = c('Production', 'Efficiency'))
       ) %>%
-      filter(met == "Production") %>%
+      dplyr::filter(met == "Production") %>%
       ggplot(aes(x = val, color = Cohort, fill = Cohort)) +
       geom_density(alpha = .3) +
       geom_vline(data = data.frame(xint=selectedData()[[3]][[1]],met="Production"), 
@@ -404,7 +388,7 @@ server <- function(input, output) {
              met = factor(ifelse(dist == 'dist1' | dist == 'dist2', 'Production', 'Efficiency'),
                           levels = c('Production', 'Efficiency'))
       ) %>%
-      filter(met == "Efficiency") %>%
+      dplyr::filter(met == "Efficiency") %>%
       ggplot(aes(x = val, color = Cohort, fill = Cohort)) +
       geom_density(alpha = .3) +
       geom_vline(data = data.frame(xint=selectedData()[[3]][[2]],met="Efficiency"), 
@@ -457,42 +441,119 @@ server <- function(input, output) {
                           concept_accuracy = list()
   )
   
+  observeEvent(input$goback,{
+    values$i=0
+    values$concept = list()
+    values$selected_sentences = list()
+    values$concept_accuracy = list()
+  })
+  
+  observeEvent(input$start,{ 
+    values$i=0
+    values$concept = list()
+    values$selected_sentences = list()
+    values$concept_accuracy = list()
+  })
+  
+  stim_task <- reactive({
+    tibble(
+    stim = input$stimMC,
+    stim_num = if(input$stimMC == 'broken_window'){1
+    } else if(input$stimMC=='cat_rescue'){2
+    } else if(input$stimMC == 'refused_umbrella'){3
+    } else if(input$stimMC == 'cinderella'){4
+    } else if(input$stimMC == 'sandwich'){5
+    } else {0},
+    num_slides = if(input$stimMC == 'broken_window'){8
+    } else if(input$stimMC=='cat_rescue'){10
+    } else if(input$stimMC == 'refused_umbrella'){10
+    } else if(input$stimMC == 'cinderella'){34
+    } else if(input$stimMC == 'sandwich'){10
+    } else {0}
+    )
+  })
+  
+ 
+  
   
   # counter functions for conditional panels ####
+  
+  # page 1 getting started
   output$countzero <- reactive({
     values$i==0
   })
   outputOptions(output, "countzero", suspendWhenHidden = FALSE)
   
+  # show panel with scoring
   output$count <- reactive({
-    values$i>0&&values$i<9
+    if(stim_task()$stim == 'broken_window'){
+      values$i>0&&values$i<9
+    } else if(stim_task()$stim=='cat_rescue'){
+      values$i>0&&values$i<11
+    } else if(stim_task()$stim == 'refused_umbrella'){
+      values$i>0&&values$i<11
+    } else if(stim_task()$stim == 'cinderella'){
+      values$i>0&&values$i<35
+    } else if(stim_task()$stim == 'sandwich'){
+      values$i>0&&values$i<11
+    } else {}
   })
   outputOptions(output, "count", suspendWhenHidden = FALSE)
   
+  # does a left arrow appear?
   output$countleft <- reactive({
     values$i>0
   })
   outputOptions(output, "countleft", suspendWhenHidden = FALSE)
   
+  # does a right arrow appear?
   output$countright <- reactive({
-    values$i>0&&values$i<9
+    if(stim_task()$stim == 'broken_window'){
+      values$i>0&&values$i<9
+    } else if(stim_task()$stim=='cat_rescue'){
+      values$i>0&&values$i<11
+    } else if(stim_task()$stim == 'refused_umbrella'){
+      values$i>0&&values$i<11
+    } else if(stim_task()$stim == 'cinderella'){
+      values$i>0&&values$i<35
+    } else if(stim_task()$stim == 'sandwich'){
+      values$i>0&&values$i<11
+    } else {}
   })
   outputOptions(output, "countright", suspendWhenHidden = FALSE)
   
+  # is there a start-over button?
   output$countback <- reactive({
-    values$i>8
+    if(stim_task()$stim == 'broken_window'){
+      values$i>8
+    } else if(stim_task()$stim=='cat_rescue'){
+      values$i>10
+    } else if(stim_task()$stim == 'refused_umbrella'){
+      values$i>10
+    } else if(stim_task()$stim == 'cinderella'){
+      values$i>34
+    } else if(stim_task()$stim == 'sandwich'){
+      values$i>10
+    } else {}
   })
   outputOptions(output, "countback", suspendWhenHidden = FALSE)
   
   
   #counter fnctions to change page contents ######
   # note this also saves the input data to the reactive list 'values' #####
+  # this is probably ok for the time being
   observeEvent(input$nxt,{
-
+    
+    score = c(input$accuracy1, input$accuracy2, input$accuracy3, input$accuracy4)
+    len = length(score)
+    component = seq(1,len,1)
+    concept = rep(values$i, len)
+    
     values$concept[[values$i]] = values$i
     values$selected_sentences[[values$i]] = input$score_mca
-    values$concept_accuracy[[values$i]] = c(input$accuracy1, input$accuracy2, input$accuracy3)
-
+    values$concept_accuracy[[values$i]] = tibble(rating = score,
+                                                 component = component,
+                                                 concept = concept)
     values$i <- values$i + 1
   })
   
@@ -520,42 +581,50 @@ server <- function(input, output) {
   
   
   order <- eventReactive(input$nxt,{
-    if(values$i==9){
-    if(length(values$selected_sentences) < 2){
-        tibble(warning = "not enough data for sequencing. try selecting more sentences next time.")
-      } else {
-      sen_df = sentences() %>% mutate(sentence_num = row_number()) %>% rename(sentence = txt)
-      as_data_frame(t(map_dfr(values$selected_sentences, ~as_data_frame(t(.))))) %>%
-        pivot_longer(cols = tidyselect::everything(), names_to = "concept", values_to = "sentence") %>%
-        mutate(concept = str_remove(concept, "V")) %>%
-      arrange(concept) %>%
-      drop_na() %>%
-        left_join(sen_df, by = "sentence")
-      }
+    if(values$i==stim_task()$num_slides+1){
+      if(length(values$selected_sentences) < 2){
+          tibble(warning = "not enough data for sequencing. try selecting more sentences next time.")
+        } else {
+        sen_df = sentences() %>% mutate(sentence_num = row_number()) %>% rename(sentence = txt)
+        as_data_frame(t(map_dfr(values$selected_sentences, ~as_data_frame(t(.))))) %>%
+          pivot_longer(cols = tidyselect::everything(), names_to = "concept", values_to = "sentence") %>%
+          mutate(concept = str_remove(concept, "V")) %>%
+        arrange(concept) %>%
+        drop_na() %>%
+          left_join(sen_df, by = "sentence")
+        }
     }
   })
   
   
   
-  acc <- eventReactive(input$nxt,{
-    if(values$i==9){
-      as_data_frame(t(map_dfr(values$concept_accuracy, ~as_data_frame(t(.))))) %>%
-        pivot_longer(cols = tidyselect::everything(), names_to = "concept", values_to = "rating") %>%
-        mutate(concept = str_remove(concept, "V")) %>%
-        arrange(concept) %>%
-        mutate(component = c(rep(seq(1,3,1),3), 1,2,NA,1,2,NA,rep(seq(1,3,1),3))) %>%
-      drop_na()
-    }
+  #### ok trickier bits
+  
+  component_df <- reactive({
+    tmp = main_concepts %>%
+      dplyr::filter(task == input$stimMC) %>%
+      mutate(new = seq2(from = 1, to = concept_length, by = 1))
+    
+    tibble(
+      a = unlist(tmp$new)
+    )
+  })
+
+  filter_na_concepts <- reactive({
+    main_concepts %>%
+      ungroup() %>%
+      dplyr::filter(task == input$stimMC) %>% #'broken_window') %>%#
+      dplyr::select(id, 2:5) %>%
+      pivot_longer(cols= 2:5, names_to = "component", values_to = "element") %>%
+      mutate(component = as.numeric(str_remove(component, "e"))) %>%
+      rename(concept = id)
   })
   
   results_mca <- eventReactive(input$nxt,{
-    if(values$i==9){
-      mca = as_data_frame(t(map_dfr(values$concept_accuracy, ~as_data_frame(t(.))))) %>%
-        pivot_longer(cols = tidyselect::everything(), names_to = "concept", values_to = "rating") %>%
-        mutate(concept = str_remove(concept, "V")) %>%
-        arrange(concept) %>%
-        mutate(component = c(rep(seq(1,3,1),3), 1,2,NA,1,2,NA,rep(seq(1,3,1),3))) %>%
-        drop_na() %>%
+    if(values$i==stim_task()$num_slides+1){
+      mca = bind_rows(values$concept_accuracy) %>%
+        left_join(filter_na_concepts(), by = c('concept', 'component')) %>%
+        drop_na(element) %>%
         group_by(concept) %>%
         summarize(absent = sum(as.numeric(rating == "Absent")),
                   accurate = sum(as.numeric(rating == "Accurate")),
@@ -564,7 +633,7 @@ server <- function(input, output) {
           accuracy = case_when(
             inaccurate > 0 ~ "I",
             accurate > 0 ~ "A",
-            TRUE ~ "I"
+            TRUE ~ "Absent"
           ),
           completeness = case_when(
             absent > 0 ~ "I",
@@ -572,11 +641,20 @@ server <- function(input, output) {
             TRUE ~ "missed"
           )
         ) %>%
-        unite(col = "Result", accuracy, completeness, sep = "", remove = F)
-    }
+        mutate(completeness = ifelse(accuracy == "Absent", "", completeness)) %>%
+        unite(col = "Result", accuracy, completeness, sep = "", remove = F) %>%
+        left_join(scoring_mca, by = "Result")
+    } else {}
     
   })
   
+  # output_results <- eventReactive(input$nxt,{ # change this to download....
+  #     if(values$i==stim_task()$num_slides+1){
+  #       mca = bind_rows(values$concept_accuracy) %>%
+  #         left_join(filter_na_concepts(), by = c('concept', 'component')) %>%
+  #         drop_na(element)
+  #     } else {}
+  # })
   
   output$results_mca_table <- renderTable({
     results_mca()
@@ -625,12 +703,16 @@ server <- function(input, output) {
     
   })
   
+  scoring_df <- reactive({
+    main_concepts %>%
+      dplyr::filter(task == input$stimMC)
+  })
   # accuracy scoring x3 #######
  output$score1 <- renderUI({
-   if(values$i<9){
+   if(values$i<stim_task()$num_slides+1){
    prettyRadioButtons(
      inputId = "accuracy1",
-     label = bw_mca[1, values$i], 
+     label = scoring_df()[values$i, 2], 
      choices = c("Accurate", "Inaccurate", "Absent"),
      #inline = TRUE, 
      status = "primary",
@@ -643,10 +725,10 @@ server <- function(input, output) {
  })
  
  output$score2 <- renderUI({
-   if(values$i<9){
+   if(values$i<stim_task()$num_slides+1){
    prettyRadioButtons(
      inputId = "accuracy2",
-     label = bw_mca[2, values$i], 
+     label = scoring_df()[values$i, 3], 
      choices = c("Accurate", "Inaccurate", "Absent"),
      #inline = TRUE, 
      status = "primary",
@@ -657,26 +739,66 @@ server <- function(input, output) {
    
  })
  
+ 
+ dontshow <- reactive({
+   tmp = main_concepts %>%
+     dplyr::filter(task == input$stimMC) %>%
+     ungroup() %>%
+     dplyr::select(e3) %>%
+     slice(values$i)
+ })
+ 
+ 
  output$score3 <- renderUI({
-   if(values$i<9){
+   if(values$i<stim_task()$num_slides+1){
+     if(anyNA(dontshow())){} else {
    prettyRadioButtons(
      inputId = "accuracy3",
-     label = bw_mca[3, values$i], 
+     label = scoring_df()[values$i, 4], 
      choices = c("Accurate", "Inaccurate", "Absent"),
      #inline = TRUE, 
      status = "primary",
      fill = TRUE,
      selected = "Absent",
    )
+     } 
    }else{}
    
  })
  
+ output$score4 <- renderUI({
+     prettyRadioButtons(
+       inputId = "accuracy4",
+       label = scoring_df()[values$i, 5], 
+       choices = c("Accurate", "Inaccurate", "Absent"),
+       #inline = TRUE, 
+       status = "primary",
+       fill = TRUE,
+       selected = "Absent",
+     )
+ })
+ 
+ # observeEvent(input$nxt | input$prev, {
+ #   if(stim_task()$stim_num == 1 && values$i == 4 || values$i == 5) {
+ #   shinyjs::hide("score3")
+ #   } else if(stim_task()$stim_num == 2 && values$i == 6){
+ #     shinyjs::hide("score3")
+ #   } else if(stim_task()$stim_num == 3 && values$i == 1 || values$i == 5){
+ #     shinyjs::hide("score3")
+ #   } else if(stim_task()$stim_num == 4 && values$i == 6 || values$i == 7 || values$i == 9 || values$i == 10 || values$i == 12 || values$i == 14 || values$i == 19 || values$i == 32 || values$i == 33 || values$i == 34){
+ #     shinyjs::hide("score3")
+ #   } else if(stim_task()$stim_num == 5 && values$i == 3 || values$i == 4 || values$i == 5){
+ #     shinyjs::hide("score3")
+ #   } else {
+ #     shinyjs::show("score3")
+ #   }
+ # })
+
  observeEvent(input$nxt | input$prev, {
-   if(values$i == 4 || values$i == 5) {
-   shinyjs::hide("score3")
+   if(values$i != 16){
+     shinyjs::hide("score4")
    } else {
-     shinyjs::show("score3")
+     shinyjs::show("score4")
    }
  })
  
@@ -684,7 +806,16 @@ server <- function(input, output) {
  
  output$img <- renderUI({
    img_val = values$i
-   tags$img(src = file.path(paste('c', img_val, '.png', sep='')), width = "100%")
+   paste_val = if(input$stimMC == 'broken_window'){'bw'
+     } else if(input$stimMC == 'cat_rescue'){'cr'
+     } else if(input$stimMC == 'refused_umbrella'){'u'
+     } else if(input$stimMC == 'cinderella'){'c'
+     } else if(input$stimMC == 'sandwich'){'s'
+     } else {}
+   #tags$img(src = file.path(paste('c', img_val, '.png', sep='')), width = "100%")
+   if(img_val>0 && img_val < stim_task()$num_slides+1){
+   return(get(paste0(paste_val, img_val)))
+   } else {}
  })
 
 
@@ -883,239 +1014,3 @@ server <- function(input, output) {
 # Run the application  ###################3
 shinyApp(ui = ui, server = server)
 
-# counter <- reactiveVal(0)
-# get_sel_id <- reactive({
-#   nrow(sentences())
-#   isolate(counter(counter() + 1))
-#   paste0("sel", counter())
-# })
-# 
-# counter2 <- reactiveVal(0)
-# get_cor_id <- reactive({
-#   nrow(sentences())
-#   isolate(counter2(counter2() + 1))
-#   paste0("cor", counter2())
-# })
-
-# output$foo = DT::renderDataTable(
-#   data(),
-#   escape = FALSE,
-#   selection = 'none',
-#   server = FALSE,
-#   editable = list(target = "column", disable = list(columns = c(2,3))),
-#   options = list(dom = 't',
-#                  ordering = FALSE,
-#                  scrollY = "70vh",
-#                  scroller = TRUE,
-#                  fixedColumns = list(heightMatch = 'none'),
-#                  scrollCollapse = TRUE,
-#                  paging = FALSE,
-#                  columnDefs = list(list(className = 'dt-center dt-bottom', targets = 3),
-#                                    list(className = 'dt-top', targets = 2))
-#   ),
-#   callback = JS("table.rows().every(function(i, tab, row) {
-#       var $this = $(this.node());
-#       $this.attr('id', this.data()[0]);
-#       $this.addClass('shiny-input-container');
-#     });
-#     Shiny.unbindAll(table.table().node());
-#     Shiny.bindAll(table.table().node());")
-# )
-
-# output$sel = renderTable({
-#   table_out()
-# })
-
-# output$results_ht_out <- renderTable({
-#   mca = table_out()
-#   mca %>%
-#     filter(Concept != 'no concept') %>%
-#     mutate(rownum = row_number(),
-#            Accuracy = ifelse(Accuracy == TRUE, 1, 0)) %>%
-#     group_by(Concept) %>%
-#     summarize(total_correct = sum(Accuracy),
-#               order = min(rownum))
-#   
-# })
-
-
-# output$slick_output <- renderSlickR({
-#   
-#   x <- slickR(slick,
-#               slideId = 'myslick',
-#               #slideType = 'p',
-#               #height = 600,
-#               width = '80%'
-#               ) + 
-#     settings(dots = T)
-#   
-# })
-
-
-
-
-
-
-
-
-# ui
-
-# width = 9,
-# fluidRow(
-#   column(width = 7,
-#          tabsetPanel(
-#            tabPanel("Check Scoring", br(),
-#                     box(width = NULL,
-#                         DTOutput("foo")
-#                     )
-#            ), 
-#            tabPanel("Detailed Instructions",
-#                     textOutput("scoring_mc"))
-#          )
-#   ),
-#   column(width = 5,
-#          tabsetPanel(
-#            tabPanel("Instructions",
-#                     br(), 
-#                     br(),
-#                     box(width = NULL,
-#                         #h5("Main Concept Checklist"),
-#                         slickROutput("slick_output",width='90%'),
-#                     )
-#                     
-#            ),
-#            tabPanel("Results",br(),
-#                     DTOutput('newdat'),br(),
-#                     tableOutput('sel'),
-#                     tableOutput('results_ht_out')
-#                     # box(width = NULL,
-#                     #     plotOutput("plot_cl", height = '300px')
-#                     # )
-#            ),
-#            tabPanel("References",
-#                     br(),
-#                     tags$ol(
-#                       tags$li("Dalton, S. G., Hubbard, H. I., & Richardson, J. D. (2019). Moving toward non-transcription based discourse analysis in stable and progressive aphasia. In Seminars in speech and language. Thieme Medical Publishers."), br(),
-#                       tags$li("Dalton, S. G., & Richardson, J. D. (2015). Core-lexicon and main-concept production during picture-sequence description in adults without brain damage and adults with aphasia. American Journal of Speech-Language Pathology, 24(4), S923-S938."),br(),
-#                       tags$li("Kim, H., & Wright, H. H. (2020, January). A tutorial on core lexicon: development, use, and application. In Seminars in speech and language (Vol. 41, No. 01, pp. 020-031). Thieme Medical Publishers."),br(),
-#                       tags$li("Silge J, Robinson D (2016). tidytext: Text Mining and Analysis Using Tidy Data Principles in R. JOSS, 1(3). doi: 10.21105/joss.00037")
-#                     )
-#            )
-#          )
-#   )
-# )
-
-
-######## lexical diversity stuff #######
-# #wim value  box ####
-# output$results_ld1 <- renderValueBox({
-#   valueBox(
-#     value = round(qdap::diversity(as.character(input$transcr))$shannon,2),
-#     subtitle = paste0("Word Information Measure"),
-#     icon = icon("book"),
-#     color = "aqua"
-#   )
-# })
-# #mattr value box ######
-# output$results_ld2 <- renderValueBox({
-#   valueBox(
-#     value = round(MATTR(tokenize(as.character(input$transcr), lang = "en", format = 'obj'), window = 5)@MATTR$MATTR,2),
-#     subtitle = paste0("Moving Average Type Token Ratio"),
-#     icon = icon("book-open"),
-#     color = "aqua"
-#   )
-# })
-# #ttr value box #####
-# output$results_ld3 <-  renderValueBox({
-#   valueBox(
-#     value = round(TTR(tokenize(as.character(input$transcr), lang = "en", format = 'obj'))@TTR,2),
-#     subtitle = paste0("Type Token Ratio"),
-#     icon = icon("newspaper"),
-#     color = "aqua"
-#   )
-# })
-
-# feedback lexical diversity ####
-# observeEvent(input$button3, {
-#   showModal(
-#     modalDialog(
-#       title = "Feedback",
-#       tags$iframe(src = 'https://docs.google.com/forms/d/e/1FAIpQLSfrae3ucppQC_Hy2udxj5_xZwRqbkHwTzUX6PQEnpUdahAb4g/viewform?usp=sf_link',
-#                   width = '100%',
-#                   height = 500,
-#                   frameborder = 0,
-#                   marginheight = 0),
-#       easyClose = TRUE,
-#       size = "l"
-#     ))
-# })
-
-
-
-######### lexical diversity ########
-# tabPanel("Lexical Diversity",
-#          sidebarLayout(
-#            sidebarPanel(width = 3,
-#                         selectInput("stimLD", h5("Select Stimulus"),
-#                                     c("Broken Window" = 'broken_window',
-#                                       "Cat Rescue" = 'cat_rescue',
-#                                       "Refused Umbrella" = 'refused_umbrella',
-#                                       "Cinderella" = 'cinderella',
-#                                       "Sandwich" = 'sandwich'),
-#                                     selected = "broken_window"
-#                                     
-#                         ),
-#                         
-#                         textAreaInput("transcrLD",
-#                                       h5("Enter Transcript"),
-#                                       value = transcriptDefault,
-#                                       height = '300px'),
-#                         
-#                         sliderInput("mattr_w", "MATTR WINDOW:", value = 5, min = 5, max = 50),
-#                         
-#                         actionButton("button3", "Send Feedback", style = 'float:right;')
-#            ),
-#            mainPanel(width = 9,
-#                      fluidRow(
-#                        column(width = 6,
-#                               tabsetPanel(
-#                                 tabPanel("Scoring", 
-#                                          h4("Instructions"),
-#                                          tags$ol(
-#                                            tags$li("Check that target lexemes match tokens, following core lexicon rules."),
-#                                            tags$li("Check that target lexemes without a matched token were not missed by the algorithm. (Lexeme Produced = no)"),
-#                                            tags$li("Add 1 point to the Cinderella passage if the possessive [ 's ] is used"),
-#                                            tags$li("Count any variation of mom/mother or dad/father.")
-#                                          ))#,
-#                                 # DTOutput("table_cl")), 
-#                               #   tabPanel("Detailed Instructions",
-#                               #            textOutput("scoring_ld"))
-#                               # )
-#                               )
-#                        ),
-#                        column(width = 6,
-#                               tabsetPanel(
-#                                 tabPanel("Results",br(),
-#                                          valueBoxOutput("results_ld1", width = NULL),
-#                                          valueBoxOutput("results_ld2", width = NULL),
-#                                          valueBoxOutput("results_ld3", width = NULL),
-#                                          # box(width = NULL,
-#                                          #     plotOutput("plot_cl", height = '300px')
-#                                          # )
-#                                 ),
-#                                 tabPanel("References",
-#                                          br(),
-#                                          tags$ol(
-#                                            tags$li("Dalton, S. G., Hubbard, H. I., & Richardson, J. D. (2019). Moving toward non-transcription based discourse analysis in stable and progressive aphasia. In Seminars in speech and language. Thieme Medical Publishers."), br(),
-#                                            tags$li("Dalton, S. G., & Richardson, J. D. (2015). Core-lexicon and main-concept production during picture-sequence description in adults without brain damage and adults with aphasia. American Journal of Speech-Language Pathology, 24(4), S923-S938."),br(),
-#                                            tags$li("Kim, H., & Wright, H. H. (2020, January). A tutorial on core lexicon: development, use, and application. In Seminars in speech and language (Vol. 41, No. 01, pp. 020-031). Thieme Medical Publishers."),br(),
-#                                            tags$li("Silge J, Robinson D (2016). tidytext: Text Mining and Analysis Using Tidy Data Principles in R. JOSS, 1(3). doi: 10.21105/joss.00037")
-#                                          )
-#                                 )
-#                               )
-#                               
-#                        )
-#                      )
-#            )
-#          )
-# )
