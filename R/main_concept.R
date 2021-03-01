@@ -1,4 +1,5 @@
 ##### main concept ####
+library(tidyverse)
 
 # broken window main concepts:
 main_concepts <- read_csv("www/main_concepts.csv")%>%

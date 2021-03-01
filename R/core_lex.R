@@ -1,6 +1,7 @@
+library(tidyverse)
+
 # need to give a way for clinicians to take away or add points manually to adjust the score...
-library(tibble)
-library(slickR)
+
 broken_window=tibble(c("a","and","ball","be","boy","break","go","he","in",
                        "it","kick","lamp","look","of","out","over","play","sit",
                        "soccer","the","through","to","up","window"))
@@ -31,13 +32,9 @@ sandwich = tibble(c("a","and","bread","butter","get","it","jelly","knife","of", 
                     "one","other","out","peanut","piece","put","slice","spread","take",
                     "the","then","to","together","two","you"))
 
-# gdc_picnic <- read.csv(here('data', 'gdc_picnic_cleaned.csv'))[,2:4] %>%
-#   as_tibble()
-# 
-# list2env(split(gdc_picnic, gdc_picnic$story),envir=.GlobalEnv)
+
 
 corpus <- list(broken_window, refused_umbrella, cat_rescue, cinderella, sandwich)
-              #gdc, picnic)
 
 
 core_lex <- function(text, stimulus, age_input){

@@ -2,8 +2,15 @@
 ############### load stuff ################
 library(shiny)
 library(here)
-library(tidyverse)
+# library(dplyr)
+# library(tidyr)
+# library(readr)
+# library(ggplot2)
+# library(tibble)
+# library(stringr)
+# library(purrr)
 library(scales)
+library(tidyverse)
 library(patchwork)
 library(textstem)
 library(tidytext)
@@ -585,7 +592,10 @@ server <- function(input, output) {
       if(length(values$selected_sentences) < 2){
           tibble(warning = "not enough data for sequencing. try selecting more sentences next time.")
         } else {
-        sen_df = sentences() %>% mutate(sentence_num = row_number()) %>% rename(sentence = txt)
+        sen_df = sentences() %>% 
+          dplyr::mutate(sentence_num = row_number()) %>% 
+          rename(sentence = txt)
+        
         as_data_frame(t(map_dfr(values$selected_sentences, ~as_data_frame(t(.))))) %>%
           pivot_longer(cols = tidyselect::everything(), names_to = "concept", values_to = "sentence") %>%
           mutate(concept = str_remove(concept, "V")) %>%
