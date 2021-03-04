@@ -1,3 +1,10 @@
+# view all concepts for story (round button in corner?)
+# view examples for story (or for concept specifically?)
+# hover on hext to preview next MCA/previous previous MCA
+# add warning that going back will reset data. 
+
+
+
 
 ############### load stuff ################
 library(shiny)
@@ -173,7 +180,7 @@ ui <-
                      fluidRow(
                        column(width = 12,
                          fluidRow(
-                             box(width = NULL, height = "210px",
+                             box(width = NULL, height = "250px",
                              htmlOutput("img")
                              
                            )
@@ -706,7 +713,9 @@ server <- function(input, output) {
       #label = "Select Concept",
       choices = unique(df$txt),
       direction = "vertical",
-      selected = sel(),
+      selected = if (length(values$selected_sentences)>=values$i && values$i>0){
+        values$selected_sentences[[values$i]]
+      } else {sel()},
       status = "custom-status"
     )
     )
@@ -718,6 +727,8 @@ server <- function(input, output) {
       dplyr::filter(task == input$stimMC)
   })
   # accuracy scoring x3 #######
+  
+
  output$score1 <- renderUI({
    if(values$i<stim_task()$num_slides+1){
    prettyRadioButtons(
@@ -727,10 +738,11 @@ server <- function(input, output) {
      #inline = TRUE, 
      status = "primary",
      fill = TRUE,
-     selected = "Absent"
-    
+     selected = if (length(values$concept_accuracy)>=values$i && values$i>0){
+       values$concept_accuracy[[values$i]][1,1]
+       } else {"Absent"}
    )
-     }else{}
+     } else {}
    
  })
  
@@ -743,7 +755,9 @@ server <- function(input, output) {
      #inline = TRUE, 
      status = "primary",
      fill = TRUE,
-     selected = "Absent"
+     selected = if (length(values$concept_accuracy)>=values$i && values$i>0){
+       values$concept_accuracy[[values$i]][2,1]
+     } else {"Absent"}
    )
      }else{}
    
@@ -769,7 +783,9 @@ server <- function(input, output) {
      #inline = TRUE, 
      status = "primary",
      fill = TRUE,
-     selected = "Absent",
+     selected = if (length(values$concept_accuracy)>=values$i && values$i>0){
+       values$concept_accuracy[[values$i]][3,1]
+     } else {"Absent"}
    )
      } 
    }else{}
@@ -784,7 +800,9 @@ server <- function(input, output) {
        #inline = TRUE, 
        status = "primary",
        fill = TRUE,
-       selected = "Absent",
+       selected = if (length(values$concept_accuracy)>=values$i && values$i>0){
+         values$concept_accuracy[[values$i]][4,1]
+       } else {"Absent"}
      )
  })
  
