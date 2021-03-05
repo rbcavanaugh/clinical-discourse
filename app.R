@@ -1,21 +1,11 @@
-# view all concepts for story (round button in corner?)
-# view examples for story (or for concept specifically?)
-# hover on hext to preview next MCA/previous previous MCA
-# add warning that going back will reset data. 
-
-
-
+# view all concepts for story
+# view examples for story or for that specific concept?
+# remove back arrow when values == 1
+# download of data
 
 ############### load stuff ################
 library(shiny)
 library(here)
-# library(dplyr)
-# library(tidyr)
-# library(readr)
-# library(ggplot2)
-# library(tibble)
-# library(stringr)
-# library(purrr)
 library(scales)
 library(tidyverse)
 library(patchwork)
@@ -30,7 +20,7 @@ library(shinyWidgets)
 library(htmlwidgets)
 library(shinyjs)
 library(tokenizers)
-
+library(shinyBS)
 # load info 
 source(here('R', 'core_lex.R'))
 source(here('R', 'main_concept.R'))
@@ -81,7 +71,6 @@ ui <-
                                           # "Good Dog Carl" = 'gdc',
                                           #"Picnic" = 'picnic'),
                               ),
-                              
                               textAreaInput("transcr",
                                             "Enter Transcript",
                                             value = transcriptDefault,
@@ -91,10 +80,11 @@ ui <-
                               numericInput("time", "Time on task (seconds)", value= 120,
                                            min = 1, max = 1200, step = 1),
                               
-                              awesomeCheckbox( inputId = "adj",
+                              awesomeCheckbox(inputId = "adj",
                                 label = "Possessive ['s] (Cinderella)", 
-                                
-                                value = FALSE
+                                value = FALSE, #bigger = T, 
+                                #icon = icon("check"),
+                                status = "primary"
                               )
                               
                               # sliderInput("adj", "Score Adjustment:", value= 0,
@@ -150,7 +140,8 @@ ui <-
                                             "Refused Umbrella" = 'refused_umbrella',
                                             "Cinderella" = 'cinderella',
                                             "Sandwich" = 'sandwich'),
-                                          selected = "broken_window"
+                                          selected = "broken_window"  
+                                         
                               ),
                               
                               textAreaInput("type",
@@ -158,7 +149,7 @@ ui <-
                                             value = transcriptDefault,# transcriptDefault,
                                             height = '400px'),
                               
-                              actionButton("button2", "See All Concepts", style = "float: right;")
+                              actionButton("button3", "Restart Scoring", style = "float: right;")
                  ),
                  mainPanel(
                    conditionalPanel(condition = "output.countzero == true",
@@ -177,6 +168,13 @@ ui <-
                                     ),
                    # scoring panels
                    conditionalPanel(condition = "output.count == true",
+                                    actionButton(
+                                      inputId = "help",
+                                      label = "I'm not sure",
+                                      #color = "default",
+                                      #style = "unite", 
+                                      icon = icon("question")
+                                    ),
                      fluidRow(
                        column(width = 12,
                          fluidRow(
@@ -275,12 +273,12 @@ ui <-
 
 ######## server ########
 # Define server logic required to draw a histogram
-server <- function(input, output) {
+server <- function(input, output, session) {
   
   ###### Core Lex Stuff ####################################
 ###### stuff that doesn't matter right now.... #####
   # feedback core lex
-  observeEvent(input$button, {
+  observeEvent(input$help, {
     showModal(
       modalDialog(
         title = "Feedback",
@@ -294,11 +292,16 @@ server <- function(input, output) {
       ))
   })
   # feedback main concept
-  observeEvent(input$button2, {
+  observeEvent(input$help, {
     showModal(
       modalDialog(
-        title = "All concepts...need better image",
-        tags$img(src = file.path('all.png'), height = "600px"),
+        tabsetPanel(
+          tabPanel(title = "All concepts...",
+        tags$img(src = file.path('all.png'), height = "600px")
+          ),
+        tabPanel(title = "examples",
+                 "examples go here")
+        ),
         easyClose = TRUE,
         size = "l"
       ))
@@ -328,7 +331,9 @@ server <- function(input, output) {
                                                                   label="",
                                                                   #width = "20px",
                                                                   value = df$produced[i],
-                                                                  status = "primary"
+                                                                  status = "primary"#,
+                                                                  #bigger = T,
+                                                                 #icon = icon("check")
       ))
     }
     df %>% dplyr::select(-produced)
@@ -444,7 +449,13 @@ server <- function(input, output) {
     )
   })
   
-
+  observeEvent(input$stim,{
+    if(input$stim != "cinderella"){
+      shinyjs::disable("adj")
+    } else {
+      shinyjs::enable("adj")
+    }
+  })
   
   ################## main concept stuff ##################
   
@@ -455,7 +466,7 @@ server <- function(input, output) {
                           concept_accuracy = list()
   )
   
-  observeEvent(input$goback,{
+  observeEvent(input$goback | input$button3,{
     values$i=0
     values$concept = list()
     values$selected_sentences = list()
@@ -573,10 +584,7 @@ server <- function(input, output) {
   
   # counter down
   observeEvent(input$prev,{
-    #input$prev
-    #isolate({
-      values$i <- values$i - 1
-     # })
+     values$i <- values$i - 1
   })
   #counter up getting started
   observeEvent(input$start,{
@@ -592,6 +600,11 @@ server <- function(input, output) {
     # })
   })
   
+  observeEvent(input$prev|input$nxt,{
+    if(values$i ==1){
+      shinyjs::disable("prev")
+    } else {shinyjs::enable("prev")}
+  })
   
   
   order <- eventReactive(input$nxt,{
@@ -731,13 +744,14 @@ server <- function(input, output) {
 
  output$score1 <- renderUI({
    if(values$i<stim_task()$num_slides+1){
-   prettyRadioButtons(
+     awesomeRadio(
      inputId = "accuracy1",
      label = scoring_df()[values$i, 2], 
      choices = c("Accurate", "Inaccurate", "Absent"),
      #inline = TRUE, 
      status = "primary",
-     fill = TRUE,
+     checkbox = TRUE,
+     #fill = TRUE,
      selected = if (length(values$concept_accuracy)>=values$i && values$i>0){
        values$concept_accuracy[[values$i]][1,1]
        } else {"Absent"}
@@ -748,13 +762,13 @@ server <- function(input, output) {
  
  output$score2 <- renderUI({
    if(values$i<stim_task()$num_slides+1){
-   prettyRadioButtons(
+     awesomeRadio(
      inputId = "accuracy2",
      label = scoring_df()[values$i, 3], 
      choices = c("Accurate", "Inaccurate", "Absent"),
      #inline = TRUE, 
      status = "primary",
-     fill = TRUE,
+     checkbox = TRUE,
      selected = if (length(values$concept_accuracy)>=values$i && values$i>0){
        values$concept_accuracy[[values$i]][2,1]
      } else {"Absent"}
@@ -776,13 +790,13 @@ server <- function(input, output) {
  output$score3 <- renderUI({
    if(values$i<stim_task()$num_slides+1){
      if(anyNA(dontshow())){} else {
-   prettyRadioButtons(
+       awesomeRadio(
      inputId = "accuracy3",
      label = scoring_df()[values$i, 4], 
      choices = c("Accurate", "Inaccurate", "Absent"),
      #inline = TRUE, 
      status = "primary",
-     fill = TRUE,
+     checkbox = TRUE,
      selected = if (length(values$concept_accuracy)>=values$i && values$i>0){
        values$concept_accuracy[[values$i]][3,1]
      } else {"Absent"}
@@ -793,18 +807,36 @@ server <- function(input, output) {
  })
  
  output$score4 <- renderUI({
-     prettyRadioButtons(
+   awesomeRadio(
        inputId = "accuracy4",
        label = scoring_df()[values$i, 5], 
        choices = c("Accurate", "Inaccurate", "Absent"),
        #inline = TRUE, 
        status = "primary",
-       fill = TRUE,
+       checkbox = TRUE,
        selected = if (length(values$concept_accuracy)>=values$i && values$i>0){
          values$concept_accuracy[[values$i]][4,1]
        } else {"Absent"}
      )
  })
+ 
+ observeEvent(input$nxt | input$prev | input$button3 | input$goback,{
+   if(values$i>0){
+     shinyjs::disable("stimMC")
+     # addTooltip(session = session, id = "tool",
+     #            title = "Start over to change stimuli",
+     #            placement = "bottom",
+     #            trigger = "hover",
+     #            options = NULL)
+   } else {
+     shinyjs::enable("stimMC")
+     #removeTooltip(session, id="tool")
+   }
+ })
+ 
+
+ 
+
  
  # observeEvent(input$nxt | input$prev, {
  #   if(stim_task()$stim_num == 1 && values$i == 4 || values$i == 5) {
