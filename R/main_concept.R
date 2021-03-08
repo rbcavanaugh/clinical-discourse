@@ -265,204 +265,201 @@ s10<-
       <p class="c22"><span class="c0">Note: For concepts 1-5, put is not an acceptable verb. For each of those concepts there was a similar relevant concept (i.e., put the bread on the counter), however, none of these relevant concepts reached criterion. In these cases, the speaker would receive a score of absent, and any information associated with the verb put should be treated as extra information that is not scored.</span></p>')
 # cinderella
 c1<-
-  HTML('<p class="c13"><span class="c6">1)</span><span class="c5 c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Dad </span><span class="c9 c15">2</span><span class="c9">remarried </span><span class="c9 c15">3</span><span class="c9">a woman</span><span class="c0">&nbsp;with two daughters.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Daddy/Father</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Got married to, got remarried, married again</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">A lady</span></p>')
+  HTML('<p class="c13"><span class="c6">1)</span><span class="c9 c15">1</span><span class="c9">Dad </span><span class="c9 c15">2</span><span class="c9">remarried </span><span class="c9 c15">3</span><span class="c9">a woman</span><span class="c0">&nbsp;with two daughters.</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">Daddy/Father</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Got married to, got remarried, married again</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">A lady</span></p>')
 c2<-
-  HTML('<p class="c13"><span class="c6">2)</span><span class="c5 c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Cinderella </span><span class="c9 c15">2</span><span class="c9">lives with </span><span class="c9 c15">3</span><span class="c7 c6">stepmother/stepsisters.</span></p>
-      <p class="c12"><span class="c6">1. &nbsp; </span><span class="c2">She*</span></p>
-      <p class="c12"><span class="c6">2</span><span class="c2">. &nbsp; Is left with, moves in with, grows up with, has</span></p>
-      <p class="c12"><span class="c6">3</span><span class="c2">. &nbsp; Stepfamily, new family, the women, they</span></p>
-      <p class="c17"><span class="c5 c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="c6">i.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="c2">If they do not mention the word step, there must be a clear indication that the stepmother and stepsisters (the lady and her two daughters, the mean woman and her beautiful daughters) are a unit separate from Cinderella.</span></p>
+  HTML('<p class="c13"><span class="c6">2)</span><span class="c9 c15">1</span><span class="c9">Cinderella </span><span class="c9 c15">2</span><span class="c9">lives with </span><span class="c9 c15">3</span><span class="c9">stepmother/stepsisters.</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">She*</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0"> Is left with, moves in with, grows up with, has</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0"> Stepfamily, new family, the women, they</span></p>
+      <p class="c22 c26"><span class="c6">i.&nbsp; &nbsp;<span class="c0">If they do not mention the word step, there must be a clear indication that the stepmother and stepsisters (the lady and her two daughters, the mean woman and her beautiful daughters) are a unit separate from Cinderella.</span></p>
       <p class="c20"><span class="c0">Note 1: After Cinderella has been introduced into the story she is an acceptable alternative as long as there is a clear pronoun referent.</span></p>
       <p class="c20"><span class="c0">Note 2: After the stepmother and stepsisters have been introduced into the story they is an acceptable alternative as long as there is a clear pronoun referent.</span></p>')
 c3<-
-  HTML(' <p class="c13"><span class="c6">3)</span><span class="c5 c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Stepmother/stepsisters </span><span class="c9 c15">2</span><span class="c9">were mean </span><span class="c9 c15">3</span><span class="c7 c6">to Cinderella.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 2.3</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Were cruel, were wicked, treated Cinderella poorly, were awful, hated</span></p>')
+  HTML('<p class="c13"><span class="c6">3)</span><span class="c9 c15">1</span><span class="c9">Stepmother/stepsisters </span><span class="c9 c15">2</span><span class="c9">were mean </span><span class="c9 c15">3</span><span class="c9">to Cinderella.</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 2.3</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Were cruel, were wicked, treated Cinderella poorly, were awful, hated</span></p>')
 c4<-
-  HTML(' <p class="c13"><span class="c6">4)</span><span class="c5 c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Cinderella </span><span class="c9 c15">2</span><span class="c9">was </span><span class="c9 c15">3</span><span class="c9">a servant</span><span class="c9 c6">&nbsp;</span><span class="c0">to the stepmother and stepsisters.</span></p>
-      <p class="c12"><span class="c6">1. &nbsp; </span><span class="c2">She</span></p>
-      <p class="c12"><span class="c6">2</span><span class="c2">. &nbsp; Was forced to be, had to be</span></p>
-      <p class="c12"><span class="c6">3</span><span class="c2">. &nbsp; Maid, slave, domestic </span></p>
+  HTML('<p class="c13"><span class="c6">4)</span><span class="c9 c15">1</span><span class="c9">Cinderella </span><span class="c9 c15">2</span><span class="c9">was </span><span class="c9 c15">3</span><span class="c9">a servant</span><span class="c9 c6">&nbsp;</span><span class="c0">to the stepmother and stepsisters.</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">She</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0"> Was forced to be, had to be</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0"> Maid, slave, domestic </span></p>
       <p class="c20"><span class="c0">Note: If they say the sentence in another way that expresses servitude, for example had to wait on, they must include stepmother and/or stepsisters, because the verb requires an object. This would be the only time they are essential for this concept.</span></p>')
 c5<-
-  HTML('<p class="c13"><span class="c6">5)</span><span class="c5 c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Cinderella </span><span class="c9 c15">2</span><span class="c9">has to do</span><span class="c6 c14">&nbsp;</span><span class="c15 c9">3</span><span class="c7 c6">the housework.</span></p>
-      <p class="c12"><span class="c6">1. &nbsp; </span><span class="c2">She</span></p>
-      <p class="c12"><span class="c6">2</span><span class="c2">. &nbsp; Is forced to do, must do, has to take care of</span></p>
-      <p class="c12"><span class="c6">3</span><span class="c2">. &nbsp; Chores, cleaning, taking care of the house, everything</span></p>
-      <p class="c22 c23"><span class="c28 c21 c6"></span></p>
-      <p class="c22"><span class="c0">&nbsp;</span></p>')
+  HTML('<p class="c13"><span class="c6">5)</span><span class="c9 c15">1</span><span class="c9">Cinderella </span><span class="c9 c15">2</span><span class="c9">has to do</span><span class="c6 c14">&nbsp;</span><span class="c15 c9">3</span><span class="c9">the housework.</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">She</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0"> Is forced to do, must do, has to take care of</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0"> Chores, cleaning, taking care of the house, everything</span></p>')
 c6<-
-  HTML('<p class="c13"><span class="c6">6)</span><span class="c5 c1">&nbsp; &nbsp; </span><span class="c6">The king thinks </span><span class="c9 c15">1</span><span class="c9">the prince </span><span class="c9 c15">2</span><span class="c7 c6">should get married.</span></p>
-      <p class="c22"><span class="c6">1. &nbsp; </span><span class="c2">He*</span></p>
-      <p class="c22"><span class="c6">2.</span><span class="c2">&nbsp; &nbsp;Needs to get married/find a wife, must get married, has to get married</span></p>
+  HTML('<p class="c13"><span class="c6">6)</span><span class="c6">The king thinks </span><span class="c9 c15">1</span><span class="c9">the prince </span><span class="c9 c15">2</span><span class="c9">should get married.</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">He*</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">&nbsp; &nbsp;Needs to get married/find a wife, must get married, has to get married</span></p>
       <p class="c20"><span class="c0">Note: After the prince has been introduced into the story he is an acceptable alternative as long as there is a clear pronoun referent.</span></p>')
 c7<-
-  HTML('<p class="c13"><span class="c6">7)</span><span class="c5 c1">&nbsp; &nbsp; </span><span class="c6">King announces </span><span class="c9 c15">1</span><span class="c9">there is going to be </span><span class="c9 c15">2</span><span class="c9">a ball</span><span class="c9 c6">&nbsp;</span><span class="c0">in honor of son who needs to find a wife.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Will be, is to be, is</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Dance, big party, celebration, gala</span></p>
+  HTML('<p class="c13"><span class="c6">7)</span><span class="c6">King announces </span><span class="c9 c15">1</span><span class="c9">there is going to be </span><span class="c9 c15">2</span><span class="c9">a ball</span><span class="c9 c6">&nbsp;</span><span class="c0">in honor of son who needs to find a wife.</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">Will be, is to be, is</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Dance, big party, celebration, gala</span></p>
       <p class="c20"><span class="c0">Note: Occasionally this concept was combined with number 8 in a statement like, They got an invitation to the ball the king was hosting for his son. This should receive full credit for concepts 7 and 8.</span></p>')
 c8<-
-  HTML(' <p class="c13"><span class="c6">8)</span><span class="c5 c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">They </span><span class="c9 c15">2</span><span class="c9">got </span><span class="c9 c15">3</span><span class="c9">an invitation</span><span class="c9 c6">&nbsp;*</span><span class="c0">to the ball*.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">The women, the stepmothers and/or stepsisters and/or Cinderella, everyone in the household, the household</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Received, was delivered (if word order altered so that the invitation is delivered to the women)</span></p>
-      <p class="c12"><span class="c6">3. &nbsp; </span><span class="c2">No alternatives were produced for invitation</span></p>
+  HTML(' <p class="c13"><span class="c6">8)</span><span class="c9 c15">1</span><span class="c9">They </span><span class="c9 c15">2</span><span class="c9">got </span><span class="c9 c15">3</span><span class="c9">an invitation</span><span class="c9 c6">&nbsp;*</span><span class="c0">to the ball*.</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">The women, the stepmothers and/or stepsisters and/or Cinderella, everyone in the household, the household</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Received, was delivered (if word order altered so that the invitation is delivered to the women)</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">No alternatives were produced for invitation</span></p>
       <p class="c20"><span class="c0">Note 1: *Not essential if clear from context or previously stated; otherwise see note for number 7. </span></p>
       <p class="c20"><span class="c0">Note 2: Alternatively, the speaker could say They were invited to the ball or something similar.</span></p>')
 c9<-
-  HTML('<p class="c13"><span class="c6">9)</span><span class="c5 c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">They </span><span class="c9 c15">2</span><span class="c9">are excited</span><span class="c9 c6">&nbsp;</span><span class="c0">*about the ball*.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 8.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Are happy, are pleased</span></p>
+  HTML('<p class="c13"><span class="c6">9)</span><span class="c9 c15">1</span><span class="c9">They </span><span class="c9 c15">2</span><span class="c9">are excited</span><span class="c9 c6">&nbsp;</span><span class="c0">*about the ball*.</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 8.1</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Are happy, are pleased</span></p>
       <p class="c20"><span class="c0">Note 1: *See number 8.</span></p>
       <p class="c20"><span class="c0">Note 2: If they say something like They are looking forward to, they must include the ball because an object is required.</span></p>')
 c10<-
   HTML('<p class="c13"><span class="c6">10)</span><span class="c9 c15">1</span><span class="c9">Cinderella</span><span class="c9 c6">&nbsp;</span><span class="c6">is told by the stepmother she</span><span class="c9 c6">&nbsp;</span><span class="c9 c15">2</span><span class="c9">cannot go </span><span class="c0">*to the ball* unless/because (insert reason).</span></p>
-      <p class="c12"><span class="c6">1.</span><span class="c2">&nbsp; &nbsp;She</span></p>
-      <p class="c12"><span class="c2">2. &nbsp; Could not go, has to stay home, is not allowed to go</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">She</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Could not go, has to stay home, is not allowed to go</span></p>
       <p class="c20"><span class="c0">Note 1: *See number 8.</span></p>
       <p class="c20"><span class="c0">Note 2: An alternative is If Cinderella could get all of her chores done, she could go to the ball</span></p>')
 c11<-
-  HTML('<p class="c13"><span class="c6">11)</span><span class="c8 c6 c9">1</span><span class="c9">The stepsisters </span><span class="c9 c15">2</span><span class="c9">tore </span><span class="c9 c15">3</span><span class="c7 c6">Cinderella’s dress.</span></p>
-      <p class="c12"><span class="c6">1. &nbsp; </span><span class="c2">They</span></p>
-      <p class="c12"><span class="c6">2.</span><span class="c2">&nbsp; &nbsp;Ruined, destroyed, ripped up, shredded</span></p>
-      <p class="c12"><span class="c6">3.</span><span class="c2">&nbsp; &nbsp;Her dress</span></p>')
+  HTML('<p class="c13"><span class="c6">11)</span><span class="c9 c15">1</span><span class="c9">The stepsisters </span><span class="c9 c15">2</span><span class="c9">tore </span><span class="c9 c15">3</span><span class="c7 c6">Cinderella’s dress.</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">They</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Ruined, destroyed, ripped up, shredded</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">Her dress</span></p>')
 c12<-
   HTML('<p class="c13"><span class="c6">12)</span><span class="c9 c15">1</span><span class="c9">Stepmother/stepsisters </span><span class="c9 c15">2</span><span class="c9">went</span><span class="c9 c6">&nbsp;</span><span class="c0">*to the ball*.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Everyone but Cinderella</span></p>
-      <p class="c17"><span class="c5 c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="c6">i.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="c2">If They went to the ball is the sentence, the they must clearly exclude Cinderella in the context</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Go, left, departed</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">Everyone but Cinderella</span></p>
+      <p class="c22 c26"><span class="c6">i.&nbsp; &nbsp;</span><span class="c0">If They went to the ball is the sentence, the they must clearly exclude Cinderella in the context</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Go, left, departed</span></p>
       <p class="c20"><span class="c0">Note: *See number 8.</span></p>')
 c13<-
   HTML('<p class="c13"><span class="c6">13)</span><span class="c9 c15">1</span><span class="c9">Cinderella </span><span class="c9 c15">2</span><span class="c9">was </span><span class="c9 c15">3</span><span class="c7 c6">upset.</span></p>
-      <p class="c12"><span class="c6">1. &nbsp; </span><span class="c2">She</span></p>
-      <p class="c12"><span class="c6">2. &nbsp; </span><span class="c2">Is</span></p>
-      <p class="c12"><span class="c6">3.</span><span class="c2">&nbsp; &nbsp;Crying, sad, disappointed</span></p>')
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">She</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Is</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">Crying, sad, disappointed</span></p>')
 c14<-
   HTML('<p class="c13"><span class="c6">14)</span><span class="c9 c15">1</span><span class="c9">A fairy godmother </span><span class="c9 c15">2</span><span class="c9">appeared</span><span class="c9 c6">&nbsp;</span><span class="c0">to Cinderella.</span></p>
-      <p class="c12"><span class="c6">1. &nbsp; </span><span class="c2">No alternative for fairy godmother was produced</span></p>
-      <p class="c12"><span class="c6">2.</span><span class="c2">&nbsp; &nbsp;Shows up, appears, surprises, comes</span></p>
-      <p class="c17"><span class="c5 c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="c6">i.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="c2">Some may say Cinderella sees or meets or finds, in which case Cinderella then becomes an essential element</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">No alternative for fairy godmother was produced</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Shows up, appears, surprises, comes</span></p>
+      <p class="c22 c26"><span class="c6">i.&nbsp; &nbsp;</span><span class="c0">Some may say Cinderella sees or meets or finds, in which case Cinderella then becomes an essential element</span></p>
       <p class="c20"><span class="c0">Note: Another popular way of expressing this is Along came a fairy godmother (which is basically appeared a fairy godmother)</span></p>')
 c15<-
   HTML('<p class="c13"><span class="c6">15)</span><span class="c9 c15">1</span><span class="c9">The fairy godmother </span><span class="c9 c15">2</span><span class="c9">makes </span><span class="c9 c15">3</span><span class="c7 c6">{item(s)} turn into {items}.</span></p>
-      <p class="c12"><span class="c6">1. &nbsp; </span><span class="c2">See 14.1</span></p>
-      <p class="c12"><span class="c6">2.</span><span class="c2">&nbsp; &nbsp;Turns, creates, changes, any other verb indicating transformation/creation</span></p>
-      <p class="c17"><span class="c5 c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="c6">i.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="c2">Must be a verb that indicates some kind of transformation or creation</span></p>
-      <p class="c4"><span class="c9 c6">3.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Pumpkin and mice OR carriage/coach and horses</span></p>
-      <p class="c19"><span class="c5 c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="c6">i.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">When producing this concept, only one pair needs to be mentioned, however, it must be correctly paired to receive full credit</span></p>
-      <p class="c22 c27"><span class="c9 c6">a.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Pumpkin &nbsp;carriage/coach (and horses)</span></p>
-      <p class="c22 c27"><span class="c9 c6">b.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Mice &nbsp;horses (and carriage)</span></p>
-      <p class="c22 c27"><span class="c9 c6">c.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">If they initially mention both pumpkin and mice, they do not necessarily have to mention both after the transformation occurs in order to receive full credit, and only one needs to be accurate</span></p>
-      <p class="c22 c27"><span class="c9 c6">d.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Do not take points off for mentioning other transformations, such as dog &nbsp;coachman as these are not incorrect, they simply did not reach significance.</span></p>')
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 14.1</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Turns, creates, changes, any other verb indicating transformation/creation</span></p>
+      <p class="c22 c26"><span class="c6">i.&nbsp; &nbsp;</span><span class="c0">Must be a verb that indicates some kind of transformation or creation</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">Pumpkin and mice OR carriage/coach and horses</span></p>
+      <p class="c22 c26"><span class="c6">i.&nbsp; &nbsp;</span><span class="c0">When producing this concept, only one pair needs to be mentioned, however, it must be correctly paired to receive full credit</span></p>
+      <p class="c22 c26"><span class="c6">a.&nbsp;</span><span class="c0">Pumpkin carriage/coach (and horses) or Mice horses (and carriage)</span></p>
+      <p class="c22 c26"><span class="c6">c.&nbsp;</span><span class="c0">If they initially mention both pumpkin and mice, they do not necessarily have to mention both after the transformation occurs in order to receive full credit, and only one needs to be accurate</span></p>
+      <p class="c22 c26"><span class="c6">d.&nbsp;</span><span class="c0">Do not take points off for mentioning other transformations, such as dog &nbsp;coachman as these are not incorrect, they simply did not reach significance.</span></p>')
 c16<-
   HTML(' <p class="c13"><span class="c6">16)</span><span class="c9 c15">1</span><span class="c9">The fairy godmother </span><span class="c9 c15">2</span><span class="c9">makes </span><span class="c9 c15">3</span><span class="c9">Cinderella </span><span class="c9 c15">4</span><span class="c7 c6">into a beautiful princess.</span></p>
-      <p class="c12"><span class="c6">1. &nbsp; </span><span class="c2">See 14.1</span></p>
-      <p class="c12"><span class="c6">2.</span><span class="c2">&nbsp; &nbsp;Turns, creates, changes, gives</span></p>
-      <p class="c12"><span class="c6">3.</span><span class="c2">&nbsp; &nbsp;The regular girl, her regular clothes</span></p>
-      <p class="c10"><span class="c6">4.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Dress/shoes into gown/slippers, beautiful</span></p>')
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 14.1</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Turns, creates, changes, gives</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">The regular girl, her regular clothes</span></p>
+      <p class="c10"><span class="c6">4.&nbsp; &nbsp;</span><span class="c0">Dress/shoes into gown/slippers, beautiful</span></p>')
 c17<-
   HTML('<p class="c13"><span class="c6">17)</span><span class="c9 c15">1</span><span class="c9">Cinderella </span><span class="c9 c15">2</span><span class="c9">went </span><span class="c9 c15">3</span><span class="c9">to the ball</span><span class="c9 c6">&nbsp;</span><span class="c0">in the coach.</span></p>
-      <p class="c12"><span class="c6">1. &nbsp; </span><span class="c2">She</span></p>
-      <p class="c12"><span class="c6">2.</span><span class="c2">&nbsp; &nbsp;Goes, arrives, reaches</span></p>
-      <p class="c12"><span class="c6">3.</span><span class="c2">&nbsp; &nbsp;See 7.2</span></p>')
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">She</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Goes, arrives, reaches</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">See 7.2</span></p>')
 c18<-
   HTML('<p class="c13"><span class="c6">18)She knew </span><span class="c15 c9">1</span><span class="c9">she </span><span class="c9 c15">2</span><span class="c9">had to be </span><span class="c9 c15">3</span><span class="c9">home by midnight</span><span class="c9 c6">&nbsp;</span><span class="c0">because everything will turn back at midnight.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Cinderella</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Must be, needs to be, must return</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Leave by midnight</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">Cinderella</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Must be, needs to be, must return</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">Leave by midnight</span></p>
       <p class="c20"><span class="c0">Note: An alternative could be The fairy godmother told her that if she wasn’t home by midnight, XXX would happen or something similar.</span></p>')
 c19<-
   HTML('<p class="c13"><span class="c6">19)</span><span class="c9 c15">1</span><span class="c9">The prince and Cinderella </span><span class="c9 c15">2</span><span class="c9">danced</span><span class="c9 c6">&nbsp;</span><span class="c0">around the room/all night/with no one else.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">They</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Were dancing, kept dancing</span></p>')
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">They</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Were dancing, kept dancing</span></p>')
 c20<-
   HTML('<p class="c13"><span class="c6">20)</span><span class="c9 c15">1</span><span class="c9">Prince </span><span class="c9 c15">2</span><span class="c9">falls in love </span><span class="c9 c15">3</span><span class="c7 c6">with Cinderella.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">He</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Is enamored with, is delighted with, is awestruck by, likes, is hooked on</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Her</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">He</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Is enamored with, is delighted with, is awestruck by, likes, is hooked on</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">Her</span></p>
       <p class="c20"><span class="c0">Note: If someone says Prince/They fall in love at first sight that individual can receive credit only if Cinderella has been mentioned before or it is clearly indicated who they are.</span></p>')
 c21<-
   HTML('<p class="c13"><span class="c6">21)Cinderella realized </span><span class="c9 c15">1</span><span class="c9">it </span><span class="c9 c15">2</span><span class="c9">is </span><span class="c9 c15">3</span><span class="c7 c6">midnight.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Clock, something indicates that it is</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Is, gets to be, rings, strikes</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Twelve o’clock, twelve midnight, almost midnight</span></p>')
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">Clock, something indicates that it is</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Is, gets to be, rings, strikes</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">Twelve o’clock, twelve midnight, almost midnight</span></p>')
 c22<-
   HTML('<p class="c13"><span class="c6">22)</span><span class="c9 c15">1</span><span class="c9">She </span><span class="c9 c15">2</span><span class="c9">ran </span><span class="c9 c15">3</span><span class="c9">down the stairs</span><span class="c2">.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 18.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Was running, flew, rushed, sprinted, left, was leaving</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Out of the ball/castle, away from the ball/castle/prince, out, away</span></p>')
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 18.1</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Was running, flew, rushed, sprinted, left, was leaving</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">Out of the ball/castle, away from the ball/castle/prince, out, away</span></p>')
 c23<-
   HTML(' <p class="c13"><span class="c6">23)As she was running down the stairs </span><span class="c9 c15">1</span><span class="c9">she </span><span class="c9 c15">2</span><span class="c9">lost one of the </span><span class="c9 c15">3</span><span class="c7 c6">glass slippers.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 18.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Leaves, steps out of</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Shoes, glass shoe</span></p>')
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 18.1</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Leaves, steps out of</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">Shoes, glass shoe</span></p>')
 
 c24<-
   HTML(' <p class="c13"><span class="c6">24)</span><span class="c9 c15">1</span><span class="c9">Prince </span><span class="c9 c15">2</span><span class="c9">finds </span><span class="c9 c15">3</span><span class="c7 c6">Cinderella’s shoe.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Any other royal figure, king, servant, duke, prime minister, chamberlain</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Had, got, retrieved, was brought</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1 c5">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 23.3</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">Any other royal figure, king, servant, duke, prime minister, chamberlain</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Had, got, retrieved, was brought</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">See 23.3</span></p>
       <p class="c20"><span class="c0">Note: An alternative way to say this is The servant brings the slipper to the prince.</span></p>')
 c25<-
   HTML('<p class="c13"><span class="c6">25)</span><span class="c9 c15">1</span><span class="c9">Everything </span><span class="c9 c15">2</span><span class="c9">turns back </span><span class="c9 c15">3</span><span class="c6 c7">to its original form.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Pumpkin, mice, and/or clothes/dress</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Goes back, returns, disappears</span></p>
-      <p class="c19"><span class="c5 c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="c6">i.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">If the speaker uses disappears they do not have to specify what disappears, for example, Everything disappears.</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">To normal (can specify what it turns back into)</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">Pumpkin, mice, and/or clothes/dress</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Goes back, returns, disappears</span></p>
+      <p class="c22 c26"><span class="c6">i.&nbsp; &nbsp;</span><span class="c0">If the speaker uses disappears they do not have to specify what disappears, for example, Everything disappears.</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">To normal (can specify what it turns back into)</span></p>
       <p class="c20"><span class="c0">Note: The addition of again at the end of the sentence paired with a verb that does not indicate change is acceptable because it implies a return to the original state (e.g.,she got home and the dress was old again.</span></p>')
 c26<-
   HTML('<p class="c13"><span class="c6">26)</span><span class="c9 c15">1</span><span class="c9">She </span><span class="c9 c15">2</span><span class="c9">returned </span><span class="c9 c15">3</span><span class="c9">home</span><span class="c9 c6">&nbsp;</span><span class="c0">in time.</span></p>
-      <p class="c12"><span class="c6">1. &nbsp; </span><span class="c2">See 18.1</span></p>
-      <p class="c12"><span class="c6">2.</span><span class="c2">&nbsp; &nbsp;Gets, makes it, goes</span></p>
-      <p class="c12"><span class="c6">3. &nbsp; </span><span class="c2">to the house</span></p>')
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 18.1</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Gets, makes it, goes</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">to the house</span></p>')
 c27<-
   HTML('<p class="c13"><span class="c6">27)</span><span class="c9 c15">1</span><span class="c9">The prince </span><span class="c9 c15">2</span><span class="c9">searched</span><span class="c9 c6">&nbsp;</span><span class="c6">door to door </span><span class="c15 c9">3</span><span class="c7 c6">for Cinderella.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 24.1, the servant</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Was trying to find, looked for</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">For the person who would fit into the glass slipper, for the girl from the ball</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 24.1, the servant</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Was trying to find, looked for</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">For the person who would fit into the glass slipper, for the girl from the ball</span></p>
       <p class="c20"><span class="c0">Note: Alternatively, this could be stated as The prince/his servant was trying the slipper on all the girls.</span></p>')
 c28<-
   HTML('<p class="c13"><span class="c6">28)</span><span class="c9 c15">1</span><span class="c9">Prince </span><span class="c9 c15">2</span><span class="c9">comes </span><span class="c9 c15">3</span><span class="c7 c6">to Cinderella’s house.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 27.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Arrives at, went, found, shows up at</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Her</span></p>')
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 27.1</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Arrives at, went, found, shows up at</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">Her</span></p>')
 c29<-
   HTML('<p class="c13"><span class="c6">29)</span><span class="c9 c15">1</span><span class="c9">The stepsisters </span><span class="c9 c15">2</span><span class="c9">try on </span><span class="c9 c15">3</span><span class="c7 c6">the glass slipper.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">The stepsisters and stepmother, the other girls (if the reference to the stepsisters is clear), etc.</span></p>
-      <p class="c19"><span class="c5 c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="c6">i.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">For this concept, speakers may include the stepmother. However, the stepmother alone is not sufficient.</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c9 c6">Attempt to put on, cram, try to fit into, try</span><span class="c2">their foot in</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 23.3</span></p>')
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">The stepsisters and stepmother, the other girls (if the reference to the stepsisters is clear), etc.</span></p>
+      <p class="c22 c26"><span class="c6">i.&nbsp; &nbsp;</span><span class="c0">For this concept, speakers may include the stepmother. However, the stepmother alone is not sufficient.</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Attempt to put on, cram, try to fit into, try their foot in</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">See 23.3</span></p>')
 c30<-
   HTML('<p class="c13"><span class="c6">30)</span><span class="c9 c15">1</span><span class="c9">The slipper </span><span class="c9 c15">2</span><span class="c9">didn’t fit </span><span class="c9 c15">3</span><span class="c7 c6">the stepsisters.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 23.3</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Would not go on the feet of, did not work for, couldn’t fit on</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 29.1</span></p>')
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 23.3</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Would not go on the feet of, did not work for, couldn’t fit on</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">See 29.1</span></p>')
 c31<-
   HTML('<p class="c13"><span class="c6">31)</span><span class="c9 c15">1</span><span class="c9">He </span><span class="c9 c15">2</span><span class="c9">put </span><span class="c9 c15">3</span><span class="c9">the slipper on</span><span class="c9 c6">&nbsp;</span><span class="c0">Cinderella’s foot.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 27.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Tried, slid, slipped, placed</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 23.3</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 27.1</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Tried, slid, slipped, placed</span></p>
+      <p class="c10"><span class="c6">3.&nbsp; &nbsp;</span><span class="c0">See 23.3</span></p>
       <p class="c20"><span class="c0">Note 1: Though most did not specifically mention Cinderella in these concepts (31, 32), it was clear that at this point in the story, they were referring to Cinderella.</span></p>
-      <p class="c22"><span class="c0">Note 2: An alternate way to say this is Cinderella tried on the slipper.</span></p>')
+      <p class="c20"><span class="c0">Note 2: An alternate way to say this is Cinderella tried on the slipper.</span></p>')
 c32<-
   HTML('<p class="c13"><span class="c6">32)</span><span class="c9 c15">1</span><span class="c9">The slipper </span><span class="c9 c15">2</span><span class="c9">fits</span><span class="c9 c6">&nbsp;</span><span class="c0">Cinderella perfectly.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 23.3</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Belonged to</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 23.3</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Belonged to</span></p>
       <p class="c20"><span class="c0">Note: An alternate way to say this is The shoe slid easily onto her foot or The slipper was Cinderella’s</span></p>')
 c33<-
   HTML('<p class="c13"><span class="c6">33)</span><span class="c9 c15">1</span><span class="c9">Cinderella and the prince </span><span class="c9 c15">2</span><span class="c7 c6">were married.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 19.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Got married, were wed, had a wedding, had a marriage celebration</span></p>
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 19.1</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Got married, were wed, had a wedding, had a marriage celebration</span></p>
       <p class="c20"><span class="c0">Note: An alternate way to say this is, The prince took Cinderella as his bride.</span></p>')
 c34<-
   HTML('<p class="c13"><span class="c6">34)</span><span class="c9 c15">1</span><span class="c9">Cinderella and the prince </span><span class="c9 c15">2</span><span class="c7 c6">lived happily ever after.</span></p>
-      <p class="c34"><span class="c6">1.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">See 19.1</span></p>
-      <p class="c19"><span class="c5 c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="c6">i.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">The speaker must include or refer to both Cinderella and the prince in order to receive an accurate and complete score</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">Lived forever, lived a long time, were happy for life.</span></p>
-      <p class="c19"><span class="c5 c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="c6">i.</span><span class="c5 c1">&nbsp; &nbsp; &nbsp;</span><span class="c2">The speaker must indicate an extended length of time in order to receive an accurate and complete score. For example, ever after, forever, a long time, life</span></p>
-      <p class="c4"><span class="c0">Note: Variations can include They lived happily every after, They were together forever, They had a wonderful life</span></p>')
+      <p class="c10"><span class="c6">1.&nbsp; &nbsp;</span><span class="c0">See 19.1</span></p>
+      <p class="c22 c26"><span class="c6">i.&nbsp; &nbsp;</span><span class="c0">The speaker must include or refer to both Cinderella and the prince in order to receive an accurate and complete score</span></p>
+      <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Lived forever, lived a long time, were happy for life.</span></p>
+      <p class="c22 c26"><span class="c6">i.&nbsp; &nbsp;</span><span class="c0">The speaker must indicate an extended length of time in order to receive an accurate and complete score. For example, ever after, forever, a long time, life</span></p>
+      <p class="c20"><span class="c0">Note: Variations can include They lived happily every after, They were together forever, They had a wonderful life</span></p>')
 
 
 

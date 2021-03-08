@@ -1,7 +1,13 @@
 # view all concepts for story
 # view examples for story or for that specific concept?
-# remove back arrow when values == 1
 # download of data
+# cinderella!
+# front page
+# true corelex norms
+# mca norms and results page
+# top box shorter with overflow y
+# sentence box with overflow y
+# swap sentences and scoring??
 
 ############### load stuff ################
 library(shiny)
@@ -148,6 +154,7 @@ ui <-
                                             h5("Enter Transcript"),
                                             value = transcriptDefault,# transcriptDefault,
                                             height = '400px'),
+                              awesomeCheckbox("sequencing", "Score Sequencing?", value = F, status = "primary"),
                               
                               actionButton("button3", "Restart Scoring", style = "float: right;")
                  ),
@@ -186,10 +193,12 @@ ui <-
                          fluidRow(
                            #column(
                              #width = 6,
+                           div(id = "sequencing_input",
                            "Select the sentences that match the concept.",
                             box(width=NULL,
                                 uiOutput("sortable")
                             )
+                           )
                          ),
                          fluidRow(
                                    #)
@@ -327,7 +336,7 @@ server <- function(input, output, session) {
   data <- reactive({
     df = selectedData2()
     for (i in 1:nrow(df)) {
-      df$Correct[i] <- as.character(shinyWidgets::awesomeCheckbox(paste0(get_cor_id(), i),
+      df[["Correct"]][i] <- as.character(shinyWidgets::awesomeCheckbox(paste0(get_cor_id(), i),
                                                                   label="",
                                                                   #width = "20px",
                                                                   value = df$produced[i],
@@ -735,6 +744,10 @@ server <- function(input, output, session) {
     
   })
   
+  observeEvent(input$sequencing,{
+    shinyjs::toggle("sequencing_input")
+  })
+  
   scoring_df <- reactive({
     main_concepts %>%
       dplyr::filter(task == input$stimMC)
@@ -833,26 +846,7 @@ server <- function(input, output, session) {
      #removeTooltip(session, id="tool")
    }
  })
- 
 
- 
-
- 
- # observeEvent(input$nxt | input$prev, {
- #   if(stim_task()$stim_num == 1 && values$i == 4 || values$i == 5) {
- #   shinyjs::hide("score3")
- #   } else if(stim_task()$stim_num == 2 && values$i == 6){
- #     shinyjs::hide("score3")
- #   } else if(stim_task()$stim_num == 3 && values$i == 1 || values$i == 5){
- #     shinyjs::hide("score3")
- #   } else if(stim_task()$stim_num == 4 && values$i == 6 || values$i == 7 || values$i == 9 || values$i == 10 || values$i == 12 || values$i == 14 || values$i == 19 || values$i == 32 || values$i == 33 || values$i == 34){
- #     shinyjs::hide("score3")
- #   } else if(stim_task()$stim_num == 5 && values$i == 3 || values$i == 4 || values$i == 5){
- #     shinyjs::hide("score3")
- #   } else {
- #     shinyjs::show("score3")
- #   }
- # })
 
  observeEvent(input$nxt | input$prev, {
    if(values$i != 16){
@@ -1067,6 +1061,25 @@ server <- function(input, output, session) {
   #                             "Rob Cavanaugh")))
   # })
   
+  
+  
+  
+  
+  # observeEvent(input$nxt | input$prev, {
+  #   if(stim_task()$stim_num == 1 && values$i == 4 || values$i == 5) {
+  #   shinyjs::hide("score3")
+  #   } else if(stim_task()$stim_num == 2 && values$i == 6){
+  #     shinyjs::hide("score3")
+  #   } else if(stim_task()$stim_num == 3 && values$i == 1 || values$i == 5){
+  #     shinyjs::hide("score3")
+  #   } else if(stim_task()$stim_num == 4 && values$i == 6 || values$i == 7 || values$i == 9 || values$i == 10 || values$i == 12 || values$i == 14 || values$i == 19 || values$i == 32 || values$i == 33 || values$i == 34){
+  #     shinyjs::hide("score3")
+  #   } else if(stim_task()$stim_num == 5 && values$i == 3 || values$i == 4 || values$i == 5){
+  #     shinyjs::hide("score3")
+  #   } else {
+  #     shinyjs::show("score3")
+  #   }
+  # })
 
   
 }
