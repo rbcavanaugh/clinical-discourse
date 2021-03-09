@@ -1,13 +1,20 @@
-# view all concepts for story
-# view examples for story or for that specific concept?
-# download of data
-# cinderella!
-# front page
-# true corelex norms
-# mca norms and results page
+#Easy:
 # top box shorter with overflow y
 # sentence box with overflow y
+
+# Medium:
+# view examples for story or for that specific concept?
+# front page - welcome modal 
+# true corlex norms
+
+# Do towards the end:
+# mca norms and results page
+# download of data - core lex and mca
+
+# questions: 
 # swap sentences and scoring??
+
+
 
 ############### load stuff ################
 library(shiny)
@@ -52,13 +59,8 @@ ui <-
     navbarPage(
       id = "bigpage",
       theme = shinytheme("flatly"),
-        # bslib::bs_theme(#secondary = "#55a998",# success = "#55a998", 
-        #                        base_font = font_google("Roboto"), `enable-gradients` = TRUE, 
-        #                        `enable-shadows` = TRUE, bootswatch = "flatly", spacer = "1rem"),
       fluid = T,collapsible = T, 
-      #windowTitle = "Aphasia Discourse",
-      title = div("",
-        tags$a(id = "img-id",
+      title = div(tags$a(id = "img-id", target = "_blank",
                      href = "https://github.com/rbcavanaugh/clinical-discourse",
                      icon("github"))),
       
@@ -156,7 +158,7 @@ ui <-
                                             height = '400px'),
                               awesomeCheckbox("sequencing", "Score Sequencing?", value = F, status = "primary"),
                               
-                              actionButton("button3", "Restart Scoring", style = "float: right;")
+                              actionButton("button3", "Restart Scoring")
                  ),
                  mainPanel(
                    conditionalPanel(condition = "output.countzero == true",
@@ -185,33 +187,21 @@ ui <-
                      fluidRow(
                        column(width = 12,
                          fluidRow(
-                             box(width = NULL, height = "250px",
+                           div(style = 'overflow-x: scroll; height:190px; background: #ecf0f1;padding: 10px 20px 0px 5px;border-radius: 5px;',
                              htmlOutput("img")
-                             
+                               )
+                         ),
+                         fluidRow(
+                           div(id = "sequencing_input", style = "padding-bottom:0px; padding: 10px 20px 0px 20px; overflow-x: scroll; height:200px;",
+                               h5("Select the sentences that match the concept."),
+                                uiOutput("sortable"),
                            )
                          ),
                          fluidRow(
-                           #column(
-                             #width = 6,
-                           div(id = "sequencing_input",
-                           "Select the sentences that match the concept.",
-                            box(width=NULL,
-                                uiOutput("sortable")
-                            )
-                           )
-                         ),
-                         fluidRow(
-                                   #)
-                             #)
-                           #),
-                           #column(
-                            # width = 6,
-                            # box(width= NULL,
-                             "Check boxes for scoring accuracy go here.",
-                             #box(
-                               #width = NULL,
-                             column(width = 12, align = "center",
-                               box(width = NULL, id = "mca_results",
+                           div(style = "padding: 10px 20px 0px 20px;",
+                             h5("Check boxes for scoring accuracy go here."),
+                             column(width = 12, align = "center", 
+                               div(width = NULL, id = "mca_results", 
                                    column(width = 3, align = "left",
                                      uiOutput("score1")
                                      ),
@@ -223,14 +213,12 @@ ui <-
                                      ),
                                    column(width = 3, align = "left",
                                      uiOutput("score4")
-                                     ) 
+                                     )
                                    
                                )
                              )
-                             
-                             #)
-                            # )
-                           #)
+                           )
+
                          ),
                          fluidRow(align = "center",
                            #column(width = 12, style = "align:center;",
@@ -305,10 +293,12 @@ server <- function(input, output, session) {
     showModal(
       modalDialog(
         tabsetPanel(
-          tabPanel(title = "All concepts...",
-        tags$img(src = file.path('all.png'), height = "600px")
+          tabPanel(title = "All concepts...", br(),
+                   div(
+                   get_concepts(concept = input$stimMC)
+                   )
           ),
-        tabPanel(title = "examples",
+        tabPanel(title = "examples", br(),
                  "examples go here")
         ),
         easyClose = TRUE,

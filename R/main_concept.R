@@ -24,6 +24,23 @@ scoring_mca = tibble(
   score = c(3, 2, 2, 1, 0)
 )
 
+get_concepts <- function(concept){
+  tb = tibble(
+    num = c(8, 10, 10, 10, 34),
+    prefix = c('bw', 'cr', 'u', 's', 'c'),
+    name = c("broken_window", "cat_rescue", "refused_umbrella", "sandwich", "cinderella")
+  ) %>%
+    filter(name == concept)
+  
+  l = tagList()
+  for(i in 1:tb[[1,1]]){
+    l[[i]] =  HTML(paste0(get(paste0(tb[[1,2]], i)), "<hr>"))
+  }
+  return(l)
+  
+}
+
+
 # broken window
 bw1 <-
   HTML('<p class="c13"><span class="c6">1)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">A/The boy </span><span class="c9 c15">2</span><span class="c9">was </span><span class="c9 c15">3</span><span class="c9">outside</span><span class="c9">.</span></p>
