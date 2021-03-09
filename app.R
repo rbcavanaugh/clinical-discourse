@@ -1,11 +1,12 @@
 #Easy:
-# top box shorter with overflow y
-# sentence box with overflow y
 
 # Medium:
 # view examples for story or for that specific concept?
 # front page - welcome modal 
 # true corlex norms
+
+# hard:
+# fix column issue with 3 vs. 4 items. 
 
 # Do towards the end:
 # mca norms and results page
@@ -160,8 +161,8 @@ ui <-
                               
                               actionButton("button3", "Restart Scoring")
                  ),
-                 mainPanel(
-                   conditionalPanel(condition = "output.countzero == true",
+                 mainPanel(width = 9, style = "padding-right: 30px;",
+                   conditionalPanel(condition = "output.countzero == true", 
                                       fluidRow(
                                         column(width = 12, style = "align:center;",
                                                p("This is the getting started page."),
@@ -192,16 +193,16 @@ ui <-
                                )
                          ),
                          fluidRow(
-                           div(id = "sequencing_input", style = "padding-bottom:0px; padding: 10px 20px 0px 20px; overflow-x: scroll; height:200px;",
+                           div(id = "sequencing_input", style = "padding-bottom:0px; padding: 10px 10px 0px 10px; overflow-x: scroll; height:200px;",
                                h5("Select the sentences that match the concept."),
                                 uiOutput("sortable"),
                            )
                          ),
                          fluidRow(
-                           div(style = "padding: 10px 20px 0px 20px;",
+                           div(style = "padding: 10px 10px 0px 10px;",
                              h5("Check boxes for scoring accuracy go here."),
-                             column(width = 12, align = "center", 
-                               div(width = NULL, id = "mca_results", 
+                             #column(width = 12, align = "center", 
+                               div( id = "mca_results", 
                                    column(width = 3, align = "left",
                                      uiOutput("score1")
                                      ),
@@ -215,7 +216,7 @@ ui <-
                                      uiOutput("score4")
                                      )
                                    
-                               )
+                              # )
                              )
                            )
 
@@ -230,7 +231,7 @@ ui <-
                      )
                  ),
                  conditionalPanel(condition = "output.countback == true",
-                                  fluidRow(
+                                  #fluidRow(
                                     column(width = 12, align = "center",
                                            "This is the results page",
                                            tableOutput("sequencing"),
@@ -238,7 +239,7 @@ ui <-
                                            actionButton("goback", "Start Over")
                               
                                            )
-                                    )
+                                    #)
                                   )
                  )
                )
