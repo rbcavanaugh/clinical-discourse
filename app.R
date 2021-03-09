@@ -203,18 +203,19 @@ ui <-
                              h5("Check boxes for scoring accuracy go here."),
                              #column(width = 12, align = "center", 
                                div( id = "mca_results", 
-                                   column(width = 3, align = "left",
-                                     uiOutput("score1")
-                                     ),
-                                   column(width = 3, align = "left",
-                                     uiOutput("score2")
-                                     ),
-                                   column(width = 3, align = "left",
-                                     uiOutput("score3")
-                                     ),
-                                   column(width = 3, align = "left",
-                                     uiOutput("score4")
-                                     )
+                                    uiOutput("scores1234")
+                                   # column(width = 3, align = "left",
+                                   #   uiOutput("score1")
+                                   #   ),
+                                   # column(width = 3, align = "left",
+                                   #   uiOutput("score2")
+                                   #   ),
+                                   # column(width = 3, align = "left",
+                                   #   uiOutput("score3")
+                                   #   ),
+                                   # column(width = 3, align = "left",
+                                   #   uiOutput("score4")
+                                   #   )
                                    
                               # )
                              )
@@ -823,6 +824,46 @@ server <- function(input, output, session) {
        } else {"Absent"}
      )
  })
+ 
+ 
+ output$scores1234 <- renderUI({
+   if (input$stimMC == "cinderella" && values$i == 16){
+     tagList(
+   column(width = 3, align = "left",
+          uiOutput("score1")
+   ),
+   column(width = 3, align = "left",
+          uiOutput("score2")
+   ),
+   column(width = 3, align = "left",
+          uiOutput("score3")
+   ),
+   column(width = 3, align = "left",
+          uiOutput("score4")
+   )
+     )
+   } else {
+     tagList(
+     column(width = 4, align = "left",
+            uiOutput("score1")
+     ),
+     column(width = 4, align = "left",
+            uiOutput("score2")
+     ),
+     column(width = 4, align = "left",
+            uiOutput("score3")
+     )
+     )
+   }
+   
+ })
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  observeEvent(input$nxt | input$prev | input$button3 | input$goback,{
    if(values$i>0){
