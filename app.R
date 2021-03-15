@@ -131,7 +131,7 @@ ui <-
                          ),
                          fluidRow(
                            wellPanel(style = "padding-bottom:0px; padding: 0px 10px 10px 10px; overflow-x: scroll; height:150px; border-color: #ecf0f1; background-color: #fff;",
-                             h4("2. Score each concept noted above."),
+                             h4("2. Score each concept noted above. The current score is [current score]."),
                              #column(width = 12, align = "center", 
                                div( id = "mca_results", 
                                     uiOutput("scores1234")

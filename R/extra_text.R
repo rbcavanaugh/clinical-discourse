@@ -1,5 +1,7 @@
 ##### saving other text
 
+library(shinyglide)
+
 
 controls <- tagList(
   glideControls(
@@ -21,8 +23,9 @@ controls <- tagList(
 gettingStarted <- 
   div(
     h4("Main Concept Analysis"),
-    p("Main Concept Analysis is a discourse assessment that measures the informativeness of a discourse sample about a given topic. Each main concept consists of several essential elements, corresponding to the subject, main verb, object (if appropriate), and any subordinate clauses. Concepts are scored by their accuracy (are the essential elements accurate?) and completeness (are essential elements present?)."),
-      p("Main concept analysis has shown good sensitivity in differentiating between controls and individuals with communication disorders. It is correlated with standardized measures of overall aphasia severity, confrontation naming (for some subtypes), listener perceptions, conversational abilities, communication confidence, and life participation. Changes in informativeness are associated with listener’s perceptions of communication quality."), br(),
+    p("Main Concept Analysis is a discourse assessment that measures the informativeness of a discourse sample about a given topic.  Each main concept consists of several essential elements, corresponding to the subject, main verb, object (if appropriate), and any subordinate clauses. Concepts are scored by their accuracy (are the essential elements accurate?) and completeness (are essential elements present?)."),
+      p("Main concept analysis has shown good sensitivity in differentiating between controls and individuals with communication disorders. It is correlated with standardized measures of overall aphasia severity, confrontation naming (for some subtypes), listener perceptions, conversational abilities, communication confidence, and life participation. Changes in informativeness are associated with listener’s perceptions of communication quality."), 
+    p("Main concept analysis was originally developed by Drs. Nicholas and Brookshire sin 1995. Drs. Richardson and Dalton have recently developed main concept checklists based on large language corpora",  a("(primarily, AphasiaBank).", href = "https://www.talkbank.org", target = "_blank"), "By using established checklists, main concept analysis overcomes many challenges to evaluating discourse scoring in clinical practice. The goal of this web-app is to provide clinicians with an easy-to-use interface for scoring main concepts, improving the implementation of discourse analysis in routine clinical practice."),
   h4("Instructions"),
     tags$ol(
       tags$li("Start by reviewing the instructions for scoring main concept (hit next). Review the reference manual for additional details and examples if needed. You'll also be able to access this information while you score your transcript"),
