@@ -1,0 +1,9 @@
+﻿task,e1,e2,e3,e4,b1,b12,b23,b34,b4,n1,n2
+broken_window,The boy,was,outside,,,,,,,"Note: Sometimes, this concept was combined with number 2 in a statement like “The boy was playing soccer outside” or “The boy was kicking the ball in the yard”. These statements would receive full credit for both concept 1 and 2",
+broken_window,A/The boy,was playing,soccer,,,,,,,"Note: “He has a ball” or “He has a soccer ball” did not count towards this concept because it does not imply any kind of action with the soccer ball, and boy-action-ball was the concept that met criterion.",
+broken_window,The ball,breaks,window,,,,the man/neighbor's,,,,
+broken_window,The man,is sitting,,,,,,in a chair and/or inside the house,,,
+broken_window,The man,was startled,,,,,,,,"Note: Most common were “The man is sitting”, “The man is inside”, “The man is sitting inside”","Note: The man is watching TV” or something similar did not count for this concept; that was a separate relevant concept that did not meet criterion. However, if an individual said, “The man is sitting watching TV” then they would receive credit for this concept since they included “sitting.”"
+broken_window,The ball,broke,a lamp,,,,,,,"Note: Occasionally, this concept was combined with number 3, in a statement such as “The ball crashed through the window and startled the man.”",
+broken_window,The man,picked up,the ball,,,,,,,,
+broken_window,The man,looked,out of the window,,,,,,,"Note: “The man goes to the window,” “The man went to the window,” or “The man goes outside”, etc., did not count towards this concept. These were separate relevant concepts that did not meet criterion.",

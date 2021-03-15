@@ -18,7 +18,6 @@
 library(shiny)
 library(here)
 library(scales)
-library(fresh)
 library(tidyverse)
 library(patchwork)
 library(textstem)
@@ -32,11 +31,9 @@ library(shinyWidgets)
 library(htmlwidgets)
 library(shinyjs)
 library(tokenizers)
-library(shinyglide)
 # load info 
 source(here('R', 'core_lex.R'))
 source(here('R', 'main_concept.R'))
-source(here('R', 'extra_text.R'))
 
 ###################### UI ###################
 ui <- 
@@ -48,16 +45,17 @@ ui <-
     useShinydashboard(),
     tags$head(
       tags$link(rel = "shortcut icon", href = "favicon.png", type="image/png"),
-      tags$link(rel = "stylesheet", type = "text/css", href = "mca_css.css"),
-      tags$link(rel = "stylesheet", type = "text/css", href = "theme.css"),
       tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+      tags$link(rel = "stylesheet", type = "text/css", href = "mca_css.css"),
+      tags$script(src = "js/javascript.js"),
+      tags$script(src="javascript.js"),
       tags$title("Aphasia Discourse"),
       includeHTML("www/analytics.html")
     ),
     #app
     navbarPage(
       id = "bigpage",
-      #theme = shinytheme("flatly"),
+      theme = shinytheme("flatly"),
       fluid = T,collapsible = T, 
       title = div(tags$a(id = "img-id", target = "_blank",
                      href = "https://github.com/rbcavanaugh/clinical-discourse",
@@ -65,7 +63,7 @@ ui <-
 
       ###### main concept ######
       tabPanel("Main Concept & Sequencing",
-               sidebarLayout(fluid = T, 
+               sidebarLayout(
                  sidebarPanel(width = 3,
                               selectInput("stimMC", h5("Select Stimulus"),
                                           c("Broken Window" = 'broken_window',
@@ -81,37 +79,33 @@ ui <-
                                             h5("Enter Transcript"),
                                             value = transcriptDefault,# transcriptDefault,
                                             height = '400px'),
-                              awesomeCheckbox("show_sequencing", "Ignore Sequencing", value = F, status = "primary"),
+                              awesomeCheckbox("sequencing", "Score Sequencing?", value = F, status = "primary"),
                               
-                              div(align = "center",
-                              actionButton("start", "Start Scoring"),
-                              actionButton("button3", "Start Over")
-                              )
-                              
+                              actionButton("button3", "Restart Scoring")
                  ),
                  mainPanel(width = 9, style = "padding-right: 30px;",
-                   conditionalPanel(condition = "output.countzero == true",
-                                    tabsetPanel(id = "page1",
-                                    tabPanel("Getting Started",
-                                      
+                   conditionalPanel(condition = "output.countzero == true", 
                                     fluidRow(
-                                        column(width = 12, 
-                                             glide_div
-                                      )
-                                    )
+                                      uiOutput("glide_output")
+                                      )#,
+                                      # fluidRow(
+                                      #   column(width = 12, style = "align:center;",
+                                      #          p("This is the getting started page."),
+                                      #          p("The code only works for the broken window task right now. It will be a little tricky programming-wise to adjust the code based on the stimulus, so I've focused on the scoring setup first."),
+                                      #          p("This page should have instructions and some background information"),
+                                      #          p("After going through each step, we can show the results"),
+                                      #          p("'See all concepts' on the left will be accessible at any point in the scoring process"),
+                                      #          p("right now, if you go back, you will have to re-score the ones you've gone back over. I might be able to save the scores for going backwards and forwards without having to re-score...but I'll leave that for one of the final steps."),
+                                      #          p("right now, I've put in two tables that will spit out information needed to calculate order and accuracy at the end page."),
+                                      #          actionButton("start", "Get Started")
+                                      #          )
+                                      # )
                                     ),
-                                    tabPanel("Reference Manual", 
-                                            tags$iframe(style="height:600px; width:100%; scrolling=yes",
-                                                        src="manual.pdf")
-                                            )
-
-                                    )
-                   ),
                    # scoring panels
                    conditionalPanel(condition = "output.count == true",
                                     actionButton(
                                       inputId = "help",
-                                      label = " Help",
+                                      label = "I'm not sure",
                                       #color = "default",
                                       #style = "unite", 
                                       icon = icon("question")
@@ -119,19 +113,19 @@ ui <-
                      fluidRow(
                        column(width = 12,
                          fluidRow(
-                           wellPanel(style = 'overflow-x: scroll; height:190px; padding: 10px 20px 0px 5px;border-radius: 5px;',
+                           div(style = 'overflow-x: scroll; height:190px; background: #ecf0f1;padding: 10px 20px 0px 5px;border-radius: 5px;',
                              htmlOutput("img")
                                )
                          ),
                          fluidRow(
-                           wellPanel(id = "sequencing_input", style = "padding-bottom:0px; padding: 0px 10px 10px 10px; overflow-x: scroll; height:200px; border-color: #ecf0f1; background-color: #fff;",
-                               h4("1. Select the sentences that match the concept."),
+                           div(id = "sequencing_input", style = "padding-bottom:0px; padding: 10px 10px 0px 10px; overflow-x: scroll; height:200px;",
+                               h5("Select the sentences that match the concept."),
                                 uiOutput("sortable"),
                            )
                          ),
                          fluidRow(
-                           wellPanel(style = "padding-bottom:0px; padding: 0px 10px 10px 10px; overflow-x: scroll; height:150px; border-color: #ecf0f1; background-color: #fff;",
-                             h4("2. Score each concept noted above."),
+                           div(style = "padding: 10px 10px 0px 10px;",
+                             h5("Check boxes for scoring accuracy go here."),
                              #column(width = 12, align = "center", 
                                div( id = "mca_results", 
                                     uiOutput("scores1234")
@@ -149,28 +143,15 @@ ui <-
                      )
                  ),
                  conditionalPanel(condition = "output.countback == true",
-                                  fluidRow(
-                                    wellPanel(align = "center",
-                                    br(),
-                                    h3("This will be information about interpreting results"),
-                                    br(), br(),
-                                    )
-                                  ),
-                                  fluidRow(
-                                    column(width = 4, align = "center",
-                                           #tableOutput("sequencing"),
-                                           DTOutput("results_mca_table"),
-                                           ),
-                                  column(width = 8, align = "center", br(), br(), br(), 
-                                         h3("Plot goes here")
-                                         )
-                                    ),br(),
-                                  fluidRow(
-                                    wellPanel(align = "center",
-                                    h4("this will give an option to download all data."),
-                                    h5("This includes each sentence, which concept it was scored with, how the essential elements of each concept was scored, and how each concept was scored in terms of accuracy and completeness. ")
-                                  )
-                                  )
+                                  #fluidRow(
+                                    column(width = 12, align = "center",
+                                           "This is the results page",
+                                           tableOutput("sequencing"),
+                                           tableOutput("results_mca_table"),
+                                           actionButton("goback", "Start Over")
+                              
+                                           )
+                                    #)
                                   )
                  )
                )
@@ -268,7 +249,7 @@ ui <-
                           icon("external-link"),
                           "Jessica Richardson")),
                box(width = NULL,
-                   actionButton("feedback", "Send Feedback", style = 'float:right;')
+                   actionButton("button", "Send Feedback", style = 'float:right;')
                )
                )
 
@@ -280,25 +261,32 @@ ui <-
 server <- function(input, output, session) {
   
 #####introduction modal
-  # 
-  # showModal(
-  #   modalDialog(
-  #     title = "Core Lexicon and Main Concept Scoring!",
-  #     p("This is a welcome screen"),
-  #     p("Should we use this screen?"),
-  #     p("Here's why you should use this app (or similar methods)"),
-  #     p("here's what this app does"),
-  #     p("Here's what it doesn't do"),
-  #     p("Here's some other stuff that you should know"),
-  #     p("This app is free and open source; the code is public."),
-  #     size = "m",
-  #     easyClose = T,
-  #     footer = modalButton("Lets Go!")
-  #   )
-  # )
-  # 
+  
+  showModal(
+    modalDialog(
+      title = "Core Lexicon and Main Concept Scoring!",
+      p("This is a welcome screen"),
+      p("Should we use this screen?"),
+      p("Here's why you should use this app (or similar methods)"),
+      p("here's what this app does"),
+      p("Here's what it doesn't do"),
+      p("Here's some other stuff that you should know"),
+      p("This app is free and open source; the code is public."),
+      size = "m",
+      easyClose = T,
+      footer = modalButton("Lets Go!")
+    )
+  )
   
   
+
+    
+  output$glide_output <- renderUI({
+    glide(
+      make_screens()
+    )
+
+  })
   
   
   
@@ -306,7 +294,7 @@ server <- function(input, output, session) {
   ###### Core Lex Stuff ####################################
 ###### stuff that doesn't matter right now.... #####
   # feedback core lex
-  observeEvent(input$feedback, {
+  observeEvent(input$help, {
     showModal(
       modalDialog(
         title = "Feedback",
@@ -324,21 +312,18 @@ server <- function(input, output, session) {
     showModal(
       modalDialog(
         tabsetPanel(
-          tabPanel("Review Scoring Rules",
-                   glide_div
-                   ),
-          tabPanel("All Concepts",
-                  div(style = "height: 600px; overflow-y:auto;",
-                    get_concepts(concept = input$stimMC)
-                    )
-           )
+          tabPanel(title = "All concepts...", br(),
+                   div(
+                   get_concepts(concept = input$stimMC)
+                   )
+          ),
+        tabPanel(title = "examples", br(),
+                 "examples go here")
         ),
         easyClose = TRUE,
         size = "l"
-      )
-    )
+      ))
   })
-  
   
 
 ######## core lexicon stuff ######
@@ -464,7 +449,7 @@ server <- function(input, output, session) {
       value = paste0(selectedData()[["scores"]][1], " core words"),
       subtitle = paste0("Aphasia Percentile: ", selectedData()[["score"]][1,4], " | Control Percentile: ", selectedData()[["score"]][1,3]),
       icon = icon("list-ol"),
-      color = "blue"
+      color = "aqua"
     )
   })
   
@@ -474,7 +459,7 @@ server <- function(input, output, session) {
       paste0(round(selectedData()[["scores"]][2],1), " core words/min"),
       subtitle = paste0("Aphasia Percentile: ", selectedData()[["score"]][2,4], " | Control Percentile: ", selectedData()[["score"]][2,3]),
       icon = icon("tachometer"),
-      color = "blue"
+      color = "aqua"
     )
   })
   
@@ -715,28 +700,21 @@ server <- function(input, output, session) {
   #     } else {}
   # })
   
-  output$results_mca_table <- renderDT(
-    results_mca() %>%
-      select(Concept = concept, Code = Result, Score = score) %>%
-      mutate(Concept = as.character(Concept),
-             Score = as.character(Score)),
-    rownames = F,
-    options = list(dom = 't',
-                   #ordering = TRUE,
-                   #scrollY = "400px",
-                   #scroller = TRUE,
-                   #fixedColumns = list(heightMatch = 'none'),
-                   #scrollCollapse = TRUE,
-                   columnDefs = list(list(className = 'dt-center', targets = 0:2)),
-                   paging = FALSE
-    )
-  )
-
+  output$results_mca_table <- renderTable({
+    results_mca()
+  })
   
-  # output$sequencing <- renderTable({
-  #   order()
-  # })
+  output$results_mca_table2 <- renderTable({
+    results_mca2()
+  })
   
+  output$sequencing <- renderTable({
+    order()
+  })
+  
+  output$accuracy <- renderTable({
+    acc()
+  })
   
   # get sentences #######
   sentences <- reactive({
@@ -771,12 +749,8 @@ server <- function(input, output, session) {
     
   })
   
-  observeEvent(input$show_sequencing,{
-    if(isTruthy(input$show_sequencing)){
-    shinyjs::hide("sequencing_input")
-    } else {
-      shinyjs::show("sequencing_input")
-    }
+  observeEvent(input$sequencing,{
+    shinyjs::toggle("sequencing_input")
   })
   
   scoring_df <- reactive({

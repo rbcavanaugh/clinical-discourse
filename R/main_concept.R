@@ -8,28 +8,18 @@ main_concepts <- read_csv("www/main_concepts.csv")%>%
 main_concepts$concept_length = 4-rowSums(is.na(main_concepts))
 
 
-# bw_mca = tibble(
-#   c1 = c("The boy", "was", "outside"),
-#   c2 = c("the boy", "playing", "soccer"),
-#   c3 = c("The ball", "breaks", "window"),
-#   c4 = c("The man", "is sitting", "hide"),
-#   c5 = c("The man", "was startled", "hide"),
-#   c6 = c("The ball", "broke", "a lamp"),
-#   c7 = c("The man", "picked up", "the ball"),
-#   c8 = c("The man", "looked", "out of the window")
-# )
-
 scoring_mca = tibble(
   Result = c("AC", "AI", "IC", "II", "Absent"),
   score = c(3, 2, 2, 1, 0)
 )
+tb = tibble(
+  num = c(8, 10, 10, 10, 34),
+  prefix = c('bw', 'cr', 'u', 's', 'c'),
+  name = c("broken_window", "cat_rescue", "refused_umbrella", "sandwich", "cinderella")
+)
 
 get_concepts <- function(concept){
-  tb = tibble(
-    num = c(8, 10, 10, 10, 34),
-    prefix = c('bw', 'cr', 'u', 's', 'c'),
-    name = c("broken_window", "cat_rescue", "refused_umbrella", "sandwich", "cinderella")
-  ) %>%
+  tb = tb %>%
     filter(name == concept)
   
   l = tagList()
@@ -42,244 +32,525 @@ get_concepts <- function(concept){
 
 
 # broken window
-bw1 <-
-  HTML('<p class="c13"><span class="c6">1)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">A/The boy </span><span class="c9 c15">2</span><span class="c9">was </span><span class="c9 c15">3</span><span class="c9">outside</span><span class="c9">.</span></p>
-    <p class="c10"><span class="c6">1.</span><span class="c6">&nbsp; &nbsp; </span><span class="c3">He since referent is unambiguous; some give the boy a name</span></p>
-    <p class="c10"><span class="c6">2.</span><span class="c6">&nbsp; &nbsp; </span><span class="c3">Is, decided to go</span></p>
-    <p class="c10"><span class="c6">3.</span><span class="c6">&nbsp; &nbsp; </span><span class="c3">In his front yard, on the lawn, out of the house, etc.</span></p>
-    <p class="c20"><span class="c0">Note: Sometimes, this concept was combined with number 2 in a statement like The boy was playing soccer outside or The boy was kicking the ball in the yard. These statements would receive full credit for both concept 1 and 2.</span></p>')
-bw2<-
-  HTML('<p class="c13"><span class="c6">2)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">A/The boy </span><span class="c9 c15">2</span><span class="c9">was playing </span><span class="c9 c15">3</span><span class="c9">soccer.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">See 1.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">Played, is kicking, kicks, is practicing, etc.</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">With the soccer ball, with the ball, with the football* (*if not from U.S.)</span></p>
-      <p class="c20"><span class="c0">Note: He has a ball or He has a soccer ball did not count towards this concept because it does not imply any kind of action with the soccer ball, and boy-action-ball was the concept that met criterion.</span></p>')
+
+bw1 <- 
+  div(style = "line-height: 170%;",
+      tags$ol(start = 1,
+        tags$li(tags$em(tags$sup("1"), tags$strong("The boy"),HTML('&nbsp;'), tags$sup("2"), tags$strong("was"),HTML('&nbsp;'), tags$sup("3"), tags$strong("outside."))),
+        tags$ol(
+          tags$li("He since referent is unambiguous; some give the boy a name"),
+          tags$li("Is, decided to go"),
+          tags$li("In his front yard, on the lawn, out of the house, etc.")
+          ), br(),
+        tags$p("Note: Sometimes, this concept was combined with number 2 in a statement like
+         The boy was playing soccer outside or The boy was kicking the ball in the yard.
+         These statements would receive full credit for both concept 1 and 2.", style = "color:black; font-size: .9em;line-height: 120%;")
+        )
+      )
+
+
+bw2 <- 
+  div(style = "line-height: 170%;",
+      tags$ol(start = 2,
+        tags$li(tags$em(tags$sup("1"), tags$strong("A/The boy"),HTML('&nbsp;'), tags$sup("2"), tags$strong("was"),HTML('&nbsp;'), tags$sup("3"), tags$strong("playing soccer"))),
+        tags$ol(
+          tags$li("See 1.1."),
+          tags$li("Played, is kicking, kicks, is practicing, etc."),
+          tags$li("With the soccer ball, with the ball, with the football* (*if not from U.S.).")),
+        br(),
+        tags$p("Note: “He has a ball” or “He has a soccer ball” did not count towards this
+         concept because it does not imply any kind of action with the soccer ball,
+         and boy-action-ball was the concept that met criterion.", style = "color:black; font-size: .9em;line-height: 120%;")
+        )
+      )
+  
 bw3 <- 
-  HTML('<p class="c13"><span class="c6">3)</span><span class="c1">&nbsp; &nbsp; </span><span>&nbsp;</span><span class="c9 c15">1</span><span class="c9">The ball</span><span class="c9 c15">2</span><span class="c9">breaks</span><span class="c9 c15">3</span><span class="c9">the man’s/neighbor’s window.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">Soccer ball, football*</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">Goes through, went through, crashes through/into, flew through, sails through/into, shattered, is kicked through glass</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 3,
+        tags$li(tags$em(tags$sup("1"), tags$strong("The ball"),HTML('&nbsp;'), tags$sup("2"), tags$strong("breaks"),HTML('&nbsp;'), tags$sup("3"), tags$strong("the"), "man's/neighbor's", tags$strong("window."))),
+        tags$ol(
+          tags$li("Soccer ball, football"),
+          tags$li("Goes through, went through, crashes through/into, flew through, sails through/into, shattered, is kicked through"),
+          tags$li("glass"))
+      )
+  )
+
+
 bw4 <- 
-  HTML('<p class="c13"><span class="c6">4)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">The man </span><span class="c9 c15">2</span><span class="c9">is sitting</span><span class="c9">&nbsp;</span><span class="c11">in a chair and/or inside the house.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">His dad, his father, the father, the neighbor, the guy; some give the man a name</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">Lounging, resting, relaxing, inside</span></p>
-      <p class="c20"><span class="c6">Note: Most common were The man is sitting, The man is inside, The man is sitting inside</span></p>
-      <p class="c20"><span class="c0">Note: The man is watching TV or something similar did not count for this concept; that was a separate relevant concept that did not meet criterion. However, if an individual said, The man is sitting watching TV then they would receive credit for this concept since they included sitting.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 4,
+        tags$li(tags$em(tags$sup("1"), tags$strong("The man"),HTML('&nbsp;'), tags$sup("2"), tags$strong("is sitting"), "in a chair and/or inside the house.")),
+        tags$ol(
+          tags$li("His dad, his father, the father, the neighbor, the guy; some give the man a name"),
+          tags$li("Lounging, resting, relaxing, inside")),
+        br(),
+        tags$p("Note: Most common were “The man is sitting”, “The man is inside”, “The man is sitting inside”", style = "color:black; font-size: .9em;line-height: 120%;"),
+        tags$p('Note: "The man is watching TV" or something similar did not count for this concept; that was a separate relevant concept that did not meet criterion. However, if an individual said, "The man is sitting watching TV" then they would receive credit for this concept since they included "sitting."', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
+
 bw5 <-
-  HTML('<p class="c13"><span class="c6">5)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">The man </span><span class="c9 c15">2</span><span class="c9">was startled.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">See 4.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">Surprised, amazed, afraid, astonished, freaked out, stunned, shocked, angry, upset, not happy, mad</span></p>
-      <p class="c20"><span class="c0">Note: Occasionally, this concept was combined with number 3, in a statement such as The ball crashed through the window and startled the man.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 5,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The man"),HTML('&nbsp;'), tags$sup("2"), tags$strong("was startled"))),
+              tags$ol(
+                tags$li("See 4.1"),
+                tags$li("Surprised, amazed, afraid, astonished, freaked out, stunned, shocked, angry, upset, not happy, mad")),
+              br(),
+              tags$p('Note: Most common were "The man is sitting", "The man is inside", "The man is sitting inside"', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: Occasionally, this concept was combined with number 3, in a statement such as "The ball crashed through the window and startled the man."', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
+
+
 bw6 <-
-  HTML('<p class="c13"><span class="c6">6)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">The ball </span><span class="c9 c15">2</span><span class="c9">broke </span><span class="c9 c15">3</span><span class="c9">a lamp.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">See 3.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">Knocks down/over, smashes into, breaks, hit</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">No alternative for lamp was produced</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 6,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The ball"),HTML('&nbsp;'), tags$sup("2"), tags$strong("broke"),HTML('&nbsp;'), tags$sup("3"), tags$strong("a lamp"))),
+              tags$ol(
+                tags$li("See 3.1"),
+                tags$li("Knocks down/over, smashes into, breaks, hit"),
+                tags$li("No alternative for lamp was produced"))
+      )
+  )
+
+
 bw7 <-
-  HTML('<p class="c13"><span class="c6">7)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">The man </span><span class="c9 c15">2</span><span class="c9">picked up </span><span class="c9 c15">3</span><span class="c9">the ball.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">See 4.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">Grabs, gets, holds/is holding, catches, captures, has</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">See 3.1</span></p>
-      <p class="c20"><span class="c0">Note: Occasionally, The man stands up with the ball and The man jumps up with the ball was used to express this concept, expressing that the man had performed some action to hold on to the ball. </span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 7,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The man"),HTML('&nbsp;'), tags$sup("2"), tags$strong("picked up"),HTML('&nbsp;'), tags$sup("3"), tags$strong("the ball"))),
+              tags$ol(
+                tags$li("See 4.1"),
+                tags$li("Grabs, gets, holds/is holding, catches, captures, has"),
+                tags$li("See 3.1")),
+              br(),
+              tags$p("Note: Occasionally, “The man stands up with the ball” and “The man jumps up with the ball” was used to express this concept, expressing that the man had performed some action to hold on to the ball", style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
+  
+  
 bw8 <-
-  HTML('<p class="c13"><span class="c6">8)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">The man </span><span class="c9 c15">2</span><span class="c9">looked </span><span class="c9 c15">3</span><span class="c9">out of the window.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">See 4.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">Looks, is looking</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; &nbsp; </span><span class="c3">Outside, out, out of the glass</span></p>
-      <p class="c20"><span class="c0">Note: The man goes to the window, The man went to the window, or The man goes outside, etc., did not count towards this concept. These were separate relevant concepts that did not meet criterion.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 8,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The man"),HTML('&nbsp;'), tags$sup("2"), tags$strong("looked"),HTML('&nbsp;'), tags$sup("3"), tags$strong("out of the window"))),
+              tags$ol(
+                tags$li("See 4.1"),
+                tags$li("Looks, is looking"),
+                tags$li("Outside, out, out of the glass")),
+              br(),
+              tags$p("Note: The man goes to the window, The man went to the window, or The man goes outside, etc., did not count towards this concept. These were separate relevant concepts that did not meet criterion.", style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
+
+
 # cat rescue
 cr1 <-
-  HTML('<p class="c13"><span class="c6">1)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The little girl</span><span class="c15 c9">2</span><span class="c9">was riding </span><span class="c15 c9">3</span><span class="c9">her bicycle.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">She (if appropriate referent), the girl, the child, any girl’s name</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Rode, rides, was on, is playing on, stopped riding, got off, was beside, has</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; </span><span class="c0">Bike, tricycle, trike, it (if appropriate referent)</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 1,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The little girl"),HTML('&nbsp;'), tags$sup("2"), tags$strong("was riding"),HTML('&nbsp;'), tags$sup("3"), tags$strong("her bicycle"))),
+              tags$ol(
+                tags$li("She (if appropriate referent), the girl, the child, any girl’s name"),
+                tags$li("Rode, rides, was on, is playing on, stopped riding, got off, was beside, has"),
+                tags$li("Bike, tricycle, trike, it (if appropriate referent)"))
+      )
+  )
+
 
 cr2<-
-  HTML('<p class="c13"><span class="c6">2)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The cat</span><span class="c15 c9">2</span><span class="c9">was in</span><span class="c9 c15">3</span><span class="c9">the tree because the dog chased it.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">Kitty, kitten, it (if appropriate referent), any cat name</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Was up, was stuck in, got stuck in, climbed up, ran up, goes up, gets in, was caught in, ends up in, was on, was chased up, was scared up</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; </span><span class="c0">The tree limb, limb</span></p>
-      <p class="c20"><span class="c0">Note: Sometimes expressed as The dog</span><span class="c9">&nbsp;</span><span class="c15 c9">2</span><span class="c9">chased </span><span class="c15 c9">1</span><span class="c9">the cat </span><span class="c15 c9">3</span><span class="c9">up the tree.</span><span class="c6"> or The girl </span><span class="c15 c9">2</span><span class="c9">saw</span><span class="c15 c9">1</span><span class="c9">the cat </span><span class="c15 c9">3</span><span class="c9">in the tree</span><span class="c0">.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 2,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The cat"),HTML('&nbsp;'), tags$sup("2"), tags$strong("was in"),HTML('&nbsp;'), tags$sup("3"), tags$strong("the tree"), "because the dog chased it.")),
+              tags$ol(
+                tags$li("Kitty, kitten, it (if appropriate referent), any cat name"),
+                tags$li("Was up, was stuck in, got stuck in, climbed up, ran up, goes up, gets in, was caught in, ends up in, was on, was chased up, was scared up"),
+                tags$li("The tree limb, limb")),
+              br(),
+              tags$p('Note: Sometimes expressed as "The dog (2) chased (1) the cat (3) up the tree." or "The girl (2) saw (1) the cat (3) in the tree."', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
+
+
+
 cr3<-
-  HTML('<p class="c13"><span class="c6">3)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The dog </span><span class="c9 c15">2</span><span class="c9">was barking up the tree. </span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">It (if appropriate referent), puppy, pup, any dog name</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Barks, is barking, barked, is yelping</span></p>
-      <p class="c20"><span class="c0">Note: The dog chased the cat should not apply to this statement as it was a separate relevant concept that did not meet threshold but was occasionally combined with additional elements that could apply to MC2 above.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 3,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The dog"),HTML('&nbsp;'), tags$sup("2"), tags$strong("was barking"),HTML('&nbsp;'), tags$sup("3"), "up the tree")),
+              tags$ol(
+                tags$li("It (if appropriate referent), puppy, pup, any dog name"),
+                tags$li("Barks, is barking, barked, is yelping")),
+              br(),
+              tags$p('Note: "The dog chased the cat" should not apply to this statement as it was a separate relevant concept that did not meet threshold but was occasionally combined with additional elements that could apply to MC2', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
+
+
 cr4<-
-  HTML('<p class="c13"><span class="c6">4)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The man </span><span class="c15 c9">2</span><span class="c9">climbed up</span><span class="c15 c9">3</span><span class="c9">the tree.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">The neighbor, the father, dad, daddy, someone older, big brother, he (if appropriate referent), any man’s name</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Was climbing, climbed, climbs, ran up, goes up into, got up on, crawls in/on</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; </span><span class="c0">The branch, the limb, the ladder, it (if appropriate referent), there</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 4,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The man"),HTML('&nbsp;'), tags$sup("2"), tags$strong("climbed up"),HTML('&nbsp;'), tags$sup("3"), tags$strong("the tree"))),
+              tags$ol(
+                tags$li("The neighbor, the father, dad, daddy, someone older, big brother, he (if appropriate referent), any man’s name"),
+                tags$li("Was climbing, climbed, climbs, ran up, goes up into, got up on, crawls in/on"),
+                tags$li("The branch, the limb, the ladder, it (if appropriate referent), there"))
+      )
+  )
+
+
+
 cr5<-
-  HTML('<p class="c13"><span class="c6">5)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The man </span><span class="c15 c9">2</span><span class="c9">tries to rescue </span><span class="c15 c9">3</span><span class="c9">the cat.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">See 4.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Wants to help, wants to rescue, tries to get, attempts to get, tries to reach, goes to get, tries to retrieve, went up after, comes to rescue</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; </span><span class="c0">See 2.1</span></p>
-      <p class="c20"><span class="c0">Note 1: Frequently combined with MC 4 as in The man climbed up the tree to get the cat.; a person who says this should receive full credit for MCs 4 and 5.</span></p>
-      <p class="c20"><span class="c0">Note 2: Occasionally combined with MC 7 as in He’s stuck in the tree trying to get the cat.; a person who says this should receive full credit for MCs 5 and 7.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 5,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The man"),HTML('&nbsp;'), tags$sup("2"), tags$strong("tries to rescue"),HTML('&nbsp;'), tags$sup("3"), tags$strong("the cat"))),
+              tags$ol(
+                tags$li("See 4.1"),
+                tags$li("Wants to help, wants to rescue, tries to get, attempts to get, tries to reach, goes to get, tries to retrieve, went up after, comes to rescue"),
+                tags$li("See 2.1")),
+              br(),
+              tags$p('Note: Frequently combined with MC 4 as in "The man climbed up the tree to get the cat."; a person who says this should receive full credit for MCs 4 and 5.', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: Occasionally combined with MC 7 as in "He’s stuck in the tree trying to get the cat."; a person who says this should receive full credit for MCs 5 and 7.', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
+
 cr6<-
-  HTML('<p class="c13"><span class="c6">6)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The ladder </span><span class="c15 c9">2</span><span class="c9">fell down.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">It (if appropriate referent)</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Is down, falls, fell, has fallen, has fallen down, got away from him, is on the ground, has slipped away, has dropped away, fell off, has been knocked down</span></p>
-      <p class="c20"><span class="c0">Note: Sometimes expressed with an agent that caused the ladder to fall, such as the wind or dog (e.g., the dog knocked the ladder down).</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 6,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The ladder"),HTML('&nbsp;'), tags$sup("2"), tags$strong("fell down"),HTML('&nbsp;'))),
+              tags$ol(
+                tags$li("It (if appropriate referent)"),
+                tags$li("Is down, falls, fell, has fallen, has fallen down, got away from him, is on the ground, has slipped away, has dropped away, fell off, has been knocked down")),
+              br(),
+              tags$p('Note: Sometimes expressed with an agent that caused the ladder to fall, such as the wind or dog (e.g., "the dog knocked the ladder down").', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
+
+
 cr7<-
-  HTML('<p class="c13"><span class="c6">7)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The father </span><span class="c15 c9">2</span><span class="c9">is stuck </span><span class="c15 c9">3</span><span class="c9">in the tree with the cat.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">See 4.1, the man and the cat, they (if appropriate referents)</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Is up, is, is stranded, is caught, ended up, is marooned, is sitting</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; </span><span class="c0">On the branch, on the limb, up there</span></p>
-      <p class="c20"><span class="c0">Note: Sometimes expressed as: </span><span class="c15 c9">1</span><span class="c9">The man </span><span class="c15 c9">2</span><span class="c9">couldn’t</span><span class="c15 c9">3</span><span class="c9">get down.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 7,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The father"),HTML('&nbsp;'), tags$sup("2"), tags$strong("is stuck"),HTML('&nbsp;'), tags$sup("3"), tags$strong("in the tree"), "with the cat.")),
+              tags$ol(
+                tags$li("See 4.1, the man and the cat, they (if appropriate referents)"),
+                tags$li("Is up, is, is stranded, is caught, ended up, is marooned, is sitting"),
+                tags$li("On the branch, on the limb, up there")),
+              br(),
+              tags$p('Note: Sometimes expressed as: "(1) The man (2) couldn’t (3) get down."', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 cr8<-
-  HTML('<p class="c13"><span class="c6">8)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">Someone</span><span class="c15 c9">2</span><span class="c9">called</span><span class="c15 c9">3</span><span class="c9">the fire department.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">The mother, the neighbor, the lady next door, the girl, the father, a passerby, an onlooker, he/she/they</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Notifies, alerts, got</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; </span><span class="c0">The firemen, 911</span></p>
-      <p class="c20"><span class="c0">Note 1: Sometimes expressed as a passive such as: </span><span class="c15 c9">3</span><span class="c9">The fire department </span><span class="c15 c9">2</span><span class="c9">has been called.</span></p>
-      <p class="c20"><span class="c0">Note 2: For this concept, a pronoun without a preceding referent is scored as AC since this action is not depicted in the picture stimuli.</span></p>
-      ')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 8,
+              tags$li(tags$em(tags$sup("1"), tags$strong("Someone"),HTML('&nbsp;'), tags$sup("2"), tags$strong("called"),HTML('&nbsp;'), tags$sup("3"), tags$strong("the fire department"))),
+              tags$ol(
+                tags$li("The mother, the neighbor, the lady next door, the girl, the father, a passerby, an onlooker, he/she/they"),
+                tags$li("Notifies, alerts, got"),
+                tags$li("The firemen, 911")),
+              br(),
+              tags$p('Note: Sometimes expressed as a passive such as: " (3) The fire department (2) has been called."', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: For this concept, a pronoun without a preceding referent is scored as AC since this action is not depicted in the picture stimuli.', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
+
 cr9<-
-  HTML('<p class="c13"><span class="c6">9)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The fire department </span><span class="c15 c9">2</span><span class="c9">comes</span><span class="c15 c9">3</span><span class="c9">with a ladder.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">The firefighters, the firemen, the fire truck, they (if appropriate referent or if includes ladder or other context so that the referent is not ambiguous)</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Is on the way, is/are coming, came, have arrived, rushes out, brings</span></p>
-      <p class="c20"><span class="c0">Note 1: Sometimes combined with MC 8 as in The mother called the fire department to come with their ladder. A person who says this should receive full credit for MCs 8 and 9.</span></p>
-      <p class="c20"><span class="c0">Note 2: While the first two essential elements met 66% threshold, the final element with a ladder was only produced by 33% of the sample. </span></p>
-      ')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 9,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The fire department"),HTML('&nbsp;'), tags$sup("2"), tags$strong("comes"),HTML('&nbsp;'), tags$sup("3"), tags$strong("with a ladder"))),
+              tags$ol(
+                tags$li("The firefighters, the firemen, the fire truck, they (if appropriate referent or if includes ladder or other context so that the referent is not ambiguous)"),
+                tags$li("Is on the way, is/are coming, came, have arrived, rushes out, brings")),
+              br(),
+              tags$p('Note: Sometimes combined with MC 8 as in "The mother called the fire department to come with their ladder." A person who says this should receive full credit for MCs 8 and 9.', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: While the first two essential elements met 66% threshold, the final element “with a ladder” was only produced by 33% of the sample.', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
+
+
 cr10<-
-  HTML('<p class="c13"><span class="c6">10)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The fire department </span><span class="c15 c9">2</span><span class="c9">rescues</span><span class="c15 c9">3</span><span class="c9">them.</span></p>
-      <p class="c10"><span class="c6">1. &nbsp;See 9.1 (but not fire truck)</span></p>
-      <p class="c10"><span class="c6">2. &nbsp;Saves, is going to get, helps, gets, will take </span></p>
-      <p class="c10"><span class="c6">3. &nbsp;The man, the cat, the man and the cat</span></p>
-      <p class="c20"><span class="c0">Note 1: Often combined with MC 9 as in The fire department comes with a ladder to rescue them. A person who says this should receive full credit for MCs 9 and 10.</span></p>
-      <p class="c20"><span class="c0">Note 2: Sometimes combined with MC 8 and MC 9 as in The mother called the fire department to come and rescue the father with a ladder. A person who says this should receive full credit for MCs 8, 9, and 10.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 10,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The fire department"),HTML('&nbsp;'), tags$sup("2"), tags$strong("rescues"),HTML('&nbsp;'), tags$sup("3"), tags$strong("them"))),
+              tags$ol(
+                tags$li("See 9.1 (but not fire truck)"),
+                tags$li("Saves, is going to get, helps, gets, will take"),
+                tags$li("The man, the cat, the man and the cat")),
+              br(),
+              tags$p('Note: Often combined with MC 9 as in "The fire department comes with a ladder to rescue them." A person who says this should receive full credit for MCs 9 and 10.', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: Sometimes combined with MC 8 and MC 9 as in "The mother called the fire department to come and rescue the father with a ladder." A person who says this should receive full credit for MCs 8, 9, and 10.', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
+
 # umbrella
 u1<-
-  HTML('<p class="c13"><span class="c6">1)</span><span class="c1">&nbsp; &nbsp;</span><span class="c9">The mother says</span><span class="c15 c9">1</span><span class="c9">it’s going to </span><span class="c15 c9">2</span><span class="c9">rain today.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">It’s supposed to, it might, it’s predicted, it looks like, there’s a chance</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Sprinkle, drizzle, storm</span></p>
-      <p class="c20"><span class="c0">Note 1: Occasionally produced as </span><span class="c15 c9">2</span><span class="c9">Rain</span><span class="c14 c6">&nbsp;</span><span class="c15 c9">1</span><span class="c9">is in the forecast</span><span class="c0">. </span></p>
-      <p class="c20"><span class="c0">Note 2: Statements that implied bad weather was on the way e.g. the weather was looking gray and cloudy outside do not count towards this MC as it was another relevant concept that did not meet threshold. </span></p>
-      <p class="c20"><span class="c0">Note 3: The statement It is raining. does not apply to this MC; see MC 5.</span></p>
-      ')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 1,
+              tags$li("The mother says", tags$em(tags$sup("1"), tags$strong("It's going to"),HTML('&nbsp;'), tags$sup("2"), tags$strong("rain"), HTML('&nbsp;'), "today.")),
+              tags$ol(
+                tags$li("It’s supposed to, it might, it’s predicted, it looks like, there’s a chance"),
+                tags$li("1.2.	Sprinkle, drizzle, storm")),
+              br(),
+              tags$p('Note: Occasionally produced as " (2) Rain (1) is in the forecast."', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: Statements that implied bad weather was on the way e.g. "the weather was looking gray and cloudy outside" do not count towards this MC as it was another relevant concept that did not meet threshold.', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('The statement "It is raining." does not apply to this MC; see MC 5.', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 u2<-
-  HTML('<p class="c13"><span class="c6">2)</span><span class="c1">&nbsp; &nbsp;</span><span class="c6">The mother says </span><span class="c15 c9">1</span><span class="c9">you </span><span class="c15 c9">2</span><span class="c9">need to take </span><span class="c15 c9">3</span><span class="c9">the</span><span class="c14 c6">&nbsp;</span><span class="c9">umbrella</span><span class="c2">.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">He (if appropriate referent), the boy, (male name)</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Carry, take, have, need, should have, might need, might want </span></p>
-      <p class="c20"><span class="c0">Note 1: Sometimes produced as a command with the subject implied, e.g., take this umbrella these statements were considered AC since English allows the subject to be dropped in a command.</span></p>
-      <p class="c20"><span class="c0">Note 2: Sometimes produced as </span><span class="c15 c9">1</span><span class="c9">his mother </span><span class="c15 c9">2</span><span class="c9">offers</span><span class="c6">&nbsp;him </span><span class="c15 c9">3</span><span class="c9">an umbrella</span><span class="c0">. or similar.</span></p>
-      <p class="c20"><span class="c0">Note 3: Occasionally produced as a question </span><span class="c9">dont &nbsp;</span><span class="c15 c9">1</span><span class="c9">you &nbsp;</span><span class="c15 c9">2</span><span class="c9">want to take</span><span class="c15 c9">3</span><span class="c9">this umbrella</span><span class="c0">?</span></p>
-      <p class="c20"><span class="c0">Note 4: Sometimes produced </span><span class="c15 c9">2</span><span class="c9">here is</span><span class="c15 c9">1</span><span class="c9">your &nbsp;</span><span class="c15 c9">3</span><span class="c9">umbrella</span><span class="c0">.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 2,
+              tags$li("The mother says", tags$em(tags$sup("1"), tags$strong("you"),HTML('&nbsp;'), tags$sup("2"), tags$strong("need to take"),HTML('&nbsp;'), tags$sup("3"), tags$strong("the umbrella"))),
+              tags$ol(
+                tags$li("He (if appropriate referent), the boy, (male name)"),
+                tags$li("Carry, take, have, need, should have, might need, might want")),
+              br(),
+              tags$p('Note: Sometimes produced as a command with the subject implied, e.g., "take this umbrella" these statements were considered AC since English allows the subject to be dropped in a command.', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: Sometimes produced as "(1) his mother (2) offers him (3) an umbrella." or similar.', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: Occasionally produced as a question "Don’t (1) you (2) want to take (3) this umbrella?"', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: Sometimes produced " (2) here is (1) your (3) umbrella."', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 u3<-
-  HTML('<p class="c13"><span class="c6">3)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The boy</span><span class="c15 c9">2</span><span class="c9">(does something to refuse)</span><span class="c15 c9">3</span><span class="c9">the umbrella.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">He (if appropriate referent), the boy, (male name), I (if reported speech)</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Doesn’t want, refuses, won’t/is not going to take, declines, says no, says he’ll be ok without</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; </span><span class="c0">It (if appropriate referent)</span></p>
-      <p class="c20"><span class="c0">Note: Occasionally this concept was stated as He won’t do it. in reference to the mother trying to make him take the umbrella, so the action he won’t do is take the umbrella and this should receive an AC as long as the referent is produced.</span></p>
-      ')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 3,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The boy"),HTML('&nbsp;'), tags$sup("2"), tags$strong("(does something to refuse)"),HTML('&nbsp;'), tags$sup("3"), tags$strong("the umbrella"))),
+              tags$ol(
+                tags$li("He (if appropriate referent), the boy, (male name), I (if reported speech)"),
+                tags$li("Doesn’t want, refuses, won’t/is not going to take, declines, says no, says he’ll be ok without"),
+                tags$li("It (if appropriate referent)")),
+              br(),
+              tags$p('Note: Occasionally this concept was stated as "He won’t do it." in reference to the mother trying to make him take the umbrella, so the action he "won’t do" is "take the umbrella" and this should receive an AC as long as the referent is produced.', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 u4<-
-  HTML('<p class="c13"><span class="c6">4)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The boy </span><span class="c15 c9">2</span><span class="c9">walks</span><span class="c15 c9">3</span><span class="c9">to school.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">See 3.1, a child</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Goes, leaves, heads, takes off, starts, sets</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; </span><span class="c0">Outside, out of the house, out, to/for/towards [location], down the road, off, out of the door, further, forth, down, in the rain</span></p>
-      <p class="c20"><span class="c0">Note: Sometimes the order of elements was switched, e.g. </span><span class="c9 c15">3</span><span class="c9">Off to school </span><span class="c9 c15">1</span><span class="c9">he </span><span class="c9 c15">2</span><span class="c9">goes</span><span class="c0"> </span></p>
-      ')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 4,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The boy"),HTML('&nbsp;'), tags$sup("2"), tags$strong("walks"),HTML('&nbsp;'), tags$sup("3"), tags$strong("to school"))),
+              tags$ol(
+                tags$li("See 3.1, a child"),
+                tags$li("Saves, is going to get, helps, gets, will take"),
+                tags$li("Goes, leaves, heads, takes off, starts, sets"),
+                tags$li("Outside, out of the house, out, to/for/towards [location], down the road, off, out of the door, further, forth, down, in the rain")),
+              br(),
+              tags$p('Note: Sometimes the order of elements was switched, e.g. "(3) Off to school (1) he (2) goes” ', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 u5<-
-  HTML('<p class="c13"><span class="c6">5)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">It </span><span class="c15 c9">2</span><span class="c9">is raining.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">The rain, the deluge</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Starts to pour, starts coming down, is falling, is sprinkling, gets harder, gets heavier, is raining, begins to rain, starts to rain, starts falling, comes, is coming down, starts raining, started sprinkling, started, rained</span></p>
-      <p class="c20"><span class="c0">Note 1: Sometimes produced as a colloquialism, The sky opens up or We have a downpour.</span></p>
-      <p class="c20"><span class="c0">Note 2: Occasionally produced as Here </span><span class="c15 c9">2</span><span class="c9">comes</span><span class="c14 c6">&nbsp;</span><span class="c15 c9">1</span><span class="c9">the rain</span><span class="c0">.</span></p>
-      <p class="c20"><span class="c0">Note 3: Do not count utterances about rain increasing in severity (e.g., It starts to rain harder.).</span></p>
-      ')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 5,
+              tags$li(tags$em(tags$sup("1"), tags$strong("It"),HTML('&nbsp;'), tags$sup("2"), tags$strong("is raining"))),
+              tags$ol(
+                tags$li("The rain, the deluge"),
+                tags$li("Starts to pour, starts coming down, is falling, is sprinkling, gets harder, gets heavier, is raining, begins to rain, starts to rain, starts falling, comes, is coming down, starts raining, started sprinkling, started, rained")),
+              br(),
+              tags$p('Note: Sometimes produced as a colloquialism, "The sky opens up" or "We have a downpour."', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: Occasionally produced as "Here (2) comes (1) the rain."', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: Do not count utterances about rain "increasing"" in severity (e.g., "It starts to rain harder.").', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 u6<-
-  HTML('<p class="c13"><span class="c6">6)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The boy </span><span class="c15 c9">2</span><span class="c9">gets</span><span class="c15 c9">3</span><span class="c9">soaking wet.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">See 3.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Is, looks, stands there</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; </span><span class="c0">Soaked, drenched, dripping, very wet</span></p>
-      <p class="c20"><span class="c0">Note: Sometimes speakers would use first person (e.g. </span><span class="c9 c15">1</span><span class="c9">I </span><span class="c9 c15">2</span><span class="c9">am </span><span class="c9 c15">3</span><span class="c9">all wet</span><span class="c0">)</span></p>
-      ')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 6,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The boy"),HTML('&nbsp;'), tags$sup("2"), tags$strong("gets"),HTML('&nbsp;'), tags$sup("3"), tags$strong("soaking wet"))),
+              tags$ol(
+                tags$li("See 3.1"),
+                tags$li("Is, looks, stands there"),
+                tags$li("Soaked, drenched, dripping, very wet")),
+              br(),
+              tags$p('Note: Sometimes speakers would use first person (e.g. "(1) I (2) am (3) all wet")', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 u7<-
-  HTML('<p class="c13"><span class="c6">7)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The boy </span><span class="c15 c9">2</span><span class="c9">runs </span><span class="c15 c9">3</span><span class="c9">back.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">See 3.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">Goes, heads, returns, turns around, races, rushes, comes, gets, arrives, shows</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; </span><span class="c0">Home, inside</span></p>
-      <p class="c20"><span class="c0">Note: Occasionally combined with MC 6 as in, The boy runs back soaking wet. A person </span></p>
-      <p class="c22"><span class="c0">who says this should receive full credit for MCs 6 and 7.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 7,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The fboy"),HTML('&nbsp;'), tags$sup("2"), tags$strong("runs"),HTML('&nbsp;'), tags$sup("3"), tags$strong("back"))),
+              tags$ol(
+                tags$li("See 3.1"),
+                tags$li("Goes, heads, returns, turns around, races, rushes, comes, gets, arrives, shows"),
+                tags$li("Home, inside")),
+              br(),
+              tags$p('Note: Occasionally combined with MC 6 as in, "The boy runs back soaking wet." A person who says this should receive full credit for MCs 6 and 7.', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 u8<-
-  HTML(' <p class="c13"><span class="c6">8)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The mother</span><span class="c15 c9">2</span><span class="c9">is</span><span class="c15 c9">3</span><span class="c9">(negative emotional state).</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">The woman, she, the lady, mom </span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">looks, feels</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; </span><span class="c0">unhappy, mad, angry, upset, annoyed, frustrated, concerned, cross, disappointed</span></p>
-      <p class="c20"><span class="c0">Note 1: Sometimes reported as his mother doesn’t look happy.</span></p>
-      <p class="c20"><span class="c0">Note 2: Statements about physical stance/nonverbal expression do not count, e.g., She’s scowling.</span></p>
-      <p class="c20"><span class="c0">Note 3: Occasionally combined with MC 6 and MC 7 as in When the boy came back home, mom was mad because he was all wet. A person who says this should receive full credit for MCs 6, 7, and 8.</span></p>
-      ')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 8,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The mother"),HTML('&nbsp;'), tags$sup("2"), tags$strong("is"),HTML('&nbsp;'), tags$sup("3"), tags$strong("(negative emotional state"))),
+              tags$ol(
+                tags$li("The woman, she, the lady, mom "),
+                tags$li("looks, feels"),
+                tags$li("unhappy, mad, angry, upset, annoyed, frustrated, concerned, cross, disappointed")),
+              br(),
+              tags$p('Note: Sometimes reported as "his mother doesn’t look happy."', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: Statements about physical stance/nonverbal expression do not count, e.g., "She’s scowling."', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: Occasionally combined with MC 6 and MC 7 as in "When the boy came back home, mom was mad because he was all wet." A person who says this should receive full credit for MCs 6, 7, and 8.', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 
 u9<-
-  HTML('<p class="c13"><span class="c6">9)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The boy</span><span class="c15 c9">2</span><span class="c9">gets</span><span class="c15 c9">3</span><span class="c9">an umbrella.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">see 3.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">takes, receives, has, asks for, carries, retrieves, picks up, holds</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; </span><span class="c0">it (if appropriate referent)</span></p>
-      <p class="c20"><span class="c0">Note: Sometimes produced as The mother </span><span class="c15 c6">2</span><span class="c9">gives</span><span class="c15 c6">1</span><span class="c9">the boy </span><span class="c15 c6">3</span><span class="c9">an</span><span class="c14 c6">&nbsp;</span><span class="c9">umbrella</span><span class="c14 c6">.</span><span class="c6"></span><span class="c14 c6">&nbsp;</span><span class="c6">Or she</span><span class="c14 c6">&nbsp;</span><span class="c9 c15">2</span><span class="c9">gave </span><span class="c9 c15">3</span><span class="c9">it to </span><span class="c9 c15">1</span><span class="c9">him.</span><span class="c6"></span><span class="c14 c6">&nbsp;</span><span class="c0">(if appropriate referents). </span></p>
-      ')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 9,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The boy"),HTML('&nbsp;'), tags$sup("2"), tags$strong("gets"),HTML('&nbsp;'), tags$sup("3"), tags$strong("an umbrella"))),
+              tags$ol(
+                tags$li("see 3.1"),
+                tags$li("takes, receives, has, asks for, carries, retrieves, picks up, holds"),
+                tags$li("it (if appropriate referent)")),
+              br(),
+              tags$p('Note: Sometimes produced as "The mother (2) gives (1) the boy (3) an umbrella.” Or “she (2) gave (3) it to (1) him.” (if appropriate referents). ', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 u10<-
-  HTML(' <p class="c13"><span class="c6">10)</span><span class="c1">&nbsp; &nbsp;</span><span class="c15 c9">1</span><span class="c9">The boy</span><span class="c15 c9">2</span><span class="c9">goes</span><span class="c15 c9">3</span><span class="c9">back to school.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; </span><span class="c0">see 3.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; </span><span class="c0">walks, leaves, heads, starts, takes, is, sets forth, proceeds</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; </span><span class="c0">out, again, along, back, in the rain, off, on his way, with the umbrella, (leaves) the house, the school bus</span></p>
-      <p class="c20"><span class="c0">Note 1: Sometimes produced as </span><span class="c15 c6">3</span><span class="c9">Off</span><span class="c15 c6">1</span><span class="c9">he</span><span class="c15 c6">2</span><span class="c9">goes</span><span class="c0">&nbsp;again.</span></p>
-      <p class="c20"><span class="c0">Note 2: Occasionally combined with MC 9, as in He goes out with the umbrella. A person who says this should receive full credit for MCs 9 and 10.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 10,
+              tags$li(tags$em(tags$sup("1"), tags$strong("The boy"),HTML('&nbsp;'), tags$sup("2"), tags$strong("goes back"),HTML('&nbsp;'), tags$sup("3"), tags$strong("to school"))),
+              tags$ol(
+                tags$li("see 3.1"),
+                tags$li("walks, leaves, heads, starts, takes, is, sets forth, proceeds"),
+                tags$li("out, again, along, back, in the rain, off, on his way, with the umbrella, (leaves) the house, the school bus")),
+              br(),
+              tags$p('Note: Sometimes produced as "(3) Off (1) he (2) goes again.”', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: Occasionally combined with MC 9, as in "He goes out with the umbrella." A person who says this should receive full credit for MCs 9 and 10.', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
+
 # sandwich
 s1<-
-  HTML('<p class="c13"><span class="c6">1)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Get </span><span class="c9 c15">2</span><span class="c9">bread </span><span class="c9 c15">3</span><span class="c9">out</span><span class="c0">&nbsp;of the pantry/cupboard/refrigerator/freezer/etc.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">Take out, remove, grab, find, pull out</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">Loaf, bread loaf, bread bag</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">From (which if used, must be followed by a location from the speaker)</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 1,
+              tags$li(tags$em(tags$sup("1"), tags$strong("Get"),HTML('&nbsp;'), tags$sup("2"), tags$strong("bread"),HTML('&nbsp;'), tags$sup("3"), tags$strong("out"), "of the pantry/cupboard/refrigerator/freezer/etc.")),
+              tags$ol(
+                tags$li("Take out, remove, grab, find, pull out"),
+                tags$li("Loaf, bread loaf, bread bag"),
+                tags$li("From (which if used, must be followed by a location from the speaker)")),
+              br(),
+              tags$p('Note: For concepts 1-5, "put" is not an acceptable verb. For each of those concepts there was a similar relevant concept (i.e., "put the bread on the counter"), however, none of these relevant concepts reached criterion. In these cases, the speaker would receive a score of absent, and any information associated with the verb “put” should be treated as extra information that is not scored.', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 s2<-
-  HTML('<p class="c13"><span class="c6">2)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Get </span><span class="c9 c15">2</span><span class="c9">two slices </span><span class="c9 c15">3</span><span class="c9">of bread.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">See 1.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">A couple of slices, two pieces</span></p>
-      <p class="c22 c26"><span class="c6">i.</span><span class="c1">&nbsp; &nbsp; </span><span class="c0">Most speakers indicated more than one piece of bread. However, if the speaker uses one piece of bread throughout the story, and for #8 uses fold or close, or indicates in some way that they made a half sandwich, then one slice/piece of bread is allowed. Speakers must be consistent throughout the telling for this to be counted as correct.</span></p>
-      <p class="c12"><span class="c6">3. &nbsp; </span><span class="c0">If the speaker received full credit for the first concept, they do not necessarily have to repeat of bread to be counted correct/complete for this concept. For example, a speaker could say You take the bread out of the pantry and get two slices.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 2,
+              tags$li(tags$em(tags$sup("1"), tags$strong("Get"),HTML('&nbsp;'), tags$sup("2"), tags$strong("two slices"),HTML('&nbsp;'), tags$sup("3"), tags$strong("of bread"))),
+              tags$ol(
+                tags$li("See 1.1"),
+                tags$li("A couple of slices, two pieces")),
+              br(),
+              tags$p('Note: Most speakers indicated more than one piece of bread. However, if the speaker uses one piece of bread throughout the story, and for #8 uses "fold" or "close"", or indicates in some way that they made a half sandwich, then one slice/piece of bread is allowed. Speakers must be consistent throughout the telling for this to be counted as correct.', style = "color:black; font-size: .9em;line-height: 120%;"),
+              tags$p('Note: If the speaker received full credit for the first concept, they do not necessarily have to repeat “of bread” to be counted correct/complete for this concept. For example, a speaker could say “You take the bread out of the pantry and get two slices.”', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 s3<-
-  HTML(' <p class="c13"><span class="c6">3)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Get</span><span class="c15 c9">2</span><span class="c9">the peanut butter.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">See 1.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">A jar of peanut butter</span></p>
-      <p class="c20"><span class="c0">Note: A concept like take off the lid on the peanut butter or open the peanut butter cannot be used for this concept. This was a relevant concept that did not reach significance.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 3,
+              tags$li(tags$em(tags$sup("1"), tags$strong("Get"),HTML('&nbsp;'), tags$sup("2"), tags$strong("the peanut butter"),HTML('&nbsp;'))),
+              tags$ol(
+                tags$li("See 1.1"),
+                tags$li("A jar of peanut butter")),
+              br(),
+              tags$p('Note: A concept like “take off the lid on the peanut butter” or "open the peanut butter" cannot be used for this concept. This was a relevant concept that did not reach significance.', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 s4<-
-  HTML('<p class="c13"><span class="c6">4)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Get </span><span class="c9 c15">2</span><span class="c9">the jelly.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">See 1.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">A jar of jelly, jam, preserves, honey</span></p>
-      <p class="c20"><span class="c0">Note: See note for number 3.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 4,
+              tags$li(tags$em(tags$sup("1"), tags$strong("Get"),HTML('&nbsp;'), tags$sup("2"), tags$strong("the jelly"),HTML('&nbsp;'))),
+              tags$ol(
+                tags$li("See 1.1"),
+                tags$li("A jar of jelly, jam, preserves, honey")),
+              br(),
+              tags$p('Note: See note for Number 3.', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 s5<-
-  HTML('<p class="c13"><span class="c6">5)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Get </span><span class="c9 c15">2</span><span class="c9">a knife.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">See 1.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">Spatula</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 5,
+              tags$li(tags$em(tags$sup("1"), tags$strong("Get"),HTML('&nbsp;'), tags$sup("2"), tags$strong("a knife"),HTML('&nbsp;'))),
+              tags$ol(
+                tags$li("See 1.1"),
+                tags$li("Spatula"))
+      )
+  )
+
 s6<-
-  HTML('<p class="c13"><span class="c6">6)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Put </span><span class="c9 c15">2</span><span class="c9">the bread </span><span class="c9 c15">3</span><span class="c9">on the plate.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">Place, set, lay</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">The slices, the pieces, it, them</span></p>
-      <p class="c22 c26"><span class="c6">i.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">It must be clear that the individual is referring only to the bread, not the jelly, peanut butter, or knife</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">Counter, breadboard, cutting board, napkin, down (on a surface)</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 6,
+              tags$li(tags$em(tags$sup("1"), tags$strong("Put"),HTML('&nbsp;'), tags$sup("2"), tags$strong("the bread"),HTML('&nbsp;'), tags$sup("3"), tags$strong("on a plate"))),
+              tags$ol(
+                tags$li("Place, set, lay"),
+                tags$li("The slices, the pieces, it, them (It must be clear that the individual is referring only to the bread, not the jelly, peanut butter, or knife)"),
+                tags$li("Counter, breadboard, cutting board, napkin, down (on a surface)"))
+      )
+  )
+
 s7<-
-  HTML('<p class="c13"><span class="c6">7)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Put </span><span class="c9 c15">2</span><span class="c9">peanut butter </span><span class="c9 c15">3</span><span class="c9">on bread.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">Place, smear, spread, slap, slather, spoon out, cover</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">No alternative for peanut butter was produced</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c0">&nbsp; &nbsp;On top of jelly, on the other piece of bread, on one slice, on one side, on one half</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 7,
+              tags$li(tags$em(tags$sup("1"), tags$strong("Put"),HTML('&nbsp;'), tags$sup("2"), tags$strong("peanut butter"),HTML('&nbsp;'), tags$sup("3"), tags$strong("on bread"))),
+              tags$ol(
+                tags$li("Place, smear, spread, slap, slather, spoon out, cover"),
+                tags$li("No alternative for “peanut butter was produced"),
+                tags$li("On top of jelly, on the other piece of bread, on one slice, on one side, on one half"))
+      )
+  )
+
 s8<-
-  HTML('<p class="c13"><span class="c6">8)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Put </span><span class="c9 c15">2</span><span class="c9">jelly </span><span class="c9 c15">3</span><span class="c9">on bread.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">See 7.1</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">See 4.2</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">See 7.3 </span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 8,
+              tags$li(tags$em(tags$sup("1"), tags$strong("Put"),HTML('&nbsp;'), tags$sup("2"), tags$strong("jelly"),HTML('&nbsp;'), tags$sup("3"), tags$strong("on bread"))),
+              tags$ol(
+                tags$li("See 7.1"),
+                tags$li("See 4.2"),
+                tags$li("See 7.3"))
+      )
+  )
+
 s9<-
-  HTML(' <p class="c13"><span class="c6">9)</span><span class="c1">&nbsp; &nbsp; </span><span class="c9 c15">1</span><span class="c9">Put </span><span class="c9 c15">2</span><span class="c9">the two pieces </span><span class="c9 c15">3</span><span class="c9">together.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">Place, smash, slap, smack, stick</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">The bread, the two slices of bread, the two sides, the peanut butter and jelly, the two, the two halves, them</span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">If the speaker does not say together they must give some indication that the two pieces become one (i.e., Put one piece on top of the other, Combine the pieces of bread, Put the second piece of bread on top.)</span></p>
-      <p class="c22 c26"><span class="c6">i.</span>&nbsp;&nbsp; The verbs fold and close cannot be used for this concept, unless the speaker tells the entire story with one piece of bread as if making half of a sandwich, see 2.2.i.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 9,
+              tags$li(tags$em(tags$sup("1"), tags$strong("Put"),HTML('&nbsp;'), tags$sup("2"), tags$strong("the two pieces"),HTML('&nbsp;'), tags$sup("3"), tags$strong("together"))),
+              tags$ol(
+                tags$li("Place, smash, slap, smack, stick"),
+                tags$li("The bread, the two slices of bread, the two sides, the peanut butter and jelly, the two, the two halves, them"),
+                tags$li('If the speaker does not say "together" they must give some indication that the two pieces become one (i.e., "Put one piece on top of the other", "Combine the pieces of bread", "Put the second piece of bread on top.")')),
+              br(),
+              tags$p('Note: The verbs “fold” and “close” cannot be used for concept 3, unless the speaker tells the entire story with one piece of bread as if making half of a sandwich, see 2.2', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 s10<-
-  HTML('<p class="c13"><span class="c6">10)</span><span class="c9 c15">1</span><span class="c9">Cut </span><span class="c9 c15">2</span><span class="c9">the sandwich </span><span class="c9 c15">3</span><span class="c9">in pieces.</span></p>
-      <p class="c10"><span class="c6">1.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">Slice</span></p>
-      <p class="c10"><span class="c6">2.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">The bread, it </span></p>
-      <p class="c10"><span class="c6">3.</span><span class="c1">&nbsp; &nbsp;</span><span class="c0">In half, in quarters, in two, diagonally, across, on the bias, down the middle, with an x, however you like</span></p>
-      <p class="c22"><span class="c0">Note: For concepts 1-5, put is not an acceptable verb. For each of those concepts there was a similar relevant concept (i.e., put the bread on the counter), however, none of these relevant concepts reached criterion. In these cases, the speaker would receive a score of absent, and any information associated with the verb put should be treated as extra information that is not scored.</span></p>')
+  div(style = "line-height: 170%;",
+      tags$ol(start = 2,
+              tags$li(tags$em(tags$sup("1"), tags$strong("Cut"),HTML('&nbsp;'), tags$sup("2"), tags$strong("the sandwich"),HTML('&nbsp;'), tags$sup("3"), tags$strong("in pieces"))),
+              tags$ol(
+                tags$li("Slice"),
+                tags$li("The bread, it"),
+                tags$li("In half, in quarters, in two, diagonally, across, on the bias, down the middle, with an x, however you like")),
+              br(),
+              tags$p('Note: Most speakers indicated more than one piece of bread. However, if the speaker uses one piece of bread throughout the story, and for #8 uses "fold" or "close"", or indicates in some way that they made a half sandwich, then one slice/piece of bread is allowed. Speakers must be consistent throughout the telling for this to be counted as correct.', style = "color:black; font-size: .9em;line-height: 120%;")
+      )
+  )
+
 # cinderella
 c1<-
   HTML('<p class="c13"><span class="c6">1)</span><span class="c9 c15">1</span><span class="c9">Dad </span><span class="c9 c15">2</span><span class="c9">remarried </span><span class="c9 c15">3</span><span class="c9">a woman</span><span class="c0">&nbsp;with two daughters.</span></p>
@@ -477,7 +748,6 @@ c34<-
       <p class="c10"><span class="c6">2.&nbsp; &nbsp;</span><span class="c0">Lived forever, lived a long time, were happy for life.</span></p>
       <p class="c22 c26"><span class="c6">i.&nbsp; &nbsp;</span><span class="c0">The speaker must indicate an extended length of time in order to receive an accurate and complete score. For example, ever after, forever, a long time, life</span></p>
       <p class="c20"><span class="c0">Note: Variations can include They lived happily every after, They were together forever, They had a wonderful life</span></p>')
-
 
 
 
