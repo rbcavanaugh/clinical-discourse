@@ -22,20 +22,18 @@ controls <- tagList(
 
 gettingStarted <- 
   div(
-    h4("Main Concept Analysis"),
-    p("Main Concept Analysis is a discourse assessment that measures the informativeness of a discourse sample about a given topic.  Each main concept consists of several essential elements, corresponding to the subject, main verb, object (if appropriate), and any subordinate clauses. Concepts are scored by their accuracy (are the essential elements accurate?) and completeness (are essential elements present?)."),
+    h4("Main Concept Analysis", align = "center"),
+    p("Main Concept Analysis is a discourse assessment that measures the informativeness of a discourse sample about a given topic. Each main concept consists of several essential elements, corresponding to the subject, main verb, object (if appropriate), and any subordinate clauses. Concepts are scored by accuracy and completeness."),
       p("Main concept analysis has shown good sensitivity in differentiating between controls and individuals with communication disorders. It is correlated with standardized measures of overall aphasia severity, confrontation naming (for some subtypes), listener perceptions, conversational abilities, communication confidence, and life participation. Changes in informativeness are associated with listener’s perceptions of communication quality."), 
-    p("Main concept analysis was originally developed by Drs. Nicholas and Brookshire sin 1995. Drs. Richardson and Dalton have recently developed main concept checklists based on large language corpora",  a("(primarily, AphasiaBank).", href = "https://www.talkbank.org", target = "_blank"), "By using established checklists, main concept analysis overcomes many challenges to evaluating discourse scoring in clinical practice. The goal of this web-app is to provide clinicians with an easy-to-use interface for scoring main concepts, improving the implementation of discourse analysis in routine clinical practice."),
+    p("Main concept analysis was originally developed in 1995 (Nicholas & Brookshire). Drs. Richardson and Dalton have recently developed main concept checklists based on large language corpora",  a("(primarily, AphasiaBank).", href = "https://www.talkbank.org", target = "_blank"), "By using checklists, main concept analysis overcomes many challenges to discourse evaluation in clinical practice. The goal of this web-app is to provide clinicians with an easy-to-use interface for scoring main concepts, further improving the implementation of main concept analysis in routine clinical practice."),
   h4("Instructions"),
     tags$ol(
-      tags$li("Start by reviewing the instructions for scoring main concept (hit next). Review the reference manual for additional details and examples if needed. You'll also be able to access this information while you score your transcript"),
+      tags$li("Start by reviewing the instructions for scoring main concept (hit next). Review the reference manual for additional details and examples if needed. You'll also be able to access this information while you score your transcript. We encourage you to use the", a("full scoring manual", href = "https://drive.google.com/file/d/1HFaKg8kHGW3JZhNr1nSGVJHLZhnnQiK-/view?usp=sharing", target = "_blank"),"and", a("specific guideles for Cinderella", href = "https://docs.google.com/document/d/1dx2aPGi6z_sPl1CCC0vbyNyVECwFRBLkHBXo9UrOWyg/edit?usp=sharing", target = "_blank")),
       tags$li("When you're ready, select the stimulus you used to elicit the discourse sample and type in your transcript in the box on the left. Make sure to capitalize the first letter of each sentence and use periods to end sentences. WHAT ARE THE TRANSCRIPTION RULES????"),
       tags$li('After typing in your transcript, hit "Start Scoring" to start scoring'),
       tags$li('Selecting the sentences to go along with each concept is not necessary, but may help with evaluting the parts of the transcript relevant to each concept. In the future, this will  provide information on discourse sequencing.'),
       tags$li("When you're done scoring, the results will be shown on the last page. You will also be able to download a summary spreadsheet with your transcript and the concept scores.")
-    ),br(),
-    "If you have any questions, concerns, or feedback, please use the 'give feedback' form (see about page) or post a question to the github page under 'issues.'"
-    
+    )
   )
 
 

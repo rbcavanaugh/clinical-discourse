@@ -1,16 +1,16 @@
 #Easy:
 
 # Medium:
-# view examples for story or for that specific concept?
-# front page - welcome modal 
 # true corlex norms
-
-# Do towards the end:
 # mca norms and results page
 # download of data - core lex and mca
 
 # questions: 
 # swap sentences and scoring??
+
+# hard:
+# use slickR or shinyglide for scoring components.
+#learn-r tutorial
 
 
 
@@ -84,27 +84,16 @@ ui <-
                               awesomeCheckbox("show_sequencing", "Ignore Sequencing", value = F, status = "primary"),
                               
                               div(align = "center",
-                              actionButton("start", "Start Scoring"),
-                              actionButton("button3", "Start Over")
+                              uiOutput("sidebarstart")
                               )
                               
                  ),
                  mainPanel(width = 9, style = "padding-right: 30px;",
                    conditionalPanel(condition = "output.countzero == true",
-                                    tabsetPanel(id = "page1",
-                                    tabPanel("Getting Started",
-                                      
                                     fluidRow(
                                         column(width = 12, 
                                              glide_div
-                                      )
-                                    )
-                                    ),
-                                    tabPanel("Reference Manual", 
-                                            tags$iframe(style="height:600px; width:100%; scrolling=yes",
-                                                        src="manual.pdf")
-                                            )
-
+                                        )
                                     )
                    ),
                    # scoring panels
@@ -495,18 +484,19 @@ server <- function(input, output, session) {
                           concept_accuracy = list()
   )
   
-  observeEvent(input$goback | input$button3,{
+  observeEvent(input$button3,{
     values$i=0
     values$concept = list()
     values$selected_sentences = list()
     values$concept_accuracy = list()
   })
   
-  observeEvent(input$start,{ 
-    values$i=0
-    values$concept = list()
-    values$selected_sentences = list()
-    values$concept_accuracy = list()
+  output$sidebarstart <- renderUI({
+    if(values$i > 0){
+      actionButton("button3", "Start Over")
+    } else {
+      actionButton("start", "Start Scoring")
+    }
   })
   
   stim_task <- reactive({
@@ -904,7 +894,7 @@ server <- function(input, output, session) {
  
  
  
- observeEvent(input$nxt | input$prev | input$button3 | input$goback,{
+ observeEvent(c(input$button3, input$start),{
    if(values$i>0){
      shinyjs::disable("stimMC")
    } else {

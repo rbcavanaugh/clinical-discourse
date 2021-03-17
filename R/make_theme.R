@@ -32,6 +32,10 @@ theme <-
     bg = "#ecf0f1",
     border = "#4a647c"
   ),
+  bs_vars_font(
+    size_base = "16px"
+  ),
+  
   
   
   
