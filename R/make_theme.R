@@ -29,11 +29,11 @@ theme <-
     default_bg = "#4a647c"
   ),
   bs_vars_wells(
-    bg = "#ecf0f1",
-    border = "#4a647c"
+    bg = "#ecf0f1"#,
+    #border = "#4a647c"
   ),
   bs_vars_font(
-    size_base = "16px"
+    size_base = "15px"
   ),
   
   
@@ -41,3 +41,27 @@ theme <-
   
   output_file = "www/theme.css"
   )
+
+
+# theme2 <- 
+#   create_theme(theme = "default",
+#                bs_vars_navbar(
+#                  default_bg = "#FFFFFF",
+#                ),
+#                bs_vars_button(
+#                  font_weight = 500,
+#                  default_border = "#607D8B",
+#                  default_color = "#EEEEEE",
+#                  default_bg = "#4a647c"
+#                ),
+#                bs_vars_font(
+#                  size_base = "14px",
+#                  family_sans_serif = "Roboto"
+#                   
+#                ),
+#                
+#                
+#                
+#                
+#                output_file = "www/theme.css"
+#   )

@@ -48,7 +48,6 @@ ui <-
     useShinydashboard(),
     tags$head(
       tags$link(rel = "shortcut icon", href = "favicon.png", type="image/png"),
-      tags$link(rel = "stylesheet", type = "text/css", href = "mca_css.css"),
       tags$link(rel = "stylesheet", type = "text/css", href = "theme.css"),
       tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
       tags$title("Aphasia Discourse"),
@@ -148,7 +147,7 @@ ui <-
                                   fluidRow(
                                     column(width = 4, align = "center",
                                            #tableOutput("sequencing"),
-                                           DTOutput("results_mca_table"),
+                                           tableOutput("results_mca_table"),
                                            ),
                                   column(width = 8, align = "center", br(), br(), br(), 
                                          h3("Plot goes here")
@@ -156,8 +155,8 @@ ui <-
                                     ),br(),
                                   fluidRow(
                                     wellPanel(align = "center",
-                                    h4("this will give an option to download all data."),
-                                    h5("This includes each sentence, which concept it was scored with, how the essential elements of each concept was scored, and how each concept was scored in terms of accuracy and completeness. ")
+                                              downloadButton("downloadData", "Download"),
+                                              h5("This includes each sentence, which concept it was scored with, how the essential elements of each concept was scored, and how each concept was scored in terms of accuracy and completeness. ")
                                   )
                                   )
                                   )
@@ -697,31 +696,41 @@ server <- function(input, output, session) {
     
   })
   
-  # output_results <- eventReactive(input$nxt,{ # change this to download....
-  #     if(values$i==stim_task()$num_slides+1){
-  #       mca = bind_rows(values$concept_accuracy) %>%
-  #         left_join(filter_na_concepts(), by = c('concept', 'component')) %>%
-  #         drop_na(element)
-  #     } else {}
-  # })
-  
-  output$results_mca_table <- renderDT(
+  results_mca_tab <- reactive({
     results_mca() %>%
       select(Concept = concept, Code = Result, Score = score) %>%
-      mutate(Concept = as.character(Concept),
-             Score = as.character(Score)),
-    rownames = F,
-    options = list(dom = 't',
-                   #ordering = TRUE,
-                   #scrollY = "400px",
-                   #scroller = TRUE,
-                   #fixedColumns = list(heightMatch = 'none'),
-                   #scrollCollapse = TRUE,
-                   columnDefs = list(list(className = 'dt-center', targets = 0:2)),
-                   paging = FALSE
-    )
+      summarize(`Accurate Complete` = sum(Code == 'AC'),
+                `Accurate Incomplete` = sum(Code == 'AI'),
+                `Inaccurate Complete` = sum(Code == 'IC'),
+                `Inaccurate Incomplete` = sum(Code == 'II'),
+                Absent = sum(Code == 'Absent'),
+                `Main Concept Attempts` = sum(Code == 'AC'|Code == 'AI'|Code == 'IC'| Code == 
+                                'II'),
+                `Composite Score` = sum(Score)
+      ) %>% 
+      pivot_longer(cols = everything(), names_to = 'Variable', values_to = 'Score') %>%
+      mutate(Score = as.character(Score))
+  })
+  
+  output$results_mca_table <- renderTable(
+    results_mca_tab(),
+    align = "c", colnames = F
   )
+  
+  transcr = reactive({
+    tibble(transcript = c(input$stimMC, input$type))
+  })
 
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste(input$stimMC, "_MC.xlsx", sep = "")
+    },
+    content = function(file) {
+      writexl::write_xlsx(list(overall = results_mca_tab(),
+                               by_concept = results_mca(),
+                               transcript = transcr()), file)
+    }
+  )
   
   # output$sequencing <- renderTable({
   #   order()
