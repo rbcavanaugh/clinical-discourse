@@ -79,7 +79,9 @@ ui <-
                               textAreaInput("type",
                                             h5("Enter Transcript"),
                                             value = transcriptDefault,# transcriptDefault,
-                                            height = '400px'),
+                                            height = '300px'),
+                              numericInput("timeMC", "Time on task (seconds)", value= 120,
+                                           min = 1, max = 1200, step = 1),
                               awesomeCheckbox("show_sequencing", "Ignore Sequencing", value = F, status = "primary"),
                               
                               div(align = "center",
@@ -155,8 +157,10 @@ ui <-
                                     ),br(),
                                   fluidRow(
                                     wellPanel(align = "center",
-                                              downloadButton("downloadData", "Download"),
-                                              h5("This includes each sentence, which concept it was scored with, how the essential elements of each concept was scored, and how each concept was scored in terms of accuracy and completeness. ")
+                                              downloadButton("downloadData", "Download Summary Data"),
+                                              downloadButton("downloadData_raw", "Download Concept Data"),
+                                              downloadButton("downloadData_rawsen", "Download Sentence Data"),
+                                              h5("The sumary data is intended for clinicians and general review. Concept data downloads scoring for each element of each concept. Sentence data (will) provide info on which 'sentences/utterances' were selected for each concept for sequencing...")
                                   )
                                   )
                                   )
@@ -267,31 +271,7 @@ ui <-
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
   
-#####introduction modal
-  # 
-  # showModal(
-  #   modalDialog(
-  #     title = "Core Lexicon and Main Concept Scoring!",
-  #     p("This is a welcome screen"),
-  #     p("Should we use this screen?"),
-  #     p("Here's why you should use this app (or similar methods)"),
-  #     p("here's what this app does"),
-  #     p("Here's what it doesn't do"),
-  #     p("Here's some other stuff that you should know"),
-  #     p("This app is free and open source; the code is public."),
-  #     size = "m",
-  #     easyClose = T,
-  #     footer = modalButton("Lets Go!")
-  #   )
-  # )
-  # 
-  
-  
-  
-  
-  
-  
-  ###### Core Lex Stuff ####################################
+
 ###### stuff that doesn't matter right now.... #####
   # feedback core lex
   observeEvent(input$feedback, {
@@ -329,150 +309,7 @@ server <- function(input, output, session) {
   
   
 
-######## core lexicon stuff ######
 
-# core lexicon table output
-  
-  # core lex counter
-  counter2 <- reactiveVal(0)
-  get_cor_id <- reactive({
-    nrow(selectedData2())
-    isolate(counter2(counter2() + 1))
-    paste0("cor_check", counter2())
-  })
-  
-  data <- reactive({
-    df = selectedData2()
-    for (i in 1:nrow(df)) {
-      df[["Correct"]][i] <- as.character(shinyWidgets::awesomeCheckbox(paste0(get_cor_id(), i),
-                                                                  label="",
-                                                                  #width = "20px",
-                                                                  value = df$produced[i],
-                                                                  status = "primary"#,
-                                                                  #bigger = T,
-                                                                 #icon = icon("check")
-      ))
-    }
-    df %>% dplyr::select(-produced)
-  })
-  
-  ####core lex table #####
-  output$table_cl = DT::renderDataTable(
-    data(),
-    escape = FALSE,
-    selection = 'none',
-    server = FALSE,
-    options = list(dom = 't',
-                   ordering = TRUE,
-                   scrollY = "400px",
-                   #scroller = TRUE,
-                   fixedColumns = list(heightMatch = 'none'),
-                   #scrollCollapse = TRUE,
-                   columnDefs = list(list(className = 'dt-center', targets = 0:3)),
-                   paging = FALSE
-    ),
-    callback = JS(
-      "table.rows().every(function(i, tab, row) {
-        var $this = $(this.node());
-        $this.attr('id', this.data()[0]);
-        $this.addClass('shiny-input-container');
-      });
-      Shiny.unbindAll(table.table().node());
-      Shiny.bindAll(table.table().node());")
-  )
-  
-  
-  
-  score_num_data <- reactive({
-    accuracy = unlist(sapply(1:nrow(data()), function(i) input[[paste0(get_cor_id(), i)]]))
-    
-    return(sum(as.numeric(accuracy)))
-
-  })
-
-  output$sel = renderTable({
-    score_num()
-  })
-  
-  
-  
- # core lexicon results plot 
-  output$plot_cl <- renderPlot({
-    prod <- selectedData()[[2]] %>%
-      mutate(Cohort = ifelse(dist == 'dist1' | dist == 'dist3', 'control', 'aphasia'),
-             met = factor(ifelse(dist == 'dist1' | dist == 'dist2', 'Production', 'Efficiency'),
-                          levels = c('Production', 'Efficiency'))
-      ) %>%
-      dplyr::filter(met == "Production") %>%
-      ggplot(aes(x = val, color = Cohort, fill = Cohort)) +
-      geom_density(alpha = .3) +
-      geom_vline(data = data.frame(xint=selectedData()[[3]][[1]],met="Production"), 
-                 aes(xintercept = xint), linetype = "dashed", size = 1) +
-      theme_grey(base_size = 14) +
-      theme(#panel.background = element_rect(fill = "transparent"),
-        legend.position = 'bottom',
-        axis.title.y=element_blank(),
-        axis.title.x=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        legend.title = element_blank(),
-        plot.title = element_text(hjust = 0.5)) +
-      labs(title = "Core words")
-    
-    eff <- selectedData()[[2]] %>%
-      mutate(Cohort = ifelse(dist == 'dist1' | dist == 'dist3', 'control', 'aphasia'),
-             met = factor(ifelse(dist == 'dist1' | dist == 'dist2', 'Production', 'Efficiency'),
-                          levels = c('Production', 'Efficiency'))
-      ) %>%
-      dplyr::filter(met == "Efficiency") %>%
-      ggplot(aes(x = val, color = Cohort, fill = Cohort)) +
-      geom_density(alpha = .3) +
-      geom_vline(data = data.frame(xint=selectedData()[[3]][[2]],met="Efficiency"), 
-                 aes(xintercept = xint), linetype = "dashed", size = 1) +
-      theme_grey(base_size = 14) +
-      theme(#panel.background = element_rect(fill = "transparent"),
-        legend.position = 'bottom',
-        axis.title.y=element_blank(),
-        axis.title.x=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        legend.title = element_blank(),
-        plot.title = element_text(hjust = 0.5)) +
-      labs(title = "Core words / min")
-    
-    prod + eff + plot_layout(guides = 'collect') & theme(legend.position = 'bottom')
-    
-  })
-  
-  #### value boxes ####   
-  
-  #core lex value box production
-  output$results_cl1 <- renderValueBox({
-    valueBox(
-      value = paste0(selectedData()[["scores"]][1], " core words"),
-      subtitle = paste0("Aphasia Percentile: ", selectedData()[["score"]][1,4], " | Control Percentile: ", selectedData()[["score"]][1,3]),
-      icon = icon("list-ol"),
-      color = "blue"
-    )
-  })
-  
-  # core lex value box efficiency
-  output$results_cl2 <- renderValueBox({
-    valueBox(
-      paste0(round(selectedData()[["scores"]][2],1), " core words/min"),
-      subtitle = paste0("Aphasia Percentile: ", selectedData()[["score"]][2,4], " | Control Percentile: ", selectedData()[["score"]][2,3]),
-      icon = icon("tachometer"),
-      color = "blue"
-    )
-  })
-  
-  observeEvent(input$stim,{
-    if(input$stim != "cinderella"){
-      shinyjs::disable("adj")
-    } else {
-      shinyjs::enable("adj")
-    }
-  })
   
   ################## main concept stuff ##################
   
@@ -723,12 +560,30 @@ server <- function(input, output, session) {
 
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste(input$stimMC, "_MC.xlsx", sep = "")
+      paste(input$stimMC, "_MC_summary.xlsx", sep = "")
     },
     content = function(file) {
       writexl::write_xlsx(list(overall = results_mca_tab(),
                                by_concept = results_mca(),
                                transcript = transcr()), file)
+    }
+  )
+  
+  output$downloadData_raw <- downloadHandler(
+    filename = function() {
+      paste(input$stimMC, "_MC_concept.csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(bind_rows(values$concept_accuracy), file)
+    }
+  )
+  
+  output$downloadData_rawsen <- downloadHandler(
+    filename = function() {
+      paste(input$stimMC, "_MC_sentence.csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(get_sentence_data(values$selected_sentences), file)
     }
   )
   
@@ -939,6 +794,159 @@ server <- function(input, output, session) {
 
 
 
+ 
+ 
+ 
+ 
+ ######## core lexicon stuff ######
+ 
+ # core lexicon table output
+ 
+ # core lex counter
+ counter2 <- reactiveVal(0)
+ get_cor_id <- reactive({
+   nrow(selectedData2())
+   isolate(counter2(counter2() + 1))
+   paste0("cor_check", counter2())
+ })
+ 
+ data <- reactive({
+   df = selectedData2()
+   for (i in 1:nrow(df)) {
+     df[["Correct"]][i] <- as.character(shinyWidgets::awesomeCheckbox(paste0(get_cor_id(), i),
+                                                                      label="",
+                                                                      #width = "20px",
+                                                                      value = df$produced[i],
+                                                                      status = "primary"#,
+                                                                      #bigger = T,
+                                                                      #icon = icon("check")
+     ))
+   }
+   df %>% dplyr::select(-produced)
+ })
+ 
+ ####core lex table #####
+ output$table_cl = DT::renderDataTable(
+   data(),
+   escape = FALSE,
+   selection = 'none',
+   server = FALSE,
+   options = list(dom = 't',
+                  ordering = TRUE,
+                  scrollY = "400px",
+                  #scroller = TRUE,
+                  fixedColumns = list(heightMatch = 'none'),
+                  #scrollCollapse = TRUE,
+                  columnDefs = list(list(className = 'dt-center', targets = 0:3)),
+                  paging = FALSE
+   ),
+   callback = JS(
+     "table.rows().every(function(i, tab, row) {
+        var $this = $(this.node());
+        $this.attr('id', this.data()[0]);
+        $this.addClass('shiny-input-container');
+      });
+      Shiny.unbindAll(table.table().node());
+      Shiny.bindAll(table.table().node());")
+ )
+ 
+ 
+ 
+ score_num_data <- reactive({
+   accuracy = unlist(sapply(1:nrow(data()), function(i) input[[paste0(get_cor_id(), i)]]))
+   
+   return(sum(as.numeric(accuracy)))
+   
+ })
+ 
+ output$sel = renderTable({
+   score_num()
+ })
+ 
+ 
+ 
+ # core lexicon results plot 
+ output$plot_cl <- renderPlot({
+   prod <- selectedData()[[2]] %>%
+     mutate(Cohort = ifelse(dist == 'dist1' | dist == 'dist3', 'control', 'aphasia'),
+            met = factor(ifelse(dist == 'dist1' | dist == 'dist2', 'Production', 'Efficiency'),
+                         levels = c('Production', 'Efficiency'))
+     ) %>%
+     dplyr::filter(met == "Production") %>%
+     ggplot(aes(x = val, color = Cohort, fill = Cohort)) +
+     geom_density(alpha = .3) +
+     geom_vline(data = data.frame(xint=selectedData()[[3]][[1]],met="Production"), 
+                aes(xintercept = xint), linetype = "dashed", size = 1) +
+     theme_grey(base_size = 14) +
+     theme(#panel.background = element_rect(fill = "transparent"),
+       legend.position = 'bottom',
+       axis.title.y=element_blank(),
+       axis.title.x=element_blank(),
+       axis.text.y=element_blank(),
+       axis.ticks.y=element_blank(),
+       legend.title = element_blank(),
+       plot.title = element_text(hjust = 0.5)) +
+     labs(title = "Core words")
+   
+   eff <- selectedData()[[2]] %>%
+     mutate(Cohort = ifelse(dist == 'dist1' | dist == 'dist3', 'control', 'aphasia'),
+            met = factor(ifelse(dist == 'dist1' | dist == 'dist2', 'Production', 'Efficiency'),
+                         levels = c('Production', 'Efficiency'))
+     ) %>%
+     dplyr::filter(met == "Efficiency") %>%
+     ggplot(aes(x = val, color = Cohort, fill = Cohort)) +
+     geom_density(alpha = .3) +
+     geom_vline(data = data.frame(xint=selectedData()[[3]][[2]],met="Efficiency"), 
+                aes(xintercept = xint), linetype = "dashed", size = 1) +
+     theme_grey(base_size = 14) +
+     theme(#panel.background = element_rect(fill = "transparent"),
+       legend.position = 'bottom',
+       axis.title.y=element_blank(),
+       axis.title.x=element_blank(),
+       axis.text.y=element_blank(),
+       axis.ticks.y=element_blank(),
+       legend.title = element_blank(),
+       plot.title = element_text(hjust = 0.5)) +
+     labs(title = "Core words / min")
+   
+   prod + eff + plot_layout(guides = 'collect') & theme(legend.position = 'bottom')
+   
+ })
+ 
+ #### value boxes ####   
+ 
+ #core lex value box production
+ output$results_cl1 <- renderValueBox({
+   valueBox(
+     value = paste0(selectedData()[["scores"]][1], " core words"),
+     subtitle = paste0("Aphasia Percentile: ", selectedData()[["score"]][1,4], " | Control Percentile: ", selectedData()[["score"]][1,3]),
+     icon = icon("list-ol"),
+     color = "blue"
+   )
+ })
+ 
+ # core lex value box efficiency
+ output$results_cl2 <- renderValueBox({
+   valueBox(
+     paste0(round(selectedData()[["scores"]][2],1), " core words/min"),
+     subtitle = paste0("Aphasia Percentile: ", selectedData()[["score"]][2,4], " | Control Percentile: ", selectedData()[["score"]][2,3]),
+     icon = icon("tachometer"),
+     color = "blue"
+   )
+ })
+ 
+ observeEvent(input$stim,{
+   if(input$stim != "cinderella"){
+     shinyjs::disable("adj")
+   } else {
+     shinyjs::enable("adj")
+   }
+ })
+ 
+ 
+ 
+ 
+ 
   #########################################################
   
  # this makes the table for scoring....

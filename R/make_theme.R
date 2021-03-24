@@ -6,6 +6,8 @@ library(fresh)
 
 theme <- 
   create_theme(theme = "default",
+               bs_vars_global(link_color = "black"),
+               bs_vars_pills(active_link_hover_bg = "black"),
   bs_vars_navbar(
     default_bg = "#2c3e50",
     default_link_color = "#FFFFFF",
