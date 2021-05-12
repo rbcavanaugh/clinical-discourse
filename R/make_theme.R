@@ -31,7 +31,7 @@ theme <-
     default_bg = "#4a647c"
   ),
   bs_vars_wells(
-    bg = "#ecf0f1"#,
+    bg = "#f5f5f5"#,
     #border = "#4a647c"
   ),
   bs_vars_font(
